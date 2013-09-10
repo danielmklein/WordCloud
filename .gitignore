@@ -1,6 +1,0 @@
-#list of stuff to ignore
-*.pyc
-
-.project
-.pydevproject
-
