@@ -4,9 +4,10 @@ Created on Sep 12, 2013
 @author: Daniel
 '''
 import unittest
+import Metadata
+import Document
 
-
-class Test(unittest.TestCase):
+class DocumentTest(unittest.TestCase):
 
 
     def setUp(self):

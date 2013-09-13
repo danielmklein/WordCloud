@@ -4,9 +4,12 @@ Created on Sep 12, 2013
 @author: Daniel
 '''
 import unittest
+import Metadata
+import Document
+import SuperDocument
 
 
-class Test(unittest.TestCase):
+class SuperDocumentTest(unittest.TestCase):
 
 
     def setUp(self):

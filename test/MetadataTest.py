@@ -4,9 +4,9 @@ Created on Sep 12, 2013
 @author: Daniel
 '''
 import unittest
+import Metadata
 
-
-class Test(unittest.TestCase):
+class MetadataTest(unittest.TestCase):
 
 
     def setUp(self):
