@@ -24,7 +24,7 @@ class Document():
         '''
         self.doc_metadata = doc_metadata
         self.doc_text = doc_text
-        self.word_count = self.count_word(self.doc_text)
+        self.word_count = self.count_words(self.doc_text)
     
     
     def count_words(self, text):
@@ -34,7 +34,10 @@ class Document():
         num_words = 0
         for line in text:
             num_words += len(line.split())
-            return num_words
+        # test output
+        print "WORD COUNT:{0}".format(num_words)
+        # \test output
+        return num_words
     
     
     def write_to_file(self):
@@ -42,7 +45,7 @@ class Document():
         Uses pickle to serialize and save the Document to file.
         '''
         pass
-    
+     
     
     def print_doc(self):
         '''
