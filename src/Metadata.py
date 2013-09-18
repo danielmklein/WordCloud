@@ -33,9 +33,16 @@ class Metadata():
     
     def print_fields(self):
         '''
+        Display the list of fields in the metadata.
+        '''
+        print self.field_names
+    
+    
+    def print_metadata(self):
+        '''
         Display the fields and their values.
         '''
-        print(self)
+        print self
     
     
     def __str__(self):

@@ -17,13 +17,14 @@ class Document():
     classdocs
     '''
     
-    def __init__(self, doc_metadata, doc_text):
+    def __init__(self, doc_metadata, doc_text, output_filename):
         '''
         doc_metadata should be a Metadata object or ancestor.
         doc_text should be a string.
         '''
         self.doc_metadata = doc_metadata
         self.doc_text = doc_text
+        self.output_filename = output_filename
         self.word_count = self.count_words(self.doc_text)
     
     
@@ -32,10 +33,9 @@ class Document():
         Utility method to perform simple wordcount.
         '''
         num_words = 0
-        for line in text:
-            num_words += len(line.split())
+        num_words = len(text.split(' '))
         # test output
-        print "WORD COUNT:{0}".format(num_words)
+        #print "WORD COUNT:{0}".format(num_words)
         # \test output
         return num_words
     
@@ -44,26 +44,38 @@ class Document():
         '''
         Uses pickle to serialize and save the Document to file.
         '''
-        pass
-     
+        print "I haven't written the Document.write_to_file() method yet!"
+        return False
+    
     
     def print_doc(self):
         '''
         Display document with its metadata.
         '''
-        pass
+        #print "I haven't written the Document.print_doc() method yet!"
+        print self
+        return True
     
     
     def print_metadata(self):
         '''
         Display metadata data fields and values from doc.
         '''
-        pass
+        self.doc_metadata.print_metadata()
+        return True
     
         
     def __str__(self):
         '''
         Converts Document object to formatted string.
         '''
-        pass
+        #print "I haven't written the Document.__str__() method yet!"
+        #return "haven't written it yet"
+        document_string = ""
+        document_string += str(self.doc_metadata)
+        document_string += self.doc_text
+        return document_string
+    
+    
+    
     

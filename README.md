@@ -16,3 +16,11 @@ We are approaching the research objective with a highly object-oriented design t
 Final delivery of the software is scheduled for early December 2013. 
 The GitHub repository for the project is viewable at https://github.com/dmarklein/WordCloud.
 
+The basic idea for the flow of the project is this:
+(I)		Each document has a file to itself. The DocumentConverter parses each file and creates a Document object from each one.
+(II)	Given a group of these Document objects, the DocumentSorter creates subsets of them (by sorting on a given metadata field) and passes each subset to the SuperDocGenerator.
+(III)	Given a subset of Document objects, the SuperDocGenerator creates a SuperDocument object.
+(IV)	Given a set of SuperDocumentObjects, the AnalysisEngine performs the actual statistical analysis on term frequency and whatnot and creates a weighted dictionary of the most important terms in the set of SuperDocuments, which it passes to the WordCloudGenerator.
+(V)		The WordCloudGenerator has the easy part: it takes the weighted dict of terms and creates a visualization word cloud. 
+
+

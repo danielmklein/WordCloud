@@ -16,7 +16,10 @@ class SuperDocumentTest(unittest.TestCase):
         self.test_metadata = Metadata.Metadata()
         self.test_text = ("Here is some test text. Blah blah blah blah \n"
                           + "1234567890987654321Yea Alabama Drown 'em Tide!\n")
-        self.test_document = Document.Document(self.test_metadata, self.test_text)
+        self.test_filename = "test_document.txt"
+        self.test_document = Document.Document(self.test_metadata, 
+                                               self.test_text,
+                                               self.test_filename)
         self.test_metadata_list = ([self.test_metadata, 
                                     self.test_metadata, self.test_metadata])
         self.test_superdoc_text = self.test_text * 3

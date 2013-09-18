@@ -29,9 +29,12 @@ class MetadataTest(unittest.TestCase):
                         + "field4: test4\n"
         self.assertEqual(metadata_string, expected_string)
         
-    
     def test_print_fields(self):
         self.test_metadata.print_fields()
+        
+        
+    def test_print_metadata(self):
+        self.test_metadata.print_metadata()
 
 
 if __name__ == "__main__":

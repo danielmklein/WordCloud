@@ -8,6 +8,7 @@ The University of Alabama
 '''
 
 import unittest
+import pickle
 import Metadata
 import Document
 
@@ -18,7 +19,10 @@ class DocumentTest(unittest.TestCase):
         self.test_text = ("Here is some test text. Blah blah blah blah \n"
                           + "1234567890987654321Yea Alabama Drown 'em Tide!\n")
         self.test_metadata = Metadata.Metadata()
-        self.test_document = Document.Document(self.test_metadata, self.test_text)
+        self.test_filename = "test_document.txt"
+        self.test_document = Document.Document(self.test_metadata, 
+                                               self.test_text,
+                                               self.test_filename)
 
 
     def tearDown(self):
@@ -27,35 +31,38 @@ class DocumentTest(unittest.TestCase):
                                                                                
 
     def test_serialization(self):
-        self.fail("Document class: You need to write a serialization test.")
+        if not self.test_document.write_to_file():
+            self.fail("Document class: You need to write a serialization test.")
         
     
     def test_serialization_output_nonwritable(self):
-        self.fail("Document class: You need to write a serialization test "
-                  "for when the output file isn't writable.")
+        if not self.test_document.write_to_file():
+            self.fail("Document class: You need to write a serialization test "
+                      "for when the output file isn't writable.")
     
     
     def test_convert_to_string(self):
-        self.fail("Document class: You need to write a __str__ test.")
+        expected_string = ""
+        expected_string += str(self.test_metadata)
+        expected_string += self.test_text
+        self.assertEqual(str(self.test_document), expected_string)
         
     
     def test_count_words(self):
-        self.fail("Document class: You need to write a count_words test.")
+        expected_word_count = 14
+        self.assertEqual(self.test_document.word_count, expected_word_count)
         
         
     def test_print_doc(self):
-        self.fail("Document class: You need to write a print_doc test.")
+        print "Testing Document.print_doc()..."
+        if not self.test_document.print_doc():
+            self.fail("Document class: You need to write a print_doc test.")
         
     
     def test_print_metadata(self):
-        self.fail("Document class: You need to write a print_metadata test.")
-    
-        
-        
-        
-    
-    
-    
+        print "Testing Document.print_metadata()..."
+        if not self.test_document.print_metadata():
+            self.fail("Document class: You need to write a print_metadata test.") 
 
 
 if __name__ == "__main__":
