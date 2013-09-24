@@ -11,6 +11,7 @@ A typical object will consist of the document's text and a metadata object
 consisting of various fields relevant to the document. We will subclass this
 class for each type of document we will use.
 '''
+import pickle 
 
 class Document():
     '''
@@ -33,7 +34,7 @@ class Document():
         Utility method to perform simple wordcount.
         '''
         num_words = 0
-        num_words = len(text.split(' '))
+        num_words = len(text.split())
         # test output
         #print "WORD COUNT:{0}".format(num_words)
         # \test output
@@ -44,8 +45,14 @@ class Document():
         '''
         Uses pickle to serialize and save the Document to file.
         '''
-        print "I haven't written the Document.write_to_file() method yet!"
-        return False
+        #print "I haven't written the Document.write_to_file() method yet!"
+        try:
+            with open(self.output_filename, 'wb') as output_file:
+                pickle.dump(self, output_file)
+        except IOError: 
+            print "An error occurred while pickling the document -- the output file may not be writable."
+            raise IOError
+        return True
     
     
     def print_doc(self):

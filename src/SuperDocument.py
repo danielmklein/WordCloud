@@ -13,6 +13,7 @@ concatenation of the text fields from 1+ documents, along with a list of
 Metadata objects -- each item in this list will be the metadata from one of
 the documents that make up the SuperDoc.
 '''
+import pickle 
 
 class SuperDocument():
     '''
@@ -35,9 +36,11 @@ class SuperDocument():
         Utility method to perform simple wordcount.
         '''
         num_words = 0
-        for line in text:
-            num_words += len(line.split())
-            return num_words
+        num_words = len(text.split())
+        # test output
+        #print "WORD COUNT:{0}".format(num_words)
+        # \test output
+        return num_words
         
     
     def write_to_file(self):
@@ -65,6 +68,11 @@ class SuperDocument():
         '''
         Converts the SuperDocument to a formatted string.
         '''
-        pass
+        super_doc_string = ""
+        for metadata in self.component_metadata:
+            super_doc_string += str(metadata)
+        super_doc_string += self.superdoc_text
+        #print super_doc_string
+        return super_doc_string
     
     
