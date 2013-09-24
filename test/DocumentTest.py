@@ -74,14 +74,14 @@ class DocumentTest(unittest.TestCase):
         
     def test_print_doc(self):
         print "Testing Document.print_doc()..."
-        if not self.test_document.print_doc():
-            self.fail("Document class: You need to write a print_doc test.")
+        self.test_document.print_doc()
+        print "Document.print_doc() testing finished.***"
         
     
     def test_print_metadata(self):
         print "Testing Document.print_metadata()..."
-        if not self.test_document.print_metadata():
-            self.fail("Document class: You need to write a print_metadata test.") 
+        self.test_document.print_metadata()
+        print "Document.print_metadata() testing finished.***"
 
 
 if __name__ == "__main__":

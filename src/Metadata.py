@@ -1,19 +1,15 @@
-'''
-Metadata Class for Word Cloud Project
-
-Daniel Klein
-Computer-Based Honors Program
-The University of Alabama
-9.12.2013
-
-A metadata object will be a collection of fields (pieces of metadata) that 
-accompany of piece of data (in our case, the text of a document). We will 
-subclass this class for each type of document we use.
-'''
-
 class Metadata():
     '''
-    classdocs
+    Metadata Class for Word Cloud Project
+    
+    Daniel Klein
+    Computer-Based Honors Program
+    The University of Alabama
+    9.12.2013
+    
+    A metadata object will be a collection of fields (pieces of metadata) that 
+    accompany of piece of data (in our case, the text of a document). We will 
+    subclass this class for each type of document we use.
     '''
 
 
