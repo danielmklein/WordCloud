@@ -16,4 +16,5 @@ class DocumentSorter():
         '''
         Constructor
         '''
+        pass
         

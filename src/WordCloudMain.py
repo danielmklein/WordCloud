@@ -4,6 +4,9 @@ class WordCloudMain():
     Computer-Based Honors Program
     The University of Alabama
     9.26.2013
+    
+    This class represents the Word Cloud application itself -- it integrates
+    all of the components into a functional application.
     '''
 
 
@@ -11,6 +14,7 @@ class WordCloudMain():
         '''
         Constructor
         '''
+        pass
         
         
     def main(self):

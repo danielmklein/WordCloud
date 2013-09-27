@@ -18,4 +18,5 @@ class AnalysisEngine():
         '''
         Constructor
         '''
+        pass
         

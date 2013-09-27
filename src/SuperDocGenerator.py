@@ -15,4 +15,5 @@ class SuperDocGenerator():
         '''
         Constructor
         '''
+        pass
         

@@ -15,4 +15,5 @@ class DocumentConverter():
         '''
         Constructor
         '''
+        pass
         
