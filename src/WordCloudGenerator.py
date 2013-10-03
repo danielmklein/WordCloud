@@ -24,6 +24,10 @@ class WordCloudGenerator():
     Much inspiration for this module was drawn from:
     https://github.com/amueller/word_cloud and
     http://peekaboo-vision.blogspot.com/2012/11/a-wordcloud-in-python.html
+    
+    This all-Python implementation is indeed rather sluggish -- a rewrite
+    might be necessary in the future, but this is definitely functional
+    and is a great starting point.
     '''
 
 
@@ -81,81 +85,67 @@ class WordCloudGenerator():
             print "The current list contains {0} terms.".format(
                                                         self.weighted_terms)
             return 0
-        
         # make sure all weights are 0 <= weight <= 1
         for term, weight in self.weighted_terms:
             if weight < 0 or 1 < weight:
                 print "All weights must be between 0 and 1."
-                print "Term {0} has weight {1}.".format(term, weight)
+                print "Term '{0}' has weight {1}.".format(term, weight)
                 return 0
-            
+        # reduce the term list down to length num_terms_to_visualize
+        if num_terms_to_visualize < len(self.weighted_terms):
+            term_list = self.weighted_terms[:num_terms_to_visualize] 
+        else:
+            term_list = self.weighted_terms
+        
         # sort term list by weights
-        self.weighted_terms.sort(key=lambda pair: pair[1], reverse=True)
+        term_list.sort(key=lambda pair: pair[1], reverse=True)
         # test output
-        print self.weighted_terms
+        #print term_list
         # /test output
         
-        # create B/W image
+        # create black&white image
         black_white_image = Image.new("L", (self.image_width, self.image_height))
-        # draw image
         draw = ImageDraw.Draw(black_white_image)
-        # instantiate integral
         integral = numpy.zeros((self.image_height, self.image_width),
                                dtype=numpy.uint32)
-        # instantiate image array
         image_array = numpy.asarray(black_white_image) 
-        # set font_sizes, positions, orientations to blank lists
         font_sizes, term_positions, term_orientations = [], [], []
-        
-        # set font_size to "large enough" value (1000?)
+        # set font_size to "large enough" value
         font_size = 200
         
-        # for each term:weight pair:
-        for term, weight in self.weighted_terms:
+        for term, weight in term_list:
             font_size = min(font_size, int(100 * numpy.log(weight + 100)))
-            # while True:
             while True:
-                # set font
                 font = ImageFont.truetype(FONT_PATH, font_size)
                 # optionally rotate orientation
                 orientation = random.choice([None, Image.ROTATE_90])
-                # set transposed_font with new orientation
                 transposed_font = ImageFont.TransposedFont(font,
                                                         orientation=orientation)
-                # set font to transponsed_font
                 draw.setfont(transposed_font)
                 # get size of box for current term
                 term_box_size = draw.textsize(term)
-                # use query_integral_image to get possible places for term
+                # query_integral_image to get possible places for current term
                 location_result = self.query_integral_image(integral, 
                                                        term_box_size[1] + margin,
                                                        term_box_size[0] + margin
                                                        )
-                # if there are results or font_size hits 0:
+                # if there are results or font_size hits 0, we're done
                 if location_result is not None or font_size == 0:
-                    # break from while true
                     break
-                # otherwise decrement font_size and loop
                 else:
                     font_size -= 1
-  
-            # if font_size hit 0:
+            # if font_size hits 0, we cannot draw anymore
             if font_size == 0:
-                # this means we can't draw anymore
-                # break from foreach
                 break
                 
-            # set x and y coords using result and margin value
+            # set x and y coords for placing term and then draw it
             x, y = numpy.array(location_result) + margin // 2
-            # perform the actual drawing of the term
             draw.text((y, x), term, fill="white")
             term_positions.append((x, y))
             term_orientations.append(orientation)
             font_sizes.append(font_size) 
-            # recompute integral image
+
             image_array = numpy.asarray(black_white_image)
-            
-            # recompute bottom right
             partial_integral = numpy.cumsum(numpy.cumsum(image_array[x:, y:],
                                                          axis=1), axis=0)
             # paste recomputed part into old image
@@ -169,21 +159,16 @@ class WordCloudGenerator():
                 partial_integral += integral[x:, y-1][:, numpy.newaxis]
             integral[x:, y:] = partial_integral
         '''
-        # #redraw in color
-        # create new color image
+        # now redraw entire image in color
         color_image = Image.new("RGB", (self.image_width, self.image_height))
         color_draw = ImageDraw.Draw(color_image)
         # build a list of big tuples with all the needed info for each term
-        terms = [term for term, weight in self.weighted_terms]
+        terms = [term for term, weight in term_list]
         term_data = zip(terms, font_sizes, term_positions, term_orientations)
-        # for each item in that list:
         for term, font_size, term_position, term_orientation in term_data:
-            # set font
             font = ImageFont.truetype(FONT_PATH, font_size)
-            # transpose font
             transposed_font = ImageFont.TransposedFont(font, 
                                                     orientation=term_orientation)
-            # draw the text
             color_draw.setfont(transposed_font)
             color_draw.text((term_position[1], term_position[0]),
                              term, fill="hsl(%d" % random.randint(0, 255)
@@ -192,7 +177,6 @@ class WordCloudGenerator():
         # display image
         black_white_image.show()
         #color_image.show()
-        
         # save image to file
         #black_white_image.save(self.output_filename)
         #color_image.save(self.output_filename)
