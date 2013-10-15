@@ -1,3 +1,6 @@
+import pickle
+import Document
+
 class DocumentConverter():
     '''
     Daniel Klein
@@ -11,9 +14,18 @@ class DocumentConverter():
     '''
 
 
-    def __init__(self):
+    def __init__(self, file_to_parse, pickle_path):
         '''
         Constructor
         '''
         pass
+    
+    
+    def convert_file(self):
+        '''
+        '''
+        return None
+    
+    
+    
         

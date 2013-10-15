@@ -6,9 +6,15 @@ The University of Alabama
 Computer-Based Honors Program
 10.06.2013
 
+This script, given a directory containing text files of Supreme Court
+cases from Lexis, will parse each file in the directory to extract the
+cases, then parse each case to extract the opinions therein. The script
+will then write each opinion to file, along with key information about
+the corresponding case.
 
-
-
+This code is adapted from a piece of code written by my research
+advisor, Dr. Joseph Smith. The basic ideas and algorithms are his --
+I merely translated them into a more modularized, object-oriented form.
 '''
 import re
 import glob
