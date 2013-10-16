@@ -11,6 +11,7 @@ import unittest
 import os, os.path
 import DocumentConverter
 
+##### Here are all the global variables used in these tests.
 VALID_OPINION_FILE_LINES = ([
 """\
 TITLE: UNITED STATES v. JOHNSON ET AL., DOING BUSINESS AS UNITED STATES\
@@ -56,8 +57,22 @@ narrow construction of criminal statutes does not warrant interpreting the \
 "use" of the mails to cover all possible uses in light of the foregoing \
 considerations."""])
 
-TEST_FILE_PATH = os.path.join(os.path.abspath(os.curdir), "test_opinion.txt")
+CASE_TITLE = """\
+UNITED STATES v. JOHNSON ET AL., DOING BUSINESS AS UNITED STATES\
+DENTAL CO., ET AL.\
+"""
+CASE_NUM = "No. 43"
+CASE_LEXIS_CITE = "1944 U.S. LEXIS 1230"
+CASE_FULL_CITE = "323 U.S. 273; 65 S. Ct. 249; 89 L. Ed. 236; 1944 U.S. LEXIS 1230"
+CASE_DATES = [("12/18/1944", "Decided")] # THIS MIGHT CHANGE!!
+CASE_DISPOSITION = "53 F.Supp. 596, affirmed."
+
+OPINION_AUTHOR = "MURPHY"
+OPINION_TEXT = "\n".join(VALID_OPINION_FILE_LINES[7:])
+
+TEST_FILE_PATH = os.path.join(os.path.abspath(os.curdir), "MURPHY_1944 U.S. LEXIS 1230.txt")
 TEST_PICKLE_PATH = os.path.join(os.path.abspath(os.curdir), "pickled_test_doc")
+#####
 
 def create_test_file(file_lines):
     with open(TEST_FILE_PATH, 'w') as test_file:
@@ -80,7 +95,6 @@ class DocumentConverterTest(unittest.TestCase):
         self.test_converter = DocumentConverter.DocumentConverter(self.test_path, TEST_PICKLE_PATH)
         
 
-
     def tearDown(self):
         if os.path.exists(self.test_path): 
             os.remove(self.test_path)
@@ -92,7 +106,33 @@ class DocumentConverterTest(unittest.TestCase):
         create_test_file(VALID_OPINION_FILE_LINES)
         converted_doc = self.test_converter.convert_file()
         # here assert a bunch of things about the resulting converted_doc
-        self.fail("DocumentConverterTest: I haven't written testNormalCase yet.")
+        self.assertTrue(hasattr(converted_doc, 'output_filename'))
+        self.assertEqual(converted_doc.output_filename, TEST_FILE_PATH)
+        
+        self.assertTrue(hasattr(converted_doc, 'doc_text'))
+        self.assertEqual(converted_doc.doc_text, OPINION_TEXT)
+        
+        self.assertTrue(hasattr(converted_doc, 'doc_metadata'))
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_title'))
+        self.assertEqual(converted_doc.doc_metadata.case_title, CASE_TITLE)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'opinion_author'))
+        self.assertEqual(converted_doc.doc_metadata.opinion_author, OPINION_AUTHOR)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_num'))
+        self.assertEqual(converted_doc.doc_metadata.case_num, CASE_NUM)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_lexis_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_lexis_cite, CASE_LEXIS_CITE)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_full_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_full_cite, CASE_FULL_CITE)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_dates'))
+        self.assertEqual(converted_doc.doc_metadata.case_dates, CASE_DATES)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_disposition'))
+        self.assertEqual(converted_doc.doc_metadata.case_disposition, CASE_DISPOSITION)
 
 
     def testImproperFileFormat(self):
@@ -105,7 +145,35 @@ class DocumentConverterTest(unittest.TestCase):
         create_test_file(VALID_OPINION_FILE_LINES[7:])
         converted_doc = self.test_converter.convert_file()
         # here assert a bunch of things about the resulting converted_doc
-        self.fail("DocumentConverterTest: I haven't written testNoMetadataInFile yet.")
+        self.assertTrue(hasattr(converted_doc, 'output_filename'))
+        self.assertEqual(converted_doc.output_filename, TEST_FILE_PATH)
+        
+        self.assertTrue(hasattr(converted_doc, 'doc_text'))
+        self.assertEqual(converted_doc.doc_text, OPINION_TEXT)
+        
+        self.assertTrue(hasattr(converted_doc, 'doc_metadata'))
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_title'))
+        self.assertEqual(converted_doc.doc_metadata.case_title, "")
+    
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'opinion_author'))
+        self.assertEqual(converted_doc.doc_metadata.opinion_author, OPINION_AUTHOR)
+        self.assertEqual(converted_doc.doc_metadata.opinion_author, "")
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_num'))
+        self.assertEqual(converted_doc.doc_metadata.case_num, "")
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_lexis_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_lexis_cite, "")
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_full_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_full_cite, "")
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_dates'))
+        self.assertEqual(converted_doc.doc_metadata.case_dates, "")
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_disposition'))
+        self.assertEqual(converted_doc.doc_metadata.case_disposition, "")
+        #self.fail("DocumentConverterTest: I haven't written testNoMetadataInFile yet.")
     
     
     def testNoBodyTextInFile(self):
@@ -113,26 +181,88 @@ class DocumentConverterTest(unittest.TestCase):
         create_test_file(VALID_OPINION_FILE_LINES[:7])
         converted_doc = self.test_converter.convert_file()
         # here assert a bunch of things about the resulting converted_doc
-        self.fail("DocumentConverterTest: I haven't written testNoBodyTextInFile yet.")
+        self.assertTrue(hasattr(converted_doc, 'output_filename'))
+        self.assertEqual(converted_doc.output_filename, TEST_FILE_PATH)
+        
+        self.assertTrue(hasattr(converted_doc, 'doc_text'))
+        self.assertEqual(converted_doc.doc_text, "")
+        
+        self.assertTrue(hasattr(converted_doc, 'doc_metadata'))
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_title'))
+        self.assertEqual(converted_doc.doc_metadata.case_title, CASE_TITLE)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'opinion_author'))
+        self.assertEqual(converted_doc.doc_metadata.opinion_author, OPINION_AUTHOR)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_num'))
+        self.assertEqual(converted_doc.doc_metadata.case_num, CASE_NUM)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_lexis_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_lexis_cite, CASE_LEXIS_CITE)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_full_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_full_cite, CASE_FULL_CITE)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_dates'))
+        self.assertEqual(converted_doc.doc_metadata.case_dates, CASE_DATES)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_disposition'))
+        self.assertEqual(converted_doc.doc_metadata.case_disposition, CASE_DISPOSITION)
+        #self.fail("DocumentConverterTest: I haven't written testNoBodyTextInFile yet.")
     
     
     def testOutputFileNotWritable(self):
+        create_test_file(VALID_OPINION_FILE_LINES)
+        converted_doc = self.test_converter.convert_file()
+        # assert stuff about the created converted_doc
+        self.assertTrue(hasattr(converted_doc, 'output_filename'))
+        self.assertEqual(converted_doc.output_filename, TEST_FILE_PATH)
+        
+        self.assertTrue(hasattr(converted_doc, 'doc_text'))
+        self.assertEqual(converted_doc.doc_text, OPINION_TEXT)
+        
+        self.assertTrue(hasattr(converted_doc, 'doc_metadata'))
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_title'))
+        self.assertEqual(converted_doc.doc_metadata.case_title, CASE_TITLE)
+
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'opinion_author'))
+        self.assertEqual(converted_doc.doc_metadata.opinion_author, OPINION_AUTHOR)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_num'))
+        self.assertEqual(converted_doc.doc_metadata.case_num, CASE_NUM)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_lexis_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_lexis_cite, CASE_LEXIS_CITE)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_full_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_full_cite, CASE_FULL_CITE)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_dates'))
+        self.assertEqual(converted_doc.doc_metadata.case_dates, CASE_DATES)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_disposition'))
+        self.assertEqual(converted_doc.doc_metadata.case_disposition, CASE_DISPOSITION)
         # I need to change the permisssions of the pickle_path (chmod 0444)
-        self.fail("DocumentConverterTest: I haven't written testOutputFileNotWritable yet.")
+        os.chmod(converted_doc.output_filename, 0444)
+        self.assertRaises(Exception, self.test_converter.save_converted_doc)
+        os.chmod(converted_doc.output_filename, 0777)
+        #self.fail("DocumentConverterTest: I haven't written testOutputFileNotWritable yet.")
         
     
     def testInputFileNonexistent(self):
         # skip the create_test_file call and just try to convert.
         converted_doc = self.test_converter.convert_file()
         # this might actually be a "assertThrows" situation on convert_file
-        self.fail("DocumentConverterTest: I haven't written testInputFileNonexistent yet.")
+        self.assertRaises(Exception, self.test_converter.convert_file)
+        #self.fail("DocumentConverterTest: I haven't written testInputFileNonexistent yet.")
 
     
     def testEmptyInputFile(self):
         # create a test file with nothing in it
         create_test_file([])
-        converted_doc = self.test_converter.convert_file()
-        self.fail("DocumentConverterTest: I haven't written testEmptyInputFile yet.")
+        #converted_doc = self.test_converter.convert_file()
+        self.assertRaises(Exception, self.test_converter.convert_file)
+        #self.fail("DocumentConverterTest: I haven't written testEmptyInputFile yet.")
 
 
 if __name__ == "__main__":

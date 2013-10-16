@@ -1,5 +1,6 @@
 import pickle
-import Document
+from Document import Document
+from SupremeCourtOpinionMetadata import SupremeCourtOpinionMetadata
 
 class DocumentConverter():
     '''
@@ -18,14 +19,29 @@ class DocumentConverter():
         '''
         Constructor
         '''
-        pass
+        self.input_path = file_to_parse
+        self.output_path = pickle_path
     
     
     def convert_file(self):
         '''
+        Returns a Document object.
         '''
-        return None
+        # open input file
+        # parse out metadata
+        # create metadata object 
+        # concatenate lines of opinion body
+        # create Document object
+        # close input file
+        pass
+        
+        
     
     
+    def save_converted_doc(self):
+        '''
+        '''
+        # save Document object to file using appropriate Document method
+        pass
     
         
