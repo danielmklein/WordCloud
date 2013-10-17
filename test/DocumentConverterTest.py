@@ -64,7 +64,7 @@ DENTAL CO., ET AL.\
 CASE_NUM = "No. 43"
 CASE_LEXIS_CITE = "1944 U.S. LEXIS 1230"
 CASE_FULL_CITE = "323 U.S. 273; 65 S. Ct. 249; 89 L. Ed. 236; 1944 U.S. LEXIS 1230"
-CASE_DATES = [("12/18/1944", "Decided")] # THIS MIGHT CHANGE!!
+CASE_DATES = [("December 18, 1944", "Decided")] # THIS MIGHT CHANGE!!
 CASE_DISPOSITION = "53 F.Supp. 596, affirmed."
 
 OPINION_AUTHOR = "MURPHY"
@@ -98,7 +98,11 @@ class DocumentConverterTest(unittest.TestCase):
     def tearDown(self):
         if os.path.exists(self.test_path): 
             os.remove(self.test_path)
+        if os.path.exists(TEST_PICKLE_PATH):
+            os.chmod(TEST_PICKLE_PATH, 0777)
+            os.remove(TEST_PICKLE_PATH)
         del self.test_converter
+        
         
 
     def testNormalCase(self):
@@ -107,7 +111,7 @@ class DocumentConverterTest(unittest.TestCase):
         converted_doc = self.test_converter.convert_file()
         # here assert a bunch of things about the resulting converted_doc
         self.assertTrue(hasattr(converted_doc, 'output_filename'))
-        self.assertEqual(converted_doc.output_filename, TEST_FILE_PATH)
+        self.assertEqual(converted_doc.output_filename, TEST_PICKLE_PATH)
         
         self.assertTrue(hasattr(converted_doc, 'doc_text'))
         self.assertEqual(converted_doc.doc_text, OPINION_TEXT)
@@ -142,11 +146,11 @@ class DocumentConverterTest(unittest.TestCase):
     
     def testNoMetadataInFile(self):
         # create a test file without any metadata fields in it
-        create_test_file(VALID_OPINION_FILE_LINES[7:])
+        create_test_file(VALID_OPINION_FILE_LINES[6:])
         converted_doc = self.test_converter.convert_file()
         # here assert a bunch of things about the resulting converted_doc
         self.assertTrue(hasattr(converted_doc, 'output_filename'))
-        self.assertEqual(converted_doc.output_filename, TEST_FILE_PATH)
+        self.assertEqual(converted_doc.output_filename, TEST_PICKLE_PATH)
         
         self.assertTrue(hasattr(converted_doc, 'doc_text'))
         self.assertEqual(converted_doc.doc_text, OPINION_TEXT)
@@ -157,7 +161,6 @@ class DocumentConverterTest(unittest.TestCase):
     
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'opinion_author'))
         self.assertEqual(converted_doc.doc_metadata.opinion_author, OPINION_AUTHOR)
-        self.assertEqual(converted_doc.doc_metadata.opinion_author, "")
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_num'))
         self.assertEqual(converted_doc.doc_metadata.case_num, "")
@@ -169,7 +172,7 @@ class DocumentConverterTest(unittest.TestCase):
         self.assertEqual(converted_doc.doc_metadata.case_full_cite, "")
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_dates'))
-        self.assertEqual(converted_doc.doc_metadata.case_dates, "")
+        self.assertEqual(converted_doc.doc_metadata.case_dates, [])
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_disposition'))
         self.assertEqual(converted_doc.doc_metadata.case_disposition, "")
@@ -182,7 +185,7 @@ class DocumentConverterTest(unittest.TestCase):
         converted_doc = self.test_converter.convert_file()
         # here assert a bunch of things about the resulting converted_doc
         self.assertTrue(hasattr(converted_doc, 'output_filename'))
-        self.assertEqual(converted_doc.output_filename, TEST_FILE_PATH)
+        self.assertEqual(converted_doc.output_filename, TEST_PICKLE_PATH)
         
         self.assertTrue(hasattr(converted_doc, 'doc_text'))
         self.assertEqual(converted_doc.doc_text, "")
@@ -216,7 +219,7 @@ class DocumentConverterTest(unittest.TestCase):
         converted_doc = self.test_converter.convert_file()
         # assert stuff about the created converted_doc
         self.assertTrue(hasattr(converted_doc, 'output_filename'))
-        self.assertEqual(converted_doc.output_filename, TEST_FILE_PATH)
+        self.assertEqual(converted_doc.output_filename, TEST_PICKLE_PATH)
         
         self.assertTrue(hasattr(converted_doc, 'doc_text'))
         self.assertEqual(converted_doc.doc_text, OPINION_TEXT)
@@ -243,25 +246,53 @@ class DocumentConverterTest(unittest.TestCase):
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_disposition'))
         self.assertEqual(converted_doc.doc_metadata.case_disposition, CASE_DISPOSITION)
         # I need to change the permisssions of the pickle_path (chmod 0444)
+        with open(converted_doc.output_filename, 'w') as dummy:
+            pass
         os.chmod(converted_doc.output_filename, 0444)
-        self.assertRaises(Exception, self.test_converter.save_converted_doc)
-        os.chmod(converted_doc.output_filename, 0777)
+        self.assertRaises(IOError, self.test_converter.save_converted_doc)
         #self.fail("DocumentConverterTest: I haven't written testOutputFileNotWritable yet.")
         
     
     def testInputFileNonexistent(self):
         # skip the create_test_file call and just try to convert.
-        converted_doc = self.test_converter.convert_file()
-        # this might actually be a "assertThrows" situation on convert_file
-        self.assertRaises(Exception, self.test_converter.convert_file)
+        self.assertRaises(IOError, self.test_converter.convert_file)
         #self.fail("DocumentConverterTest: I haven't written testInputFileNonexistent yet.")
 
     
     def testEmptyInputFile(self):
         # create a test file with nothing in it
         create_test_file([])
-        #converted_doc = self.test_converter.convert_file()
-        self.assertRaises(Exception, self.test_converter.convert_file)
+
+        converted_doc = self.test_converter.convert_file()
+        # here assert a bunch of things about the resulting converted_doc
+        self.assertTrue(hasattr(converted_doc, 'output_filename'))
+        self.assertEqual(converted_doc.output_filename, TEST_PICKLE_PATH)
+        
+        self.assertTrue(hasattr(converted_doc, 'doc_text'))
+        self.assertEqual(converted_doc.doc_text, "")
+        
+        self.assertTrue(hasattr(converted_doc, 'doc_metadata'))
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_title'))
+        self.assertEqual(converted_doc.doc_metadata.case_title, "")
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'opinion_author'))
+        self.assertEqual(converted_doc.doc_metadata.opinion_author, OPINION_AUTHOR)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_num'))
+        self.assertEqual(converted_doc.doc_metadata.case_num, "")
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_lexis_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_lexis_cite, "")
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_full_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_full_cite, "")
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_dates'))
+        self.assertEqual(converted_doc.doc_metadata.case_dates, [])
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_disposition'))
+        self.assertEqual(converted_doc.doc_metadata.case_disposition, "")
+
         #self.fail("DocumentConverterTest: I haven't written testEmptyInputFile yet.")
 
 
