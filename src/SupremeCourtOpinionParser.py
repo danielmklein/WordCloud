@@ -62,7 +62,7 @@ class SupremeCourtOpinionParser():
 		# test output
 		print "there are perhaps {0} cases in this file?".format(len(self.cases))
 		# /test output
-		for case in self.cases[:5]:
+		for case in self.cases[:6]:
 			self.parse_case(case)
 		
 	
@@ -108,7 +108,11 @@ class SupremeCourtOpinionParser():
 				#print "majority author is: {0}".format(maj_author)
 				# /test output
 
-			if re.match(alt_opinion_regex, current_paragraph):
+			if re.search(alt_opinion_regex, current_paragraph):
+				# test output
+				print current_paragraph
+				print "FOUND THE START OF ALT OPINIONS"
+				# /teste output
 				maj_end_index = index - 1
 				alt_start_index = index
 				alt_opinions_found = True
@@ -137,8 +141,8 @@ class SupremeCourtOpinionParser():
 		# test output
 		#print alt_opinions[:5]
 		# /test output
-		concur_start_regex = re.compile(r"JUSTICE\s[\w'-]+,.*\sconcurring")
-		dissent_start_regex = re.compile(r"JUSTICE\s[\w'-]+,.*\sdissenting")
+		concur_start_regex = re.compile(r"(JUSTICE|Justice)\s[\w'-]+,.*\sconcurring")
+		dissent_start_regex = re.compile(r"(JUSTICE|Justice)\s[\w'-]+,.*\sdissenting")
 		alt_opinion_regex = re.compile(r"CONCUR BY|DISSENT")
 		alt_start_indices = []
 		# TODO: figure out what to do when there are multiple concurs
@@ -269,8 +273,8 @@ class SupremeCourtOpinionParser():
 		This returns a list of tuples of the form (<opinion-type>,<opinion-text>)
 		'''
 		categorized_opinions = []
-		concur_start_regex = re.compile(r"JUSTICE\s[\w'-]+,.*\sconcurring")
-		dissent_start_regex = re.compile(r"JUSTICE\s[\w'-]+,.*\sdissenting")
+		concur_start_regex = re.compile(r"(JUSTICE|Justice)\s[\w'-]+,.*\sconcurring")
+		dissent_start_regex = re.compile(r"(JUSTICE|Justice)\s[\w'-]+,.*\sdissenting")
 
 
 		for index in range(0, len(split_alt_opinions)):
@@ -317,27 +321,27 @@ class SupremeCourtOpinionParser():
 			author_sample = [word for word in author_sample if word is not '']
 			
 			# test output
-			#print "***********************"
-			#print author_sample
+			print "***********************"
+			print author_sample
 			#print author_sample[0]
 			#print " ".join(author_sample)
-			#print "***********************"
+			print "***********************"
 			# /test output
 
 			if (len(paragraph_words) > 2) \
-			and (re.search("JUSTICE", " ".join(author_sample))):
+			and (re.search(re.compile(r"(JUSTICE|Justice)"), " ".join(author_sample))):
 				if re.match("THE CHIEF JUSTICE", " ".join(author_sample).strip()) \
 				or re.match("MR. CHIEF JUSTICE", " ".join(author_sample).strip()) \
 				or re.match("CHIEF JUSTICE", " ".join(author_sample).strip()):
 					# test output
-					#print "MATCHED"
+					print "MATCHED"
 					# /test output
 					opinion_author = "CHIEF"
 					author_found = True
 					break
 				else:
 					for i in range(0, len(author_sample)):
-						if re.match("JUSTICE", author_sample[i]):
+						if re.match(re.compile(r"(JUSTICE|Justice)"), author_sample[i]):
 							# test output
 							#print "MATCHED"
 							# /test output
@@ -407,8 +411,11 @@ class SupremeCourtOpinionParser():
 		lexis_citation = self.get_lexis_cite(joined_header)
 		full_citation = case_header[3].strip()
 
-		date_regex = re.compile(r"\w+ \d{1,2}-?\d{1,2}?, \d{4}, \w+")
-		dates = date_regex.findall(case_header[4])
+		dates = []
+		date_regex = re.compile(r"\w+\s\d{1,2}-?\d?\d?,\s\d{4},\s\w+")
+		#dates = date_regex.findall(case_header[4])
+		for line in case_header:
+			dates = dates + date_regex.findall(line)
 
 		disposition_regex = re.compile(r"DISPOSITION:(.*)")
 		disposition_match = disposition_regex.search(joined_header)

@@ -40,8 +40,6 @@ class DocumentConverter():
         break_regex = re.compile(r"\* \* \* \* \* \* \* \*")
         found_break = False
         opinion_lines = []
-        # open input file
-        # parse out metadata
         try:
             with(open(self.input_path, 'r')) as file_check:
                 pass
@@ -90,17 +88,16 @@ class DocumentConverter():
         new_metadata.case_dates = dates
         new_metadata.case_disposition = disposition
         new_metadata.opinion_author = author
-        # create Document object
-        converted_doc = Document(new_metadata, body_text, self.output_path)
         
-        return converted_doc
+        self.converted_doc = Document(new_metadata, body_text, self.output_path)
+        return self.converted_doc
         
         
     def save_converted_doc(self):
         '''
         '''
         # save Document object to file using appropriate Document method
-        pass
+        self.converted_doc.write_to_file()
     
     
     def get_author(self, file_path):

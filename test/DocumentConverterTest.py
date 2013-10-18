@@ -88,9 +88,6 @@ class DocumentConverterTest(unittest.TestCase):
         what do i need to run tests? 
        - a test file.
         '''
-        # test output
-        print TEST_FILE_PATH
-        # /test output
         self.test_path = TEST_FILE_PATH
         self.test_converter = DocumentConverter.DocumentConverter(self.test_path, TEST_PICKLE_PATH)
         
@@ -103,12 +100,12 @@ class DocumentConverterTest(unittest.TestCase):
             os.remove(TEST_PICKLE_PATH)
         del self.test_converter
         
-        
 
     def testNormalCase(self):
         # create a normal test file
         create_test_file(VALID_OPINION_FILE_LINES)
         converted_doc = self.test_converter.convert_file()
+        print "word count: {0}".format(converted_doc.word_count)
         # here assert a bunch of things about the resulting converted_doc
         self.assertTrue(hasattr(converted_doc, 'output_filename'))
         self.assertEqual(converted_doc.output_filename, TEST_PICKLE_PATH)
@@ -138,11 +135,11 @@ class DocumentConverterTest(unittest.TestCase):
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_disposition'))
         self.assertEqual(converted_doc.doc_metadata.case_disposition, CASE_DISPOSITION)
 
-
+    '''
     def testImproperFileFormat(self):
         # this test case might not be necessary... we'll see.
         self.fail("DocumentConverterTest: I haven't written testImproperFileFormat yet.")
-    
+    '''
     
     def testNoMetadataInFile(self):
         # create a test file without any metadata fields in it
@@ -292,7 +289,6 @@ class DocumentConverterTest(unittest.TestCase):
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_disposition'))
         self.assertEqual(converted_doc.doc_metadata.case_disposition, "")
-
         #self.fail("DocumentConverterTest: I haven't written testEmptyInputFile yet.")
 
 
