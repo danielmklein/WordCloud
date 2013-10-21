@@ -8,7 +8,7 @@ The University of Alabama
 '''
 
 import unittest
-import WordCloudGenerator
+from WordCloudGenerator import WordCloudGenerator
 
 class WordCloudGeneratorTest(unittest.TestCase):
 
@@ -17,8 +17,8 @@ class WordCloudGeneratorTest(unittest.TestCase):
         self.test_output_filename = "test_word_cloud.jpg"
         self.test_weighted_terms = []
         self.test_generator = \
-            WordCloudGenerator.WordCloudGenerator(self.test_weighted_terms, 
-                                                self.test_output_filename)
+            WordCloudGenerator(self.test_weighted_terms, 
+                               self.test_output_filename)
 
 
     def tearDown(self):

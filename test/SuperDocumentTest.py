@@ -4,9 +4,9 @@ Created on Sep 12, 2013
 @author: Daniel
 '''
 import unittest
-import Metadata
-import Document
-import SuperDocument
+from Metadata import Metadata
+from Document import Document
+from SuperDocument import SuperDocument
 import pickle
 import os, os.path
 
@@ -15,19 +15,20 @@ class SuperDocumentTest(unittest.TestCase):
 
 
     def setUp(self):
-        self.test_metadata = Metadata.Metadata()
+        self.test_metadata = Metadata()
         self.test_text = ("Here is some test text. Blah blah blah blah \n"
                           + "1234567890987654321 Yea Alabama Drown 'em Tide!\n")
         self.test_filename = "test_superdoc.txt"
-        self.test_document = Document.Document(self.test_metadata, 
-                                               self.test_text,
-                                               self.test_filename)
+        self.test_document = Document(self.test_metadata, 
+                                      self.test_text,
+                                      self.test_filename)
         self.test_metadata_list = ([self.test_metadata, 
                                     self.test_metadata, self.test_metadata])
         self.test_superdoc_text = self.test_text * 3
         #print self.test_superdoc_text
-        self.test_superdoc = SuperDocument.SuperDocument(
-                            self.test_metadata_list, self.test_superdoc_text, self.test_filename)
+        self.test_superdoc = SuperDocument(self.test_metadata_list, 
+                                           self.test_superdoc_text, 
+                                           self.test_filename)
         self.assertEqual(len(self.test_superdoc.component_metadata), 3)
         
 

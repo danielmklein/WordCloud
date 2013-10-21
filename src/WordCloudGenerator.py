@@ -3,6 +3,7 @@ import random
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
+from PIL import ImageOps
 
 import numpy
 
@@ -159,6 +160,7 @@ class WordCloudGenerator():
                 partial_integral += integral[x:, y-1][:, numpy.newaxis]
             integral[x:, y:] = partial_integral
         
+        '''
         # now redraw entire image in color
         color_image = Image.new("RGB", (self.image_width, self.image_height))
         color_draw = ImageDraw.Draw(color_image)
@@ -173,10 +175,11 @@ class WordCloudGenerator():
             color_draw.text((term_position[1], term_position[0]),
                              term, fill="hsl(%d" % random.randint(0, 255)
                              + ", 80%, 50%)")
-        
+        '''
+        black_white_image = ImageOps.invert(black_white_image)
         # display image
-        #black_white_image.show()
-        color_image.show()
+        black_white_image.show()
+        #color_image.show()
         # save image to file
         #black_white_image.save(self.output_filename)
         #color_image.save(self.output_filename)

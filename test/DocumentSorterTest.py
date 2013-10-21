@@ -8,7 +8,7 @@ The University of Alabama
 '''
 
 import unittest
-import DocumentSorter
+from DocumentSorter import DocumentSorter
 
 class DocumentSorterTest(unittest.TestCase):
 
@@ -21,8 +21,41 @@ class DocumentSorterTest(unittest.TestCase):
         pass
 
 
-    def testName(self):
-        pass
+    def testSortDocsNormalCase(self):
+        self.fail("DocumentSorterTest: I haven't written a test for testSortDocsNormalCase yet!")
+    
+    
+    def testSortDocsEmptyInputList(self):
+        self.fail("DocumentSorterTest: I haven't written a test for testSortDocsEmptyInputList yet!")
+    
+    
+    def testSortDocsNonDocObject(self):
+        self.fail("DocumentSorterTest: I haven't written a test for testSortDocsNonDocObject yet!")
+    
+    
+    def testSortDocsInvalidSortField(self):
+        self.fail("DocumentSorterTest: I haven't written a test for testSortDocsInvalidSortField yet!")
+    
+    
+    def testCreateSubsetNormalCase(self):
+        self.fail("DocumentSorterTest: I haven't written a test for testCreateSubsetNormalCase yet!")
+
+
+    def testCreateSubsetNoAllowedValues(self):
+        self.fail("DocumentSorterTest: I haven't written a test for testCreateSubsetNoAllowedValues yet!")
+
+
+    def testCreateSubsetNoAllowedValueMatches(self):
+        self.fail("DocumentSorterTest: I haven't written a test for testCreateSubsetNoAllowedValueMatches yet!")
+
+
+    def testAddDocNormalCase(self):
+        self.fail("DocumentSorterTest: I haven't written a test for testAddDocNormalCase yet!")
+        
+        
+    def testAddDocWithNonDocument(self):
+        self.fail("DocumentSorterTest: I haven't written a test for testAddDocWithNonDocument yet!")
+
 
 
 if __name__ == "__main__":

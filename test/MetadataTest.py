@@ -8,13 +8,13 @@ The University of Alabama
 '''
 
 import unittest
-import Metadata
+from Metadata import Metadata
 
 class MetadataTest(unittest.TestCase):
 
 
     def setUp(self):
-        self.test_metadata = Metadata.Metadata()
+        self.test_metadata = Metadata()
 
 
     def tearDown(self):

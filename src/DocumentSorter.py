@@ -18,3 +18,21 @@ class DocumentSorter():
         '''
         pass
         
+        
+    def sort_docs(self, sort_fields):
+        pass
+    
+    
+    def create_subset(self, sort_field, allowed_values):
+        pass
+    
+    
+    def print_subsets(self):
+        pass
+    
+    
+    def add_doc(self, doc_to_add):
+        pass
+    
+    
+    

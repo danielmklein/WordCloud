@@ -8,7 +8,7 @@ The University of Alabama
 '''
 
 import unittest
-import SuperDocGenerator
+from SuperDocGenerator import SuperDocGenerator
 
 class SuperDocGeneratorTest(unittest.TestCase):
 
@@ -21,8 +21,27 @@ class SuperDocGeneratorTest(unittest.TestCase):
         pass
 
 
-    def testName(self):
-        pass
+    def testGenerateNormalCase(self):
+        self.fail("SuperDocGeneratorTest: I haven't written a test for testGenerateNormalCase yet!")
+    
+    
+    def testGenerateWithSingleDocument(self):
+        self.fail("SuperDocGeneratorTest: I haven't written a test for testGenerateWithSingleDocument yet!")
+        
+    
+    def testGenerateWithEmptyInputList(self):
+        self.fail("SuperDocGeneratorTest: I haven't written a test for testGenerateWithEmptyInputList yet!")
+    
+    
+    def testGenerateWithNonDocumentInput(self):
+        self.fail("SuperDocGeneratorTest: I haven't written a test for testGenerateWithNonDocumentInput yet!")
+    
+    
+    def testGenerateOutputFileNotWritable(self):
+        self.fail("SuperDocGeneratorTest: I haven't written a test for testGenerateOutputFileNotWritable yet!")
+    
+    
+    
 
 
 if __name__ == "__main__":

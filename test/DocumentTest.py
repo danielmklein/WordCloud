@@ -9,8 +9,8 @@ The University of Alabama
 
 import unittest
 import pickle
-import Metadata
-import Document
+from Metadata import Metadata
+from Document import Document
 import os, os.path
 
 class DocumentTest(unittest.TestCase):
@@ -19,11 +19,11 @@ class DocumentTest(unittest.TestCase):
     def setUp(self):
         self.test_text = ("Here is some test text. Blah blah blah blah \n"
                           + "1234567890987654321 Yea Alabama Drown 'em Tide!\n")
-        self.test_metadata = Metadata.Metadata()
+        self.test_metadata = Metadata()
         self.test_filename = "test_document.txt"
-        self.test_document = Document.Document(self.test_metadata, 
-                                               self.test_text,
-                                               self.test_filename)
+        self.test_document = Document(self.test_metadata, 
+                                      self.test_text,
+                                      self.test_filename)
 
 
     def tearDown(self):

@@ -9,7 +9,7 @@ The University of Alabama
 
 import unittest
 import os, os.path
-import DocumentConverter
+from DocumentConverter import DocumentConverter
 
 ##### Here are all the global variables used in these tests.
 VALID_OPINION_FILE_LINES = ([
@@ -89,7 +89,7 @@ class DocumentConverterTest(unittest.TestCase):
        - a test file.
         '''
         self.test_path = TEST_FILE_PATH
-        self.test_converter = DocumentConverter.DocumentConverter(self.test_path, TEST_PICKLE_PATH)
+        self.test_converter = DocumentConverter(self.test_path, TEST_PICKLE_PATH)
         
 
     def tearDown(self):

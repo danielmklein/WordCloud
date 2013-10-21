@@ -1,6 +1,6 @@
-import Metadata
+from Metadata import Metadata
 
-class SupremeCourtOpinionMetadata(Metadata.Metadata):
+class SupremeCourtOpinionMetadata(Metadata):
     '''
     SupremeCourtOpinionMetadata Class for Word Cloud Project
     

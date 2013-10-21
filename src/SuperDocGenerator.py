@@ -1,3 +1,5 @@
+from Document import Document
+
 class SuperDocGenerator():
     '''
     Daniel Klein
@@ -16,4 +18,30 @@ class SuperDocGenerator():
         Constructor
         '''
         pass
+    
+    
+    def create_superdoc(self):
+        '''
+        '''
+        pass
+    
+    
+    def add_doc(self, doc_to_add):
+        '''
+        '''
+        pass
+    
+    
+    def print_superdoc(self):
+        '''
+        '''
+        pass
+    
+    
+    def save_generated_superdoc(self):
+        '''
+        '''
+        pass
+    
+    
         
