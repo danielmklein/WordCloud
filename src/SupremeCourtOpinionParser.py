@@ -359,8 +359,9 @@ class SupremeCourtOpinionParser():
 		Given the key info about an opinion, this writes it to file.
 		'''
 
-		(title, case_num, lexis_citation, 
-			full_citation, dates, disposition) = self.get_info(case_header)
+		(title, case_num, full_citation, us_citation, 
+		supr_court_citation, lawyers_ed_citation, lexis_citation,
+		dates, disposition) = self.get_info(case_header)
 
 		# test output
 		print "author of this opinion is: {0}".format(opinion_author)
@@ -385,6 +386,11 @@ class SupremeCourtOpinionParser():
 			#output_file.write("\n".join(case_header))
 			output_file.write("TITLE: {0}\n".format(title))
 			output_file.write("CASE NUMBER: {0}\n".format(case_num))
+			output_file.write("US CITATION: {0}\n".format(us_citation))
+			output_file.write("SUPREME COURT CITATION: {0}\n".format(
+														supr_court_citation))
+			output_file.write("LAWYERS ED CITATION: {0}\n".format(
+														lawyers_ed_citation))
 			output_file.write("LEXIS CITATION: {0}\n".format(lexis_citation))
 			output_file.write("FULL CITATION: {0}\n".format(full_citation))
 			date_string = "DATES: "
@@ -408,9 +414,13 @@ class SupremeCourtOpinionParser():
 		title = case_header[0].strip() # these might not be exactly right... check them!!
 
 		case_num = case_header[1].strip()
-		lexis_citation = self.get_lexis_cite(joined_header)
+		
 		full_citation = case_header[3].strip()
-
+		lexis_citation = self.get_lexis_cite(joined_header)
+		us_citation = self.get_us_cite(full_citation)
+		lawyers_ed_citation = self.get_lawyers_ed_cite(full_citation)
+		supr_court_citation = self.get_supr_court_cite(full_citation)
+		
 		dates = []
 		date_regex = re.compile(r"\w+\s\d{1,2}-?\d?\d?,\s\d{4},\s\w+")
 		#dates = date_regex.findall(case_header[4])
@@ -431,7 +441,9 @@ class SupremeCourtOpinionParser():
 		#print "dates: {0}".format(dates)
 		#print "disposition: {0}".format(disposition)
 		# /test output
-		return (title, case_num, lexis_citation, full_citation, dates, disposition)
+		return (title, case_num, full_citation, us_citation, 
+				supr_court_citation, lawyers_ed_citation, lexis_citation,
+			 	dates, disposition)
 		
 		
 	def get_lexis_cite(self, paragraph):
@@ -443,11 +455,33 @@ class SupremeCourtOpinionParser():
 			if re.match("LEXIS", cite_paragraph[index]):
 				lexis_cite = cite_paragraph[index - 2:index + 2]
 				lexis_cite = " ".join(lexis_cite).strip(";")
-				# test output
-				#print lexis_cite
-				# /test output
 				return lexis_cite
+	
+	
+	def get_us_cite(self, citation_string):
+		us_cite_regex = re.compile(r"\d+\sU\.S\.\s\d+;")
+		us_cite_match = us_cite_regex.search(citation_string)
+		if us_cite_match:
+			return us_cite_match.group().strip(";")
+		else:
+			return "NONE"
+		
+	def get_lawyers_ed_cite(self, citation_string):
+		led_regex = re.compile(r"\d+\sL\.\sEd\.\s2?d?\s?\d+;")
+		led_match = led_regex.search(citation_string)
+		if led_match:
+			return led_match.group().strip(";")
+		else:
+			return "NONE"
 
+	
+	def get_supr_court_cite(self, citation_string):
+		sct_regex = re.compile(r"\d+\sS\.\sCt\.\s\d+;")
+		sct_match = sct_regex.search(citation_string)
+		if sct_match:
+			return sct_match.group().strip(";")
+		else:
+			return "NONE"
 
 
 

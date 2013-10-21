@@ -18,11 +18,14 @@ TITLE: UNITED STATES v. JOHNSON ET AL., DOING BUSINESS AS UNITED STATES\
 DENTAL CO., ET AL.\
 """,
 """CASE NUMBER: No. 43""",
+"""US CITATION: 323 U.S. 273""",
+"""SUPREME COURT CITATION: 65 S. Ct. 249""",
+"""LAWYERS ED CITATION: 89 L. Ed. 236""",
 """LEXIS CITATION: 1944 U.S. LEXIS 1230""",
 """\
 FULL CITATION: 323 U.S. 273; 65 S. Ct. 249; 89 L. Ed. 236; 1944 U.S. LEXIS 1230\
 """,
-"""DATES: December 18, 1944, Decided;""",
+"""DATES: November 8, 1944, Argued;December 18, 1944, Decided;""",
 """DISPOSITION: 53 F.Supp. 596, affirmed.""",
 """* * * * * * * *""",
 """MR. JUSTICE MURPHY, concurring.""",
@@ -62,13 +65,16 @@ UNITED STATES v. JOHNSON ET AL., DOING BUSINESS AS UNITED STATES\
 DENTAL CO., ET AL.\
 """
 CASE_NUM = "No. 43"
+CASE_US_CITE = "323 U.S. 273"
+CASE_SUPREME_COURT_CITE = "65 S. Ct. 249"
+CASE_LAWYERS_ED_CITE = "89 L. Ed. 236"
 CASE_LEXIS_CITE = "1944 U.S. LEXIS 1230"
 CASE_FULL_CITE = "323 U.S. 273; 65 S. Ct. 249; 89 L. Ed. 236; 1944 U.S. LEXIS 1230"
 CASE_DATES = [("December 18, 1944", "Decided")] # THIS MIGHT CHANGE!!
 CASE_DISPOSITION = "53 F.Supp. 596, affirmed."
 
 OPINION_AUTHOR = "MURPHY"
-OPINION_TEXT = "\n".join(VALID_OPINION_FILE_LINES[7:])
+OPINION_TEXT = "\n".join(VALID_OPINION_FILE_LINES[10:])
 
 TEST_FILE_PATH = os.path.join(os.path.abspath(os.curdir), "MURPHY_1944 U.S. LEXIS 1230.txt")
 TEST_PICKLE_PATH = os.path.join(os.path.abspath(os.curdir), "pickled_test_doc")
@@ -123,6 +129,15 @@ class DocumentConverterTest(unittest.TestCase):
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_num'))
         self.assertEqual(converted_doc.doc_metadata.case_num, CASE_NUM)
         
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_us_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_us_cite, CASE_US_CITE)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_supreme_court_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_supreme_court_cite, CASE_SUPREME_COURT_CITE)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_lawyers_ed_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_lawyers_ed_cite, CASE_LAWYERS_ED_CITE)
+        
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_lexis_cite'))
         self.assertEqual(converted_doc.doc_metadata.case_lexis_cite, CASE_LEXIS_CITE)
         
@@ -143,7 +158,7 @@ class DocumentConverterTest(unittest.TestCase):
     
     def testNoMetadataInFile(self):
         # create a test file without any metadata fields in it
-        create_test_file(VALID_OPINION_FILE_LINES[6:])
+        create_test_file(VALID_OPINION_FILE_LINES[9:])
         converted_doc = self.test_converter.convert_file()
         # here assert a bunch of things about the resulting converted_doc
         self.assertTrue(hasattr(converted_doc, 'output_filename'))
@@ -161,6 +176,15 @@ class DocumentConverterTest(unittest.TestCase):
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_num'))
         self.assertEqual(converted_doc.doc_metadata.case_num, "")
+
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_us_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_us_cite, "")
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_supreme_court_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_supreme_court_cite, "")
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_lawyers_ed_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_lawyers_ed_cite, "")
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_lexis_cite'))
         self.assertEqual(converted_doc.doc_metadata.case_lexis_cite, "")
@@ -178,7 +202,7 @@ class DocumentConverterTest(unittest.TestCase):
     
     def testNoBodyTextInFile(self):
         # create a test file with valid metadata but without any body text in it
-        create_test_file(VALID_OPINION_FILE_LINES[:7])
+        create_test_file(VALID_OPINION_FILE_LINES[:10])
         converted_doc = self.test_converter.convert_file()
         # here assert a bunch of things about the resulting converted_doc
         self.assertTrue(hasattr(converted_doc, 'output_filename'))
@@ -196,6 +220,15 @@ class DocumentConverterTest(unittest.TestCase):
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_num'))
         self.assertEqual(converted_doc.doc_metadata.case_num, CASE_NUM)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_us_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_us_cite, CASE_US_CITE)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_supreme_court_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_supreme_court_cite, CASE_SUPREME_COURT_CITE)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_lawyers_ed_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_lawyers_ed_cite, CASE_LAWYERS_ED_CITE)
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_lexis_cite'))
         self.assertEqual(converted_doc.doc_metadata.case_lexis_cite, CASE_LEXIS_CITE)
@@ -230,6 +263,15 @@ class DocumentConverterTest(unittest.TestCase):
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_num'))
         self.assertEqual(converted_doc.doc_metadata.case_num, CASE_NUM)
+    
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_us_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_us_cite, CASE_US_CITE)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_supreme_court_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_supreme_court_cite, CASE_SUPREME_COURT_CITE)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_lawyers_ed_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_lawyers_ed_cite, CASE_LAWYERS_ED_CITE)
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_lexis_cite'))
         self.assertEqual(converted_doc.doc_metadata.case_lexis_cite, CASE_LEXIS_CITE)
@@ -277,6 +319,15 @@ class DocumentConverterTest(unittest.TestCase):
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_num'))
         self.assertEqual(converted_doc.doc_metadata.case_num, "")
+
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_us_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_us_cite, "")
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_supreme_court_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_supreme_court_cite, "")
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_lawyers_ed_cite'))
+        self.assertEqual(converted_doc.doc_metadata.case_lawyers_ed_cite, "")
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_lexis_cite'))
         self.assertEqual(converted_doc.doc_metadata.case_lexis_cite, "")

@@ -23,6 +23,9 @@ class SupremeCourtOpinionMetadata(Metadata):
                              "opinion_author"])
         self.case_title = ""
         self.case_num = ""
+        self.case_us_cite = ""
+        self.case_supreme_court_cite = ""
+        self.case_lawyers_ed_cite = ""
         self.case_lexis_cite = ""
         self.case_full_cite = ""
         self.case_dates = []

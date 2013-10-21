@@ -30,6 +30,9 @@ class DocumentConverter():
 
         title = ""
         case_num = ""
+        us_cite = ""
+        supreme_court_cite = ""
+        lawyers_ed_cite = ""
         lexis_cite = ""
         full_cite = ""
         dates = []
@@ -45,32 +48,57 @@ class DocumentConverter():
                 pass
         except:
             raise IOError
+        
+        title_regex = re.compile(r"TITLE: (.*)")
+        case_num_regex = re.compile(r"CASE NUMBER: (.*)")
+        us_cite_regex = re.compile(r"US CITATION: (.*)")
+        supreme_court_regex = re.compile(r"SUPREME COURT CITATION: (.*)")
+        lawyers_ed_regex = re.compile(r"LAWYERS ED CITATION: (.*)")
+        lexis_cite_regex = re.compile(r"LEXIS CITATION: (.*)")
+        full_cite_regex = re.compile(r"FULL CITATION: (.*)")
+        dateline_regex = re.compile(r"DATES: (.*)")
+        disposition_regex = re.compile(r"DISPOSITION: (.*)")
+        
         with open(self.input_path, 'r') as opinion:
             for line in opinion:
                 if found_break:
                     opinion_lines.append(line.strip('\n'))
                 
-                title_match = self.get_title(line)
+                title_match = self.get_titled_item(line, title_regex)
                 if title_match:
                     title = title_match
                     
-                case_num_match = self.get_case_num(line)
+                case_num_match = self.get_titled_item(line, case_num_regex)
                 if case_num_match:
                     case_num = case_num_match
                     
-                lexis_cite_match = self.get_lexis_cite(line)
+                us_cite_match = self.get_titled_item(line, us_cite_regex)
+                if us_cite_match:
+                    us_cite = us_cite_match
+                    
+                supr_court_cite_match = self.get_titled_item(line, 
+                                                        supreme_court_regex)
+                if supr_court_cite_match:
+                    supreme_court_cite = supr_court_cite_match
+                    
+                lawyers_ed_cite_match = self.get_titled_item(line, 
+                                                             lawyers_ed_regex)
+                if lawyers_ed_cite_match:
+                    lawyers_ed_cite = lawyers_ed_cite_match
+                    
+                lexis_cite_match = self.get_titled_item(line, lexis_cite_regex)
                 if lexis_cite_match:
                     lexis_cite = lexis_cite_match
                     
-                full_cite_match = self.get_full_cite(line)
+                full_cite_match = self.get_titled_item(line, full_cite_regex)
                 if full_cite_match:
                     full_cite = full_cite_match
                     
-                date_match = self.get_dates(line)
+                date_match = self.get_titled_item(line, dateline_regex)
                 if date_match:
-                    dates = date_match
+                    dates = self.split_dates(date_match)
                     
-                disposition_match = self.get_disposition(line)
+                disposition_match = self.get_titled_item(line, disposition_regex)
                 if disposition_match:
                     disposition = disposition_match
                 
@@ -83,6 +111,9 @@ class DocumentConverter():
         new_metadata = SupremeCourtOpinionMetadata()
         new_metadata.case_title = title
         new_metadata.case_num = case_num
+        new_metadata.case_us_cite = us_cite
+        new_metadata.case_supreme_court_cite = supreme_court_cite
+        new_metadata.case_lawyers_ed_cite = lawyers_ed_cite
         new_metadata.case_lexis_cite = lexis_cite
         new_metadata.case_full_cite = full_cite
         new_metadata.case_dates = dates
@@ -108,55 +139,18 @@ class DocumentConverter():
             author = author_match.group(1)
         return author
     
+    def get_titled_item(self, line, item_regex):
+        item = ""
+        item_match = item_regex.search(line)
+        if item_match:
+            item = item_match.group(1)
+        return item
     
-    def get_title(self, line):
-        title = ""
-        title_regex = re.compile(r"TITLE: (.*)")
-        title_match = title_regex.search(line)
-        if title_match:
-            title = title_match.group(1)
-        return title
-    
-    
-    def get_case_num(self, line):
-        case_num = ""
-        case_num_regex = re.compile(r"CASE NUMBER: (.*)")
-        case_num_match = case_num_regex.search(line)
-        if case_num_match:
-            case_num = case_num_match.group(1)
-        return case_num
-    
-    
-    def get_lexis_cite(self, line):
-        lexis_cite = ""
-        lexis_cite_regex = re.compile(r"LEXIS CITATION: (.*)")
-        lexis_cite_match = lexis_cite_regex.search(line)
-        if lexis_cite_match:
-            lexis_cite = lexis_cite_match.group(1)
-        return lexis_cite
-    
-    
-    def get_full_cite(self, line):
-        full_cite = ""
-        full_cite_regex = re.compile(r"FULL CITATION: (.*)")
-        full_cite_match = full_cite_regex.search(line)
-        if full_cite_match:
-            full_cite = full_cite_match.group(1)
-        return full_cite
-    
-    
-    def get_dates(self, line):
-        '''
-        This method is kinda messy... I think it could definitely be simpler.
-        '''
+
+    def split_dates(self, date_string):
         dates = []
         datestring_regex = re.compile(r"\w+ \d{1,2}-?\d{1,2}?, \d{4}, \w+;")
-        dateline_regex = re.compile(r"DATES: ")
-        dateline_match = dateline_regex.search(line)
-        
-        raw_dates = []
-        if dateline_match:
-            raw_dates = datestring_regex.findall(line)
+        raw_dates = datestring_regex.findall(date_string)
         
         grouped_date_regex = re.compile(r"(\w+ \d{1,2}-?\d{1,2}?, \d{4}), (\w+);")
         for raw_date in raw_dates:
@@ -165,17 +159,5 @@ class DocumentConverter():
             action = group_match.group(2)
             dates.append((date, action))           
         return dates
-    
-    
-    def get_disposition(self, line):
-        disposition = ""
-        disposition_regex = re.compile(r"DISPOSITION: (.*)")
-        disposition_match = disposition_regex.search(line)
-        if disposition_match:
-            disposition = disposition_match.group(1)
-        return disposition
-    
-    
-    
-    
+        
         
