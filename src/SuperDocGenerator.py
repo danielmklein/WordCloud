@@ -32,12 +32,6 @@ class SuperDocGenerator():
         pass
     
     
-    def print_superdoc(self):
-        '''
-        '''
-        pass
-    
-    
     def save_generated_superdoc(self):
         '''
         '''

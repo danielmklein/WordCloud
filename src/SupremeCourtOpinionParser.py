@@ -29,9 +29,6 @@ class SupremeCourtOpinionParser():
 		self.dissent_dir = os.path.join(output_dir, "dissenting")
 		self.concur_dir = os.path.join(output_dir, "concurring")
 		self.concur_dissent_dir = os.path.join(output_dir, "concur-dissent")
-		### this variable is only for testing purposes
-		#self.opin_starts = ""
-		###
 
 
 	def parse_file(self, source_file_path):
@@ -44,9 +41,6 @@ class SupremeCourtOpinionParser():
 		print "Parsing file {0}".format(source_file_path)
 		
 		self.file_text = []
-		# test output
-		print source_file_path
-		# /test output
 		with open(source_file_path, 'r') as opinion_file:
 			self.all_opinions = opinion_file.readlines()
 
@@ -59,9 +53,6 @@ class SupremeCourtOpinionParser():
 		del self.file_text[completion_message_line :]
 
 		self.cases = self.split_into_cases(delimiter)
-		# test output
-		print "there are perhaps {0} cases in this file?".format(len(self.cases))
-		# /test output
 		for case in self.cases[:6]:
 			self.parse_case(case)
 		
@@ -94,42 +85,28 @@ class SupremeCourtOpinionParser():
 				# test output
 				print "RAW: {0}".format(case_header)
 				# /test output
+				# this filters out this fishy character
 				case_header = [re.sub(r'[\xa0]', '', line) for line in case_header]
-				# test output
-				#print "\n".join(case_header)
-				# /test output
 				maj_start_index = index
 				maj_end_index = len(case_paragraphs) - 1
 				maj_start_found = True
 
 			if re.match("OPINION BY:", current_paragraph):
 				maj_author = " ".join(current_paragraph.split()[2:])
-				# test output
-				#print "majority author is: {0}".format(maj_author)
-				# /test output
 
 			if re.search(alt_opinion_regex, current_paragraph):
-				# test output
-				print current_paragraph
-				print "FOUND THE START OF ALT OPINIONS"
-				# /teste output
 				maj_end_index = index - 1
 				alt_start_index = index
 				alt_opinions_found = True
 				break
+			
 		if alt_opinions_found:
 			self.parse_alt_opinions(case_paragraphs[index:], case_header)
 
 		maj_opinion = case_paragraphs[maj_start_index:maj_end_index]
-		# test output
 		if maj_author == "":
 			maj_author = "PER CURIAM"
-			#print "**********************"
-			#print "MAJORITY OPINIOIN"
-			#print "**********************"
-			#print maj_opinion
-			#print "**********************"
-		# /test output
+
 		opinion_with_type = ("majority", "\n".join(maj_opinion))
 		self.write_opinion(opinion_with_type, maj_author, case_header)
 
@@ -145,17 +122,14 @@ class SupremeCourtOpinionParser():
 		dissent_start_regex = re.compile(r"(JUSTICE|Justice)\s[\w'-]+,.*\sdissenting")
 		alt_opinion_regex = re.compile(r"CONCUR BY|DISSENT")
 		alt_start_indices = []
-		# TODO: figure out what to do when there are multiple concurs
-		# such as "CONCUR BY: BLACK; MADISON"
+
 		for index in range(0, len(alt_opinions)):
 			current_paragraph = alt_opinions[index]
 			if (re.search(concur_start_regex, current_paragraph) 
 				or re.search(dissent_start_regex, current_paragraph)):
 				alt_start_indices.append(index)
-				#self.opin_starts += current_paragraph + "\n"
 		
 		start_end_pairs = []
-
 		if len(alt_start_indices) == 1:
 			start_end_pairs = [(0, len(alt_opinions) - 1)]
 		else:
@@ -179,31 +153,9 @@ class SupremeCourtOpinionParser():
 	
 		categorized_opinions = self.categorize_opinions(split_alt_opinions)
 		
-		# test output
-		#print categorized_opinions
-		#for opinion in categorized_opinions:
-		#	print opinion[0]
-		#	print opinion[1][:200]
-		#	print "***************************************"
-		# /test output
-		
 		for opinion in categorized_opinions:
-			#opinion_authors = []
-			# test output
-			#print opinion[1][:200]
-			#print opinion[1].split('\n')[:5]
-			# /test output
-
 			opinion_author = self.get_author(opinion)
 			self.write_opinion(opinion, opinion_author, case_header)
-
-
-	def parse_opinion(self):
-		'''
-		This parses a string containing an opinion and writes the opinion
-		to a file with all the necessary metadata.
-		'''
-		pass
 
 
 	def get_delimiter(self):
@@ -226,7 +178,6 @@ class SupremeCourtOpinionParser():
 		This method removes all instances of bracketed numbers from the
 		opinion file, as they are unnecessary for our purposes.
 		'''
-		# take out all the bracketed numbers in the file
 		bracket_regex = re.compile("\[\*+\w*\d*\]")
 		completion_regex = re.compile("\*+\sPrint\sCompleted\s\*+")
 		for index in range(0, len(self.all_opinions)):
@@ -250,7 +201,7 @@ class SupremeCourtOpinionParser():
 		'''
 		cases = []
 		delimiter_regex = re.compile(delimiter)
-		del self.file_text[:2] # get rid of the inital delimiter line
+		del self.file_text[:2] # get rid of the initial delimiter line
 
 		start_index = 0
 		for index in range(2, len(self.file_text)):
@@ -287,7 +238,9 @@ class SupremeCourtOpinionParser():
 			#print opinion_lines[:10]
 			#print " * * * * * * ** "
 			# /test output
-			for line in opinion_lines[:10]: # 10 is arbitrary -- a sample of the lines
+			
+			# [:10] here is arbitrary -- a sample of the lines
+			for line in opinion_lines[:10]: 
 
 				if re.search(concur_start_regex, line):
 					is_concur = True
@@ -309,11 +262,6 @@ class SupremeCourtOpinionParser():
 		'''
 		Given a non-majority opinion, this method returns its author.
 		'''
-		# test output
-		#print "**********"
-		print opinion[1].split("\n")[:5]
-		#print "**********"
-		# /test output
 		author_found = False
 		for paragraph in opinion[1].split("\n")[:5]:
 			paragraph_words = paragraph.split()
@@ -323,8 +271,6 @@ class SupremeCourtOpinionParser():
 			# test output
 			print "***********************"
 			print author_sample
-			#print author_sample[0]
-			#print " ".join(author_sample)
 			print "***********************"
 			# /test output
 
@@ -333,18 +279,12 @@ class SupremeCourtOpinionParser():
 				if re.match("THE CHIEF JUSTICE", " ".join(author_sample).strip()) \
 				or re.match("MR. CHIEF JUSTICE", " ".join(author_sample).strip()) \
 				or re.match("CHIEF JUSTICE", " ".join(author_sample).strip()):
-					# test output
-					print "MATCHED"
-					# /test output
 					opinion_author = "CHIEF"
 					author_found = True
 					break
 				else:
 					for i in range(0, len(author_sample)):
 						if re.match(re.compile(r"(JUSTICE|Justice)"), author_sample[i]):
-							# test output
-							#print "MATCHED"
-							# /test output
 							opinion_author = author_sample[i + 1].strip(",")
 							author_found = True
 							break
@@ -358,14 +298,10 @@ class SupremeCourtOpinionParser():
 		'''
 		Given the key info about an opinion, this writes it to file.
 		'''
-
 		(title, case_num, full_citation, us_citation, 
 		supr_court_citation, lawyers_ed_citation, lexis_citation,
 		dates, disposition) = self.get_info(case_header)
 
-		# test output
-		print "author of this opinion is: {0}".format(opinion_author)
-		# /test output
 		opinion_filename = opinion_author + "_" + lexis_citation + ".txt"
 		if opinion_with_type[0] == "majority":
 			output_dir = self.majority_dir
@@ -383,7 +319,6 @@ class SupremeCourtOpinionParser():
 		# /test output
 		
 		with open(output_path, 'w') as output_file:
-			#output_file.write("\n".join(case_header))
 			output_file.write("TITLE: {0}\n".format(title))
 			output_file.write("CASE NUMBER: {0}\n".format(case_num))
 			output_file.write("US CITATION: {0}\n".format(us_citation))
@@ -403,18 +338,17 @@ class SupremeCourtOpinionParser():
 			
 		
 	def get_info(self, case_header):
-
+		'''
+		Given the header of a case, this parses out the important
+		information and returns a tuple containing that information.
+		'''
 		# test output
 		print case_header
 		# /test output
 		joined_header = " ".join(case_header)
-		# test output
-		#print joined_header
-		# /test output
-		title = case_header[0].strip() # these might not be exactly right... check them!!
-
-		case_num = case_header[1].strip()
 		
+		title = case_header[0].strip() # these might not be exactly right... check them!!
+		case_num = case_header[1].strip()
 		full_citation = case_header[3].strip()
 		lexis_citation = self.get_lexis_cite(joined_header)
 		us_citation = self.get_us_cite(full_citation)
@@ -423,7 +357,6 @@ class SupremeCourtOpinionParser():
 		
 		dates = []
 		date_regex = re.compile(r"\w+\s\d{1,2}-?\d?\d?,\s\d{4},\s\w+")
-		#dates = date_regex.findall(case_header[4])
 		for line in case_header:
 			dates = dates + date_regex.findall(line)
 
@@ -433,14 +366,6 @@ class SupremeCourtOpinionParser():
 			disposition = disposition_match.group(1).strip()
 		else:
 			disposition = "NONE"
-		# test output
-		#print "title: {0}".format(title)
-		#print "case_num: {0}".format(case_num)
-		#print "lexis cite: {0}".format(lexis_citation)
-		#print "full citation: {0}".format(full_citation)
-		#print "dates: {0}".format(dates)
-		#print "disposition: {0}".format(disposition)
-		# /test output
 		return (title, case_num, full_citation, us_citation, 
 				supr_court_citation, lawyers_ed_citation, lexis_citation,
 			 	dates, disposition)
@@ -492,25 +417,9 @@ def main():
 	parser = SupremeCourtOpinionParser(output_dir)
 	print "Beginning to parse files in {0}".format(source_dir)
 	for opinion_file in os.listdir(source_dir):
-		# test output
-		print opinion_file
-		# /test output
-
 		full_path = os.path.join(source_dir, opinion_file)
-
-		# test output
-		print "Parsing {0}".format(full_path)
-		# /test output
 		parser.parse_file(full_path)
-
-		# test output
-		#print "OPINION STARTS:"
-		#print parser.opin_starts
-		# test output
 		
 
 main()
-
-
-
 
