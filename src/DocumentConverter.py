@@ -149,10 +149,10 @@ class DocumentConverter():
 
     def split_dates(self, date_string):
         dates = []
-        datestring_regex = re.compile(r"\w+ \d{1,2}-?\d{1,2}?, \d{4}, \w+;")
+        datestring_regex = re.compile(r"\w+\s\d{1,2}-?\d?\d?,\s\d{4},\s\w+;")
         raw_dates = datestring_regex.findall(date_string)
         
-        grouped_date_regex = re.compile(r"(\w+ \d{1,2}-?\d{1,2}?, \d{4}), (\w+);")
+        grouped_date_regex = re.compile(r"(\w+\s\d{1,2}-?\d?\d?,\s\d{4}),\s(\w+);")
         for raw_date in raw_dates:
             group_match = grouped_date_regex.search(raw_date)
             date = group_match.group(1)

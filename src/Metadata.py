@@ -50,7 +50,7 @@ class Metadata():
         output_string = ""
         for field_name in self.field_names:
             output_string += field_name + ": "
-            output_string += vars(self)[field_name] 
+            output_string += str(vars(self)[field_name]) 
             output_string += '\n'
         return output_string
         

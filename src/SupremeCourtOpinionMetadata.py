@@ -18,9 +18,10 @@ class SupremeCourtOpinionMetadata(Metadata):
         '''
         This overrides the original dummy constructor in the Metadata class.
         '''
-        self.field_names = (["case_title", "case_num", "case_lexis_cite",
-                             "case_full_cite", "case_dates", "case_disposition",
-                             "opinion_author"])
+        self.field_names = (["case_title", "case_num", "case_us_cite",
+                             "case_supreme_court_cite", "case_lawyers_ed_cite",
+                             "case_lexis_cite", "case_full_cite", "case_dates", 
+                             "case_disposition", "opinion_author"])
         self.case_title = ""
         self.case_num = ""
         self.case_us_cite = ""

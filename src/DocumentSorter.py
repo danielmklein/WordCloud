@@ -19,7 +19,7 @@ class DocumentSorter():
         pass
         
         
-    def sort_docs(self, sort_fields):
+    def sort_docs(self, sort_field):
         pass
     
     
@@ -32,6 +32,9 @@ class DocumentSorter():
     
     
     def add_doc(self, doc_to_add):
+        '''
+        Should I assert that doc_to_add has doc_metadata attribute?
+        '''
         pass
     
     
