@@ -101,7 +101,7 @@ def create_test_docs():
     test_doc2 = Document(test_meta2, OPINION_TEXT, TEST_PICKLE_PATH)
 
     test_meta3 = SupremeCourtOpinionMetadata()
-    test_meta3.case_num = "No. 43"
+    test_meta3.case_num = "No. 67"
     test_meta3.opinion_author = "JOHNSON"
     test_doc3 = Document(test_meta3, OPINION_TEXT, TEST_PICKLE_PATH)
     
@@ -111,7 +111,7 @@ def create_test_docs():
     test_doc4 = Document(test_meta4, OPINION_TEXT, TEST_PICKLE_PATH)
     
     test_meta5 = SupremeCourtOpinionMetadata()
-    test_meta5.case_num = "No. 67"
+    test_meta5.case_num = "No. 43"
     test_doc5 = Document(test_meta5, OPINION_TEXT, TEST_PICKLE_PATH)
     
     test_docs = [test_doc1, test_doc2, test_doc3, test_doc4, test_doc5]
@@ -123,8 +123,7 @@ class DocumentSorterTest(unittest.TestCase):
 
     def setUp(self):
         self.test_docs = create_test_docs()
-        self.test_sorter = DocumentSorter()
-        self.test_sorter.doc_list = self.test_docs
+        self.test_sorter = DocumentSorter(self.test_docs)
 
 
     def tearDown(self):

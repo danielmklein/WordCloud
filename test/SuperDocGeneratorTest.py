@@ -125,10 +125,9 @@ class SuperDocGeneratorTest(unittest.TestCase):
 
     def setUp(self):
         self.test_docs = create_test_docs()
-        self.test_generator = SuperDocGenerator()
-        self.test_generator.doc_list = self.test_docs
-        self.test_generator.output_path = TEST_PICKLE_PATH
-        
+        self.test_generator = SuperDocGenerator(TEST_PICKLE_PATH,
+                                                self.test_docs)
+
 
     def tearDown(self):
         del self.test_docs
@@ -142,18 +141,28 @@ class SuperDocGeneratorTest(unittest.TestCase):
         expected_superdoc = SuperDocument(expected_metadata, expected_text,
                                           TEST_PICKLE_PATH)
         generated_superdoc = self.test_generator.create_superdoc()
-        self.assertEqual(expected_superdoc, generated_superdoc)
+        self.assertEqual(expected_superdoc.component_metadata, 
+                         generated_superdoc.component_metadata)
+        self.assertEqual(expected_superdoc.superdoc_text,
+                         generated_superdoc.superdoc_text)
+        self.assertEqual(TEST_PICKLE_PATH,
+                         generated_superdoc.output_filename)
         #self.fail("SuperDocGeneratorTest: I haven't written a test for testGenerateNormalCase yet!")
     
     
     def testGenerateWithSingleDocument(self):
-        self.test_generator.doc_list = self.test_docs[0]
-        expected_metadata = self.test_docs[0].doc_metadata
+        self.test_generator.doc_list = [self.test_docs[0]]
+        expected_metadata = [self.test_docs[0].doc_metadata]
         expected_text = self.test_docs[0].doc_text
         expected_superdoc = SuperDocument(expected_metadata, expected_text,
                                           TEST_PICKLE_PATH)
         generated_superdoc = self.test_generator.create_superdoc()
-        self.assertEqual(expected_superdoc, generated_superdoc)
+        self.assertEqual(expected_superdoc.component_metadata, 
+                         generated_superdoc.component_metadata)
+        self.assertEqual(expected_superdoc.superdoc_text,
+                         generated_superdoc.superdoc_text)
+        self.assertEqual(TEST_PICKLE_PATH,
+                         generated_superdoc.output_filename)
         #self.fail("SuperDocGeneratorTest: I haven't written a test for testGenerateWithSingleDocument yet!")
         
     
@@ -166,12 +175,8 @@ class SuperDocGeneratorTest(unittest.TestCase):
     def testGenerateWithNonDocumentInput(self):
         self.test_generator.doc_list.append("THIS IS NOT A DOCUMENT")
         self.assertRaises(Exception, self.test_generator.create_superdoc)
-        self.fail("SuperDocGeneratorTest: I haven't written a test for testGenerateWithNonDocumentInput yet!")
-    
-    
-    def testGenerateOutputFileNotWritable(self):
-        self.fail("SuperDocGeneratorTest: I haven't written a test for testGenerateOutputFileNotWritable yet!")
-    
+        #self.fail("SuperDocGeneratorTest: I haven't written a test for testGenerateWithNonDocumentInput yet!")
+        
     
     def testAddDocNormalCase(self):
         test_meta = SupremeCourtOpinionMetadata()
