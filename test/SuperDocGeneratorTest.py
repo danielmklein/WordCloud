@@ -135,6 +135,7 @@ class SuperDocGeneratorTest(unittest.TestCase):
 
 
     def testGenerateNormalCase(self):
+        print "SuperDocGeneratorTest: testing SuperDocGenerator.create_superdoc normal case..."
         # create artificial superdoc from self.test_docs
         expected_metadata = [doc.doc_metadata for doc in self.test_docs]
         expected_text = "".join([doc.doc_text for doc in self.test_docs])
@@ -151,6 +152,8 @@ class SuperDocGeneratorTest(unittest.TestCase):
     
     
     def testGenerateWithSingleDocument(self):
+        print "SuperDocGeneratorTest: testing SuperDocGenerator.create_superdoc "\
+        "with doc_list containing a single Document..."
         self.test_generator.doc_list = [self.test_docs[0]]
         expected_metadata = [self.test_docs[0].doc_metadata]
         expected_text = self.test_docs[0].doc_text
@@ -167,18 +170,23 @@ class SuperDocGeneratorTest(unittest.TestCase):
         
     
     def testGenerateWithEmptyInputList(self):
+        print "SuperDocGeneratorTest: testing SuperDocGenerator.create_superdoc "\
+        "with empty doc_list..."
         self.test_generator.doc_list = []
         self.assertRaises(Exception, self.test_generator.create_superdoc)
         #self.fail("SuperDocGeneratorTest: I haven't written a test for testGenerateWithEmptyInputList yet!")
     
     
     def testGenerateWithNonDocumentInput(self):
+        print "SuperDocGeneratorTest: testing SuperDocGenerator.create_superdoc "\
+        "with doc_list containing a non-Document object..."
         self.test_generator.doc_list.append("THIS IS NOT A DOCUMENT")
         self.assertRaises(Exception, self.test_generator.create_superdoc)
         #self.fail("SuperDocGeneratorTest: I haven't written a test for testGenerateWithNonDocumentInput yet!")
         
     
     def testAddDocNormalCase(self):
+        print "SuperDocGeneratorTest: testing SuperDocGenerator.add_doc normal case..."
         test_meta = SupremeCourtOpinionMetadata()
         test_meta.case_num = "No. 99"
         test_doc = Document(test_meta, OPINION_TEXT, TEST_PICKLE_PATH)
@@ -191,6 +199,8 @@ class SuperDocGeneratorTest(unittest.TestCase):
 
 
     def testAddDocWithNonDocument(self):
+        print "SuperDocGeneratorTest: testing SuperDocGenerator.add_doc with "\
+        "non-Document input..."
         self.assertRaises(Exception, self.test_generator.add_doc, "THIS IS NOT A DOC")
         #self.fail("SuperDocGeneratorTest: I haven't written a test for testAddDocWithNonDocument yet!")
 

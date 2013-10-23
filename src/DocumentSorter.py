@@ -21,15 +21,13 @@ class DocumentSorter():
         
     def sort_docs(self, sort_field):
         '''
-        this method is messy... I think it could be done a lot more elegantly.
-        also I need to update the way I check the subsets -- need to check the
-        value of the sort_field in each object in each subset, not for 
-        object equality.
+        Given a sort_field on which to sort, this will return a list
+        of lists of Document objects, grouped by sort_field value.
         '''
         for doc in self.doc_list:
             if not hasattr(doc, "doc_metadata"):
                 print "A doc in doc_list doesn't have metadata, "\
-                "so we can't sort on a metadata field!".format(sort_field)
+                "so we can't sort on a metadata field!"
                 raise Exception
             if not hasattr(doc.doc_metadata, sort_field):
                 print "A doc in doc_list doesn't have the metadata field: "\
@@ -49,25 +47,40 @@ class DocumentSorter():
                 subsets.append(sorted_doc_list[subset_start : i])
                 subset_start = i
             if i == len(sorted_doc_list) - 1:
-                subsets.append([sorted_doc_list[i]])
-        # test output
-        print "here are the subsets: {0}".format(subsets)
-        # /test output
+                subsets.append(sorted_doc_list[subset_start:])
         return subsets
     
+    
     def create_subset(self, sort_field, allowed_values):
-        pass
-    
-    
-    def print_subsets(self):
-        pass
+        """
+        Given a sort field and a list of values to accept for that field,
+        this will return a list of Document objects, each of whose value
+        for the sort field is in the list of allowed_values.
+        """
+        subset = []
+        for doc in self.doc_list:
+            if not hasattr(doc, "doc_metadata"):
+                print "A doc in doc_list doesn't have metadata, "\
+                "so we can't sort on a metadata field!"
+                raise Exception
+            if not hasattr(doc.doc_metadata, sort_field):
+                print "A doc in doc_list doesn't have the metadata field: "\
+                "'{0}', so we can't sort on that field!".format(sort_field)
+                raise Exception
+            if getattr(doc.doc_metadata, sort_field) in allowed_values:
+                subset.append(doc)
+        return subset
     
     
     def add_doc(self, doc_to_add):
         '''
-        Should I assert that doc_to_add has doc_metadata attribute?
+        Add a Document object to self.doc_list.
         '''
-        pass
+        if not hasattr(doc_to_add, "doc_metadata"):
+            print "It appears that the object to add isn't a "\
+            "Document object!"
+            raise Exception
+        self.doc_list.append(doc_to_add)
     
     
     

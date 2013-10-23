@@ -108,6 +108,7 @@ class DocumentConverterTest(unittest.TestCase):
         
 
     def testNormalCase(self):
+        print "DocumentConverterTest: testing DocumentConverter.convert_file() normal case..."
         # create a normal test file
         create_test_file(VALID_OPINION_FILE_LINES)
         converted_doc = self.test_converter.convert_file()
@@ -150,13 +151,10 @@ class DocumentConverterTest(unittest.TestCase):
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_disposition'))
         self.assertEqual(converted_doc.doc_metadata.case_disposition, CASE_DISPOSITION)
 
-    '''
-    def testImproperFileFormat(self):
-        # this test case might not be necessary... we'll see.
-        self.fail("DocumentConverterTest: I haven't written testImproperFileFormat yet.")
-    '''
     
     def testNoMetadataInFile(self):
+        print "DocumentConverterTest: testing DocumentConverter.convert_file() "\
+        "with no Metadata in the input file..."
         # create a test file without any metadata fields in it
         create_test_file(VALID_OPINION_FILE_LINES[9:])
         converted_doc = self.test_converter.convert_file()
@@ -201,6 +199,8 @@ class DocumentConverterTest(unittest.TestCase):
     
     
     def testNoBodyTextInFile(self):
+        print "DocumentConverterTest: testing DocumentConverter.convert_file() "\
+        "with no body text in the input file..."
         # create a test file with valid metadata but without any body text in it
         create_test_file(VALID_OPINION_FILE_LINES[:10])
         converted_doc = self.test_converter.convert_file()
@@ -245,6 +245,8 @@ class DocumentConverterTest(unittest.TestCase):
     
     
     def testOutputFileNotWritable(self):
+        print "DocumentConverterTest: testing DocumentConverter.convert_file() "\
+        "and save_converted_doc() with an unwritable output file..."
         create_test_file(VALID_OPINION_FILE_LINES)
         converted_doc = self.test_converter.convert_file()
         # assert stuff about the created converted_doc
@@ -293,12 +295,16 @@ class DocumentConverterTest(unittest.TestCase):
         
     
     def testInputFileNonexistent(self):
+        print "DocumentConverterTest: testing DocumentConverter.convert_file() "\
+        "with nonexistent input file..."
         # skip the create_test_file call and just try to convert.
         self.assertRaises(IOError, self.test_converter.convert_file)
         #self.fail("DocumentConverterTest: I haven't written testInputFileNonexistent yet.")
 
     
     def testEmptyInputFile(self):
+        print "DocumentConverterTest: testing DocumentConverter.convert_file() "\
+        "with completely empty input file..."
         # create a test file with nothing in it
         create_test_file([])
 

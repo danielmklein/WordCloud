@@ -134,15 +134,27 @@ class DocumentSorterTest(unittest.TestCase):
     def testSortDocsNormalCase(self):
         # If I sort on case num, I should get one subset of 3 for "No. 43",
         # a subset of 1 for "No. 46", and a subset of 1 for "No. 67"
+        print "DocumentSorterTest: testing DocumentSorter.sort_docs normal case."
         sorted_subsets = self.test_sorter.sort_docs("case_num")
-        expected_subsets = [self.test_docs[0:3], [self.test_docs[3]], [self.test_docs[4]]]
-        self.assertEqual(expected_subsets, sorted_subsets)
+        expected_subsets = ([[self.test_docs[0],self.test_docs[1],self.test_docs[4]], 
+                             [self.test_docs[3]], [self.test_docs[2]]])
+        self.assertEqual(len(expected_subsets), len(sorted_subsets))
+        for i in range(len(expected_subsets)):
+            expected_subset = expected_subsets[i]
+            sorted_subset = sorted_subsets[i]
+            self.assertEqual(len(expected_subset), len(sorted_subset))
+            for j in range(len(expected_subsets[i])):
+                expected_doc = expected_subsets[i][j]
+                sorted_doc = sorted_subsets[i][j]
+                self.assertEqual(expected_doc.doc_metadata.case_num,
+                                 sorted_doc.doc_metadata.case_num)
         #self.fail("DocumentSorterTest: I haven't written a test for testSortDocsNormalCase yet!")
     
     
     def testSortDocsEmptyInputList(self):
         # should this just return an empty list?
-        self.test_docs = []
+        print "DocumentSorterTest: testing DocumentSorter.sort_docs with empty input list of docs."
+        self.test_sorter.doc_list = []
         sorted_subsets = self.test_sorter.sort_docs("case_num")
         expected_subsets = []
         self.assertEqual(expected_subsets, sorted_subsets)
@@ -150,6 +162,8 @@ class DocumentSorterTest(unittest.TestCase):
     
     
     def testSortDocsNonDocObject(self):
+        print "DocumentSorterTest: testing DocumentSorter.sort_docs with input "\
+        "list of docs containing non-Document object..."
         # throw exception
         self.test_docs.append("THIS IS A STRING")
         self.assertRaises(Exception, self.test_sorter.sort_docs, "case_num")
@@ -157,12 +171,14 @@ class DocumentSorterTest(unittest.TestCase):
     
     
     def testSortDocsInvalidSortField(self):
+        print "DocumentSorterTest: testing DocumentSorter.sort_docs with invalid sort field..."
         # throw exception
         self.assertRaises(Exception, self.test_sorter.sort_docs, "this_isnt_a_field")
         #self.fail("DocumentSorterTest: I haven't written a test for testSortDocsInvalidSortField yet!")
     
     
     def testCreateSubsetNormalCase(self):
+        print "DocumentSorterTest: testing DocumentSorter.create_subset normal case..."
         # If I create a subset where author is in ["JOHNSON", "MURPHY"], I 
         # should get a subset of 2 -- 2 MUPRHY, 1 JOHNSON
         test_allowed_values = ["MURPHY", "JOHNSON"]
@@ -173,6 +189,8 @@ class DocumentSorterTest(unittest.TestCase):
 
 
     def testCreateSubsetNoAllowedValues(self):
+        print "DocumentSorterTest: testing DocumentSorter.create_subset with no "\
+        "list of allowed values..."
         # return empty subset list?
         test_allowed_values = []
         expected_subset = []
@@ -182,6 +200,8 @@ class DocumentSorterTest(unittest.TestCase):
 
 
     def testCreateSubsetNoAllowedValueMatches(self):
+        print "DocumentSorterTest: testing DocumentSorter.create_subset with no "\
+        "matches on the allowed values..."
         # return empty subset list?
         test_allowed_values = ["JACKSON", "THOMPSON"]
         expected_subset = []
@@ -191,6 +211,7 @@ class DocumentSorterTest(unittest.TestCase):
 
 
     def testAddDocNormalCase(self):
+        print "DocumentSorterTest: testing DocumentSorter.add_doc normal case..."
         test_meta = SupremeCourtOpinionMetadata()
         test_meta.case_num = "No. 99"
         test_doc = Document(test_meta, OPINION_TEXT, TEST_PICKLE_PATH)
@@ -203,6 +224,7 @@ class DocumentSorterTest(unittest.TestCase):
         
         
     def testAddDocWithNonDocument(self):
+        print "DocumentSorterTest: testing DocumentSorter.add_doc with non-Document..."
         # throw exception, or let it happen??
         # what if I simply assert that it has to have at least doc_metadata?
         self.assertRaises(Exception, self.test_sorter.add_doc, "THIS IS NOT A DOC")
