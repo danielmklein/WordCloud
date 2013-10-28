@@ -27,6 +27,7 @@ FULL CITATION: 323 U.S. 273; 65 S. Ct. 249; 89 L. Ed. 236; 1944 U.S. LEXIS 1230\
 """,
 """DATES: November 8, 1944, Argued;December 18, 1944, Decided;""",
 """DISPOSITION: 53 F.Supp. 596, affirmed.""",
+"""OPINION TYPE: concur""",
 """* * * * * * * *""",
 """MR. JUSTICE MURPHY, concurring.""",
 """I join in the opinion of the Court and believe that the judgment should be \
@@ -74,7 +75,8 @@ CASE_DATES = [("November 8, 1944", "Argued"),("December 18, 1944", "Decided")] #
 CASE_DISPOSITION = "53 F.Supp. 596, affirmed."
 
 OPINION_AUTHOR = "MURPHY"
-OPINION_TEXT = "\n".join(VALID_OPINION_FILE_LINES[10:])
+OPINION_TYPE = "concur"
+OPINION_TEXT = "\n".join(VALID_OPINION_FILE_LINES[11:])
 
 TEST_FILE_PATH = os.path.join(os.path.abspath(os.curdir), "MURPHY_1944 U.S. LEXIS 1230.txt")
 TEST_PICKLE_PATH = os.path.join(os.path.abspath(os.curdir), "pickled_test_doc")
@@ -126,6 +128,9 @@ class DocumentConverterTest(unittest.TestCase):
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'opinion_author'))
         self.assertEqual(converted_doc.doc_metadata.opinion_author, OPINION_AUTHOR)
+                
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'opinion_type'))
+        self.assertEqual(converted_doc.doc_metadata.opinion_type, OPINION_TYPE)
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_num'))
         self.assertEqual(converted_doc.doc_metadata.case_num, CASE_NUM)
@@ -156,7 +161,7 @@ class DocumentConverterTest(unittest.TestCase):
         print "DocumentConverterTest: testing DocumentConverter.convert_file() "\
         "with no Metadata in the input file..."
         # create a test file without any metadata fields in it
-        create_test_file(VALID_OPINION_FILE_LINES[9:])
+        create_test_file(VALID_OPINION_FILE_LINES[10:])
         converted_doc = self.test_converter.convert_file()
         # here assert a bunch of things about the resulting converted_doc
         self.assertTrue(hasattr(converted_doc, 'output_filename'))
@@ -171,6 +176,9 @@ class DocumentConverterTest(unittest.TestCase):
     
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'opinion_author'))
         self.assertEqual(converted_doc.doc_metadata.opinion_author, OPINION_AUTHOR)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'opinion_type'))
+        self.assertEqual(converted_doc.doc_metadata.opinion_type, "")
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_num'))
         self.assertEqual(converted_doc.doc_metadata.case_num, "")
@@ -202,7 +210,7 @@ class DocumentConverterTest(unittest.TestCase):
         print "DocumentConverterTest: testing DocumentConverter.convert_file() "\
         "with no body text in the input file..."
         # create a test file with valid metadata but without any body text in it
-        create_test_file(VALID_OPINION_FILE_LINES[:10])
+        create_test_file(VALID_OPINION_FILE_LINES[:11])
         converted_doc = self.test_converter.convert_file()
         # here assert a bunch of things about the resulting converted_doc
         self.assertTrue(hasattr(converted_doc, 'output_filename'))
@@ -217,6 +225,9 @@ class DocumentConverterTest(unittest.TestCase):
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'opinion_author'))
         self.assertEqual(converted_doc.doc_metadata.opinion_author, OPINION_AUTHOR)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'opinion_type'))
+        self.assertEqual(converted_doc.doc_metadata.opinion_type, OPINION_TYPE)
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_num'))
         self.assertEqual(converted_doc.doc_metadata.case_num, CASE_NUM)
@@ -262,6 +273,9 @@ class DocumentConverterTest(unittest.TestCase):
 
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'opinion_author'))
         self.assertEqual(converted_doc.doc_metadata.opinion_author, OPINION_AUTHOR)
+        
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'opinion_type'))
+        self.assertEqual(converted_doc.doc_metadata.opinion_type, OPINION_TYPE)
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_num'))
         self.assertEqual(converted_doc.doc_metadata.case_num, CASE_NUM)
@@ -322,6 +336,9 @@ class DocumentConverterTest(unittest.TestCase):
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'opinion_author'))
         self.assertEqual(converted_doc.doc_metadata.opinion_author, OPINION_AUTHOR)
+
+        self.assertTrue(hasattr(converted_doc.doc_metadata, 'opinion_type'))
+        self.assertEqual(converted_doc.doc_metadata.opinion_type, "")
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_num'))
         self.assertEqual(converted_doc.doc_metadata.case_num, "")

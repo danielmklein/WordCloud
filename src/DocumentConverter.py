@@ -38,6 +38,7 @@ class DocumentConverter():
         dates = []
         disposition = ""
         author = ""
+        opinion_type = ""
         body_text = ""
         
         break_regex = re.compile(r"\* \* \* \* \* \* \* \*")
@@ -58,6 +59,7 @@ class DocumentConverter():
         full_cite_regex = re.compile(r"FULL CITATION: (.*)")
         dateline_regex = re.compile(r"DATES: (.*)")
         disposition_regex = re.compile(r"DISPOSITION: (.*)")
+        opinion_type_regex = re.compile(r"OPINION TYPE: (.*)")
         
         with open(self.input_path, 'r') as opinion:
             for line in opinion:
@@ -101,6 +103,10 @@ class DocumentConverter():
                 disposition_match = self.get_titled_item(line, disposition_regex)
                 if disposition_match:
                     disposition = disposition_match
+                    
+                opin_type_match = self.get_titled_item(line, opinion_type_regex)
+                if opin_type_match:
+                    opinion_type = opin_type_match
                 
                 if break_regex.match(line):
                     found_break = True
@@ -119,6 +125,7 @@ class DocumentConverter():
         new_metadata.case_dates = dates
         new_metadata.case_disposition = disposition
         new_metadata.opinion_author = author
+        new_metadata.opinion_type = opinion_type
         
         self.converted_doc = Document(new_metadata, body_text, self.output_path)
         return self.converted_doc
@@ -138,6 +145,7 @@ class DocumentConverter():
         if author_match:
             author = author_match.group(1)
         return author
+    
     
     def get_titled_item(self, line, item_regex):
         item = ""

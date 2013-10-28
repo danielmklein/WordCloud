@@ -332,7 +332,8 @@ class SupremeCourtOpinionParser():
 			for date in dates:
 				date_string += date + ";"
 			output_file.write(date_string + "\n")
-			output_file.write("DISPOSITION: {0}".format(disposition))
+			output_file.write("DISPOSITION: {0}\n".format(disposition))
+			output_file.write("OPINION TYPE: {0}".format(opinion_with_type[0]))
 			output_file.write("\n* * * * * * * *\n")
 			output_file.write(opinion_with_type[1])
 			

@@ -21,7 +21,7 @@ class SupremeCourtOpinionMetadata(Metadata):
         self.field_names = (["case_title", "case_num", "case_us_cite",
                              "case_supreme_court_cite", "case_lawyers_ed_cite",
                              "case_lexis_cite", "case_full_cite", "case_dates", 
-                             "case_disposition", "opinion_author"])
+                             "case_disposition", "opinion_author", "opinion_type"])
         self.case_title = ""
         self.case_num = ""
         self.case_us_cite = ""
@@ -32,6 +32,7 @@ class SupremeCourtOpinionMetadata(Metadata):
         self.case_dates = []
         self.case_disposition= ""
         self.opinion_author = ""
+        self.opinion_type = ""
         
         
     
