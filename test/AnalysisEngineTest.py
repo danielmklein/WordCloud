@@ -8,8 +8,8 @@ The University of Alabama
 '''
 
 import unittest
-import AnalysisEngine
-
+from AnalysisEngine import AnalysisEngine
+from Document import Document
 
 class AnalysisEngineTest(unittest.TestCase):
 
