@@ -53,7 +53,7 @@ class SupremeCourtOpinionParser():
 		del self.file_text[completion_message_line :]
 
 		self.cases = self.split_into_cases(delimiter)
-		for case in self.cases[:6]:
+		for case in self.cases[5:10]:
 			self.parse_case(case)
 		
 	
@@ -118,16 +118,20 @@ class SupremeCourtOpinionParser():
 		# test output
 		#print alt_opinions[:5]
 		# /test output
-		concur_start_regex = re.compile(r"(JUSTICE|Justice)\s[\w'-]+,.*\sconcurring")
-		dissent_start_regex = re.compile(r"(JUSTICE|Justice)\s[\w'-]+,.*\sdissenting")
+		concur_start_regex = re.compile(r"(JUSTICE|Justice)\s[\w'-]+,[^\.]*\sconcurring")
+		dissent_start_regex = re.compile(r"(JUSTICE|Justice)\s[\w'-]+,[^\.]*\sdissenting")
 		alt_opinion_regex = re.compile(r"CONCUR BY|DISSENT")
+		justice_regex = re.compile(r"(JUSTICE|Justice|MR. JUSTICE|Mr. Justice)\s[\w'-]*\.")
 		alt_start_indices = []
 
 		for index in range(0, len(alt_opinions)):
 			current_paragraph = alt_opinions[index]
 			if (re.search(concur_start_regex, current_paragraph) 
-				or re.search(dissent_start_regex, current_paragraph)):
-				alt_start_indices.append(index)
+				or re.search(dissent_start_regex, current_paragraph)
+				or re.search(alt_opinion_regex, current_paragraph)
+				or re.match(justice_regex, current_paragraph)):
+				if (len(alt_start_indices) == 0) or (index > alt_start_indices[-1] + 2):
+					alt_start_indices.append(index)
 		
 		start_end_pairs = []
 		if len(alt_start_indices) == 1:
@@ -137,6 +141,7 @@ class SupremeCourtOpinionParser():
 				if i == len(alt_start_indices) - 1:
 					start_end_pairs.append(
 						(alt_start_indices[i], len(alt_opinions) - 1))
+					break
 				else:
 					start_end_pairs.append(
 						(alt_start_indices[i], alt_start_indices[i+1] - 1))
@@ -224,28 +229,43 @@ class SupremeCourtOpinionParser():
 		This returns a list of tuples of the form (<opinion-type>,<opinion-text>)
 		'''
 		categorized_opinions = []
-		concur_start_regex = re.compile(r"(JUSTICE|Justice)\s[\w'-]+,.*\sconcurring")
-		dissent_start_regex = re.compile(r"(JUSTICE|Justice)\s[\w'-]+,.*\sdissenting")
-
+		#concur_regex = re.compile(r"((JUSTICE|Justice)\s[\w'-]+,.*\sconcurring)|concur")
+		#dissent_regex = re.compile(r"((JUSTICE|Justice)\s[\w'-]+,.*\sdissenting)|dissent")
+		concur_regex = re.compile(r"concur|CONCUR")
+		dissent_regex = re.compile(r"dissent|DISSENT")
 
 		for index in range(0, len(split_alt_opinions)):
 			is_concur = False
 			is_dissent = False
 
-			opinion_lines = split_alt_opinions[index].split("\n")
+			#opinion_lines = split_alt_opinions[index][:50].split("\n")
+			opinion_sample = " ".join(split_alt_opinions[index].split("\n")[:3])
 			# test output
-			#print " * * * * * * ** "
+			print " * * * * * * ** "
 			#print opinion_lines[:10]
-			#print " * * * * * * ** "
+			print opinion_sample
+			print " * * * * * * ** "
 			# /test output
 			
-			# [:10] here is arbitrary -- a sample of the lines
-			for line in opinion_lines[:10]: 
-
-				if re.search(concur_start_regex, line):
+			# [:4] here is arbitrary -- a sample of the lines
+			'''
+			for line in opinion_lines[:4]: 
+				if re.search(concur_regex, line):
 					is_concur = True
-				if re.search(dissent_start_regex, line):
+				if re.search(concur_regex, line):
 					is_dissent = True
+			if is_concur and is_dissent:
+				opinion_type = "concur-dissent"
+			elif is_concur:
+				opinion_type = "concur"
+			else:
+				opinion_type = "dissent"
+			'''
+			if re.search(concur_regex, opinion_sample):
+				is_concur = True
+			if re.search(dissent_regex, opinion_sample):
+				is_dissent = True
+				
 			if is_concur and is_dissent:
 				opinion_type = "concur-dissent"
 			elif is_concur:
@@ -263,19 +283,18 @@ class SupremeCourtOpinionParser():
 		Given a non-majority opinion, this method returns its author.
 		'''
 		author_found = False
-		for paragraph in opinion[1].split("\n")[:5]:
+		for paragraph in opinion[1].split("\n")[:10]:
 			paragraph_words = paragraph.split()
 			author_sample = [re.sub(r'\xa0', '', word) for word in paragraph_words]
 			author_sample = [word for word in author_sample if word is not '']
-			
-			# test output
-			print "***********************"
-			print author_sample
-			print "***********************"
-			# /test output
 
 			if (len(paragraph_words) > 2) \
 			and (re.search(re.compile(r"(JUSTICE|Justice)"), " ".join(author_sample))):
+				# test output
+				print "***********************"
+				print author_sample
+				print "***********************"
+				# /test output
 				if re.match("THE CHIEF JUSTICE", " ".join(author_sample).strip()) \
 				or re.match("MR. CHIEF JUSTICE", " ".join(author_sample).strip()) \
 				or re.match("CHIEF JUSTICE", " ".join(author_sample).strip()):
@@ -284,8 +303,9 @@ class SupremeCourtOpinionParser():
 					break
 				else:
 					for i in range(0, len(author_sample)):
-						if re.match(re.compile(r"(JUSTICE|Justice)"), author_sample[i]):
-							opinion_author = author_sample[i + 1].strip(",")
+						if re.match(re.compile(r"(JUSTICE|Justice)"), author_sample[i]) \
+						or re.match(re.compile(r"(MR. JUSTICE|Mr. Justice)"), author_sample[i]):
+							opinion_author = author_sample[i + 1].strip(",.")
 							author_found = True
 							break
 			if author_found:
