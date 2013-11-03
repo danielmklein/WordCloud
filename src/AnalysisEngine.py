@@ -1,3 +1,5 @@
+from DocumentStorage import DocumentStorage
+
 class AnalysisEngine():
     '''
     Daniel Klein
@@ -25,14 +27,46 @@ class AnalysisEngine():
         for every doc in set, create new DocumentStorage object from doc
         build list of all terms in entire set (build_full_term_list)
         '''
-        pass
+        self.set_subsets(set_of_docs)
+
+
+    def set_subsets(self, set_of_docs):
+        self.subsets = set_of_docs
+        self.subsets = self.convert_docs(self.subsets)
+        self.term_list = self.build_full_term_list(self.subsets)
+        
+        
+    def convert_docs(self, subsets):
+        converted_subsets = []
+        for subset in subsets:
+            new_subset = []
+            for doc in subset:
+                try:
+                    doc = DocumentStorage(doc.doc_metadata, doc.doc_text, 
+                                      doc.output_filename)
+                    new_subset.append(doc)
+                except:
+                    raise Exception, "AnalysisEngine: The input seems to be of the wrong type..."
+            converted_subsets.append(new_subset)
+        return converted_subsets
+            
     
-    
-    def build_full_term_list(self):
+    def build_full_term_list(self, subsets):
         '''
         constructs a list of all terms used in the entire set.
         '''
-        pass
+        term_list = []
+        for subset in subsets:
+            for doc in subset:
+                new_terms = ([term for term in doc.term_list.keys() 
+                             if term not in term_list])
+                term_list += new_terms
+        # test output
+        print "TERM LIST"
+        print term_list
+        print "END TERM LIST"
+        # /test output
+        return term_list
     
     
     def build_doc_term_list(self, doc):

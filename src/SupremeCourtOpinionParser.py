@@ -239,7 +239,7 @@ class SupremeCourtOpinionParser():
 			is_dissent = False
 
 			#opinion_lines = split_alt_opinions[index][:50].split("\n")
-			opinion_sample = " ".join(split_alt_opinions[index].split("\n")[:3])
+			opinion_sample = " ".join(split_alt_opinions[index].split("\n")[:2])
 			# test output
 			print " * * * * * * ** "
 			#print opinion_lines[:10]
