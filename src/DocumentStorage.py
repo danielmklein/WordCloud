@@ -37,12 +37,14 @@ class DocumentStorage(Document):
     def build_term_list(self):
         '''
         build term list of form 
-        {term1: (term_freq, tf_idf), term2:(term_freq, tf_idf), ... , termn:(term_freq, tf_idf)}
+        {term1: {tf:0, tf_idf:0}, term2:{tf:0, tf_idf:0}, ... , termn:{tf:0, tf_idf:0}}
         '''
         self.term_list = {}
         for term in self.split_text:
             if not term in self.term_list:
-                self.term_list[term] = [0,0]
+                self.term_list[term] = {"tf":None, "tf_idf":None}
+        for term in self.term_list:
+            self.term_list[term]['tf'] = self.calculate_term_frequency(term)
         # test output
         print self.term_list
         # /test output
@@ -81,5 +83,32 @@ class DocumentStorage(Document):
         print stemmed_list
         # /test output
         return stemmed_list
+    
+    
+    def calculate_term_frequency(self, term):
+        '''
+        given a term and a doc, calculates term's relative frequency
+        in that doc, ie
+        (# times term appears in doc) / (# total terms in doc)
+        '''
+        term_freq = self.split_text.count(term)
+        return term_freq
+    
+    
+    def calc_tfidf(self, term, doc_freq):
+        '''
+        given a term and its relative doc frequency, calculates the tf-idf 
+        for the term in the document.
+        '''
+        if term in self.term_list:
+            term_freq = self.term_list[term]['tf']
+        else:
+            term_freq = 0
+        tf_idf = term_freq / float(doc_freq)
+        
+        if term in self.term_list:
+            self.term_list[term]['tf_idf'] = tf_idf
+            
+        return tf_idf
 
         

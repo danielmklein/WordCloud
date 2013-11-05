@@ -162,16 +162,25 @@ class AnalysisEngineTest(unittest.TestCase):
     def testAnalyzeWithSingleSubset(self):
         self.test_engine.set_subsets([self.subsets[2]])
         print self.test_engine.subsets
-    
+        ##
+        self.test_engine.analyze_docs()
+        ##
+        
     
     def testAnalyzeWithMultipleSubsets(self):
         self.test_engine.set_subsets(self.subsets)
         print self.test_engine.subsets
+        ##
+        self.test_engine.analyze_docs()
+        ##
     
     
     def testAnalyzeWithZeroSubsets(self):
         self.test_engine.set_subsets([])
         print self.test_engine.subsets
+        ##
+        self.test_engine.analyze_docs()
+        ##
     
     
     def testAnalysisWithInvalidInput(self):
