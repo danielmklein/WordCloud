@@ -7,17 +7,15 @@ The University of Alabama
 9.27.2013
 '''
 
-'''
-i need to create some test docs with some arbitrary text
-and analyze them by hand.
-text1 is a subset, text2 is a subset, and text3-5 is a subset.
-'''
-
 import unittest
 import os, os.path
 from AnalysisEngine import AnalysisEngine
 from Document import Document
 from SupremeCourtOpinionMetadata import SupremeCourtOpinionMetadata
+
+'''
+Yep. Holes. 
+'''
 
 TEXT1 = \
 """\

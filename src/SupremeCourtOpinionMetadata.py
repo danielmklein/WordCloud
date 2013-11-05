@@ -10,7 +10,7 @@ class SupremeCourtOpinionMetadata(Metadata):
     10.16.2013
     
     This specializes the generic Metadata class to apply to Supreme Court 
-    opinions. 
+    opinions. Only the the constructure is overridden.
     '''
 
 

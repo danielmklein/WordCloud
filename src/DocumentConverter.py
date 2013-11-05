@@ -1,5 +1,6 @@
 import pickle
 import re
+import os, os.path
 from Document import Document
 from SupremeCourtOpinionMetadata import SupremeCourtOpinionMetadata
 
@@ -25,9 +26,8 @@ class DocumentConverter():
     
     def convert_file(self):
         '''
-        Returns a Document object.
+        Returns a Document object created from file.
         '''
-
         title = ""
         case_num = ""
         us_cite = ""
@@ -44,10 +44,8 @@ class DocumentConverter():
         break_regex = re.compile(r"\* \* \* \* \* \* \* \*")
         found_break = False
         opinion_lines = []
-        try:
-            with(open(self.input_path, 'r')) as file_check:
-                pass
-        except:
+        # check to make sure the input file exists
+        if not os.path.exists(self.input_path):
             raise IOError
         
         title_regex = re.compile(r"TITLE: (.*)")
@@ -61,8 +59,10 @@ class DocumentConverter():
         disposition_regex = re.compile(r"DISPOSITION: (.*)")
         opinion_type_regex = re.compile(r"OPINION TYPE: (.*)")
         
+        # parse out all of the necessary fields
         with open(self.input_path, 'r') as opinion:
             for line in opinion:
+                # this means we are in the body of the text
                 if found_break:
                     opinion_lines.append(line.strip('\n'))
                 
@@ -100,11 +100,13 @@ class DocumentConverter():
                 if date_match:
                     dates = self.split_dates(date_match)
                     
-                disposition_match = self.get_titled_item(line, disposition_regex)
+                disposition_match = self.get_titled_item(line, 
+                                                         disposition_regex)
                 if disposition_match:
                     disposition = disposition_match
                     
-                opin_type_match = self.get_titled_item(line, opinion_type_regex)
+                opin_type_match = self.get_titled_item(line, 
+                                                       opinion_type_regex)
                 if opin_type_match:
                     opinion_type = opin_type_match
                 
@@ -127,18 +129,22 @@ class DocumentConverter():
         new_metadata.opinion_author = author
         new_metadata.opinion_type = opinion_type
         
-        self.converted_doc = Document(new_metadata, body_text, self.output_path)
+        self.converted_doc = Document(new_metadata, body_text, 
+                                      self.output_path)
         return self.converted_doc
         
         
     def save_converted_doc(self):
         '''
+        Save Document object to file using appropriate Document method
         '''
-        # save Document object to file using appropriate Document method
         self.converted_doc.write_to_file()
     
     
     def get_author(self, file_path):
+        '''
+        Parses the author out of text.
+        '''
         author = ""
         author_regex = re.compile(r"([\w'\-]+)_\d{4} U.S. LEXIS")
         author_match = author_regex.search(file_path)
@@ -148,6 +154,10 @@ class DocumentConverter():
     
     
     def get_titled_item(self, line, item_regex):
+        '''
+        This generic helping method parses info out of any line that starts 
+        with <TITLE>:.
+        '''
         item = ""
         item_match = item_regex.search(line)
         if item_match:
@@ -156,11 +166,15 @@ class DocumentConverter():
     
 
     def split_dates(self, date_string):
+        '''
+        Pulls the individual dates out of the dates line.
+        '''
         dates = []
         datestring_regex = re.compile(r"\w+\s\d{1,2}-?\d?\d?,\s\d{4},\s\w+;")
         raw_dates = datestring_regex.findall(date_string)
         
-        grouped_date_regex = re.compile(r"(\w+\s\d{1,2}-?\d?\d?,\s\d{4}),\s(\w+);")
+        grouped_date_regex = re.compile(
+                            r"(\w+\s\d{1,2}-?\d?\d?,\s\d{4}),\s(\w+);")
         for raw_date in raw_dates:
             group_match = grouped_date_regex.search(raw_date)
             date = group_match.group(1)

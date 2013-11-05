@@ -17,8 +17,6 @@ class Metadata():
         '''
         When I subclass this guy, I have to make sure the fields in the
         field_names list match the member variables.
-        
-        I need to think on the simplest/best way to do this whole thing.
         '''
         self.field_names = ["field1", "field2", "field3", "field4"]
         self.field1 = "test1"

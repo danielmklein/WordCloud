@@ -36,6 +36,8 @@ class DocumentSorter():
             
         sorted_doc_list = sorted(self.doc_list, 
                         key = lambda doc:getattr(doc.doc_metadata, sort_field))
+        # this splits the list into subsets -- all items in a subset have the
+        # same value for the given sort_field
         subsets = []
         subset_start = 0
         for i in range(1, len(sorted_doc_list)):
@@ -52,11 +54,11 @@ class DocumentSorter():
     
     
     def create_subset(self, sort_field, allowed_values):
-        """
+        '''
         Given a sort field and a list of values to accept for that field,
         this will return a list of Document objects, each of whose value
         for the sort field is in the list of allowed_values.
-        """
+        '''
         subset = []
         for doc in self.doc_list:
             if not hasattr(doc, "doc_metadata"):

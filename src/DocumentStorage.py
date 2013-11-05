@@ -22,13 +22,22 @@ class DocumentStorage(Document):
                             + self.doc_metadata.case_lexis_cite
         # remove footnotes?
         # remove punctuation from doc_text
+        #self.doc_text = self.remove_footnotes(self.doc_text)
         self.doc_text = re.sub('[%s]' % re.escape(punctuation), ' ', self.doc_text)
-        self.split_text = self.create_split_text()
+        # split_text contains the full text of the document
+        self.split_text = self.create_split_text(self.doc_text)
+        # term_list is a list of unique terms in the document along with
+        # each term's term frequency and tf_idf metric.
         self.term_list = self.build_term_list()
         
         
-    def create_split_text(self):
-        split_text = [word.lower() for word in self.doc_text.split()]
+    def create_split_text(self, text):
+        '''
+        Turns the text of the document into a list of terms, removing
+        stop words and stemming words when necessary.
+        '''
+        
+        split_text = [word.lower() for word in text.split()]
         split_text = self.remove_stop_words(split_text)
         split_text = self.stem_text(split_text)
         return split_text
@@ -36,31 +45,34 @@ class DocumentStorage(Document):
         
     def build_term_list(self):
         '''
-        build term list of form 
-        {term1: {tf:0, tf_idf:0}, term2:{tf:0, tf_idf:0}, ... , termn:{tf:0, tf_idf:0}}
+        Build term list of form 
+        {term1: {'tf':0, 'tf_idf':0}, term2:{'tf':0, 'tf_idf':0}, ... , 
+        termn:{'tf':0, 'tf_idf':0}}
+        
+        Term frequency is calculated when each term is added to the
+        list, but tf_idf is not.
         '''
         self.term_list = {}
         for term in self.split_text:
             if not term in self.term_list:
                 self.term_list[term] = {"tf":None, "tf_idf":None}
-        for term in self.term_list:
-            self.term_list[term]['tf'] = self.calculate_term_frequency(term)
+                self.term_list[term]['tf'] = self.calculate_term_frequency(term)            
         # test output
         print self.term_list
         # /test output
         return self.term_list
     
     
-    def remove_footnotes(self):
+    def remove_footnotes(self, text):
         '''
-        removes footnotes sections from the text of the document.
+        Removes footnotes sections from the text of the document.
         '''
         pass
     
     
     def remove_stop_words(self, word_list):
         '''
-        removes stop words from the text of the document
+        Removes stop words from word_list.
         '''
         filtered_text = ([word for word in word_list if not word in
                          stopwords.words('english')])
@@ -73,7 +85,7 @@ class DocumentStorage(Document):
     
     def stem_text(self, word_list):
         '''
-        stems the appropriate words in the text of the document
+        Stems the appropriate words in the given word_list.
         '''
         stemmed_list = []
         stemmer = PorterStemmer()
@@ -87,17 +99,17 @@ class DocumentStorage(Document):
     
     def calculate_term_frequency(self, term):
         '''
-        given a term and a doc, calculates term's relative frequency
+        Given a term and a doc, calculates term's relative frequency
         in that doc, ie
         (# times term appears in doc) / (# total terms in doc)
         '''
-        term_freq = self.split_text.count(term)
+        term_freq = self.split_text.count(term) / float(len(self.term_list))
         return term_freq
     
     
     def calc_tfidf(self, term, doc_freq):
         '''
-        given a term and its relative doc frequency, calculates the tf-idf 
+        Given a term and its relative doc frequency, calculates the tf-idf 
         for the term in the document.
         '''
         if term in self.term_list:
@@ -105,10 +117,10 @@ class DocumentStorage(Document):
         else:
             term_freq = 0
         tf_idf = term_freq / float(doc_freq)
-        
+        # saves the tf_idf in the term_list... is this really necessary?
         if term in self.term_list:
             self.term_list[term]['tf_idf'] = tf_idf
-            
+        #
         return tf_idf
 
         

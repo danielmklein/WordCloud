@@ -17,7 +17,7 @@ class Document():
     
     def __init__(self, doc_metadata, doc_text, output_filename):
         '''
-        doc_metadata should be a Metadata object or ancestor.
+        doc_metadata should be a Metadata object or descendent.
         doc_text should be a string.
         '''
         self.doc_metadata = doc_metadata
