@@ -116,15 +116,19 @@ class AnalysisEngine():
                 calculate tf-idf for term in subset (median)
             build, save, and return list of terms in subset sorted by tf-idf
         '''
+        subset_lists = []
         for subset in self.subsets:
             weighted_terms = self.process_subset(subset)
             ##
             curdir = os.path.abspath(os.curdir)
             output_path = os.path.join(curdir, 
-                                       subset[0].output_filename 
+                                       weighted_terms[0] 
                                        + "_weighted_list.txt")
             ##
-            self.save_weighted_list(weighted_terms, output_path)
+            subset_lists.append(weighted_terms)
+            self.save_weighted_list(weighted_terms[1], output_path)
+            
+        return subset_lists
             
     
     def process_subset(self, subset):
@@ -139,19 +143,22 @@ class AnalysisEngine():
         for term in self.term_list:
             tfidf = self.calc_tfidf_for_subset(term, subset)
             raw_weighted_terms.append((term, tfidf))
+        raw_weighted_terms.sort(key=lambda pair: pair[1], reverse=True)
         # test output
         print "INITIAL WEIGHTED TERMS: {0}".format(raw_weighted_terms)
         # /test output
         
         # scale the weights so that they are <= 1.0 (max weight == 1.0)
         weighted_terms = []
-        scale_factor = max([item[1] for item in raw_weighted_terms])
+        # since list is reverse sorted, first element has highest weight
+        scale_factor = raw_weighted_terms[0][1] 
+        #scale_factor = max([item[1] for item in raw_weighted_terms])
         for pair in raw_weighted_terms:
             weighted_terms.append((pair[0], pair[1] / scale_factor))
         # test output
         print "SCALED WEIGHTED TERMS: {0}".format(weighted_terms)
         # /test output
-        return weighted_terms
+        return (subset[0].output_filename, weighted_terms[:51])
     
     
     def calc_doc_frequency(self, term):

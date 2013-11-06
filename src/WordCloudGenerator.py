@@ -33,7 +33,7 @@ class WordCloudGenerator():
 
 
     def __init__(self, weighted_terms, output_filename, 
-                 image_height=200, image_width=400):
+                 image_height=400, image_width=800):
         '''
         Constructor
         '''
@@ -181,7 +181,7 @@ class WordCloudGenerator():
         black_white_image.show()
         #color_image.show()
         # save image to file
-        #black_white_image.save(self.output_filename)
+        black_white_image.save(self.output_filename)
         #color_image.save(self.output_filename)
 
 

@@ -146,7 +146,7 @@ class DocumentConverter():
         Parses the author out of text.
         '''
         author = ""
-        author_regex = re.compile(r"([\w'\-]+)_\d{4} U.S. LEXIS")
+        author_regex = re.compile(r"([\w'\- ]+)_\d{4} U.S. LEXIS")
         author_match = author_regex.search(file_path)
         if author_match:
             author = author_match.group(1)
