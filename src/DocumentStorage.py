@@ -2,6 +2,7 @@ import re
 from string import punctuation
 from Document import Document
 from nltk.stem.porter import PorterStemmer
+from nltk.stem.lancaster import LancasterStemmer
 from nltk.corpus import stopwords
 
 class DocumentStorage(Document):
@@ -24,6 +25,8 @@ class DocumentStorage(Document):
         # remove punctuation from doc_text
         #self.doc_text = self.remove_footnotes(self.doc_text)
         self.doc_text = re.sub('[%s]' % re.escape(punctuation), ' ', self.doc_text)
+        self.doc_text = re.sub('[\d]', '', self.doc_text)
+        self.doc_text = re.sub('\s.\s', ' ', self.doc_text)
         # split_text contains the full text of the document
         self.split_text = self.create_split_text(self.doc_text)
         # term_list is a list of unique terms in the document along with
@@ -36,7 +39,6 @@ class DocumentStorage(Document):
         Turns the text of the document into a list of terms, removing
         stop words and stemming words when necessary.
         '''
-        
         split_text = [word.lower() for word in text.split()]
         split_text = self.remove_stop_words(split_text)
         split_text = self.stem_text(split_text)
@@ -58,7 +60,7 @@ class DocumentStorage(Document):
                 self.term_list[term] = {"tf":None, "tf_idf":None}
                 self.term_list[term]['tf'] = self.calculate_term_frequency(term)            
         # test output
-        print self.term_list
+        #print self.term_list
         # /test output
         return self.term_list
     
@@ -77,8 +79,8 @@ class DocumentStorage(Document):
         filtered_text = ([word for word in word_list if not word in
                          stopwords.words('english')])
         # test output
-        print word_list
-        print filtered_text
+        #print word_list
+        #print filtered_text
         # \ test output
         return filtered_text
     
@@ -89,10 +91,11 @@ class DocumentStorage(Document):
         '''
         stemmed_list = []
         stemmer = PorterStemmer()
+        #stemmer = LancasterStemmer()
         for word in word_list:
             stemmed_list.append(stemmer.stem(word))
         # test output
-        print stemmed_list
+        #print stemmed_list
         # /test output
         return stemmed_list
     

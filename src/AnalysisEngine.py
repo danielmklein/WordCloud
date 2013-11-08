@@ -1,7 +1,7 @@
 from DocumentStorage import DocumentStorage
 import os, os.path
 import pickle
-from numpy import mean
+from numpy import mean, median
 
 class AnalysisEngine():
     '''
@@ -36,8 +36,8 @@ class AnalysisEngine():
         build list of all terms in entire set (build_full_term_list)
         '''
         self.subsets = set_of_docs
-        self.subsets = self.convert_docs(self.subsets)
         self.num_docs = self.count_docs()
+        self.subsets = self.convert_docs(self.subsets)
         self.term_list = self.build_full_term_list(self.subsets)
         
         
@@ -57,11 +57,15 @@ class AnalysisEngine():
         which makes them much easier to deal with as we perform our
         calculations.
         '''
+        print "converting docs into DocumentStorage objects..."
+        doc_num = 1
         converted_subsets = []
-        for subset in subsets:
+        for subset in subsets: 
             new_subset = []
             for doc in subset:
                 try:
+                    print "converting doc number {0} of {1} to Storage object...".format(doc_num, self.num_docs)
+                    doc_num += 1
                     doc = DocumentStorage(doc.doc_metadata, doc.doc_text, 
                                       doc.output_filename)
                     new_subset.append(doc)
@@ -76,28 +80,20 @@ class AnalysisEngine():
         constructs a list of all terms used in the entire set along
         with each one's doc frequency
         '''
+        print "building list of all terms in document set..."
         term_list = {}
         for subset in subsets:
             for doc in subset:
-                new_terms = ([term for term in doc.term_list.keys() 
+                new_terms = ([term for term in doc.term_list 
                              if term not in term_list])
                 for term in new_terms:
                     term_list[term] = self.calc_doc_frequency(term)
         # test output
-        print "TERM LIST"
-        print term_list
-        print "END TERM LIST"
+        #print "TERM LIST"
+        #print term_list
+        #print "END TERM LIST"
         # /test output
         return term_list
-    
-    
-    def build_doc_term_list(self, doc):
-        ''' 
-        constructs list of all terms used in a doc.
-    
-        !!!!this is implemented in the DocumentStorage class!!!!
-        '''
-        pass
     
     
     def analyze_docs(self):
@@ -106,18 +102,19 @@ class AnalysisEngine():
         '''
         '''
         for each term:
-            calculate_doc_frequency
+            calculate_doc_frequency (performed in self.build_full_term_list)
             for each doc in set_of_docs:
                 calc_term_frequency(term, doc)
         for each subset in set: (self.process_subset)
             for each term in subset:
                 for each doc:
                     calculate tf-idf for term in doc (if term appears, else 0)
-                calculate tf-idf for term in subset (median)
+                calculate tf-idf for term in subset (median/mean)
             build, save, and return list of terms in subset sorted by tf-idf
         '''
         subset_lists = []
         for subset in self.subsets:
+            print "processing subset {0}...".format(self.subsets.index(subset))
             weighted_terms = self.process_subset(subset)
             ##
             curdir = os.path.abspath(os.curdir)
@@ -145,7 +142,7 @@ class AnalysisEngine():
             raw_weighted_terms.append((term, tfidf))
         raw_weighted_terms.sort(key=lambda pair: pair[1], reverse=True)
         # test output
-        print "INITIAL WEIGHTED TERMS: {0}".format(raw_weighted_terms)
+        #print "INITIAL WEIGHTED TERMS: {0}".format(raw_weighted_terms)
         # /test output
         
         # scale the weights so that they are <= 1.0 (max weight == 1.0)
@@ -156,7 +153,7 @@ class AnalysisEngine():
         for pair in raw_weighted_terms:
             weighted_terms.append((pair[0], pair[1] / scale_factor))
         # test output
-        print "SCALED WEIGHTED TERMS: {0}".format(weighted_terms)
+        #print "SCALED WEIGHTED TERMS: {0}".format(weighted_terms)
         # /test output
         return (subset[0].output_filename, weighted_terms[:51])
     
@@ -188,12 +185,14 @@ class AnalysisEngine():
         for doc in subset:
             new_tfidf = doc.calc_tfidf(term, doc_freq)
             tfidf_list.append(new_tfidf)
-        mean_tfidf = mean(tfidf_list)
+        tfidf = mean(tfidf_list)
+        #tfidf = median(tfidf_list)
+        
         # test output
-        print "TFIDF LIST FOR TERM {0} : {1}".format(term, tfidf_list)
-        print "MEAN TFIDF FOR TERM {0} : {1}".format(term, mean_tfidf)
+        #print "TFIDF LIST FOR TERM {0} : {1}".format(term, tfidf_list)
+        #print "MEAN TFIDF FOR TERM {0} : {1}".format(term, tfidf)
         # /test output
-        return mean_tfidf
+        return tfidf
     
 
     def save_weighted_list(self, weighted_list, output_path):

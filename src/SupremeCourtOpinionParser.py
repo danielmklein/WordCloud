@@ -53,7 +53,7 @@ class SupremeCourtOpinionParser():
 		del self.file_text[completion_message_line :]
 
 		self.cases = self.split_into_cases(delimiter)
-		for case in self.cases[5:10]:
+		for case in self.cases:
 			self.parse_case(case)
 		
 	
@@ -81,7 +81,8 @@ class SupremeCourtOpinionParser():
 			current_paragraph = case_paragraphs[index]
 				
 			if re.match("OPINION$", current_paragraph) and not maj_start_found:
-				case_header = [re.sub(r'[\n]', ' ', line) for line in case_paragraphs[: index - 1]]
+				case_header = ([re.sub(r'[\n]', ' ', line) 
+							for line in case_paragraphs[: index - 1]])
 				# test output
 				print "RAW: {0}".format(case_header)
 				# /test output
@@ -90,9 +91,11 @@ class SupremeCourtOpinionParser():
 				maj_start_index = index
 				maj_end_index = len(case_paragraphs) - 1
 				maj_start_found = True
-
+				
 			if re.match("OPINION BY:", current_paragraph):
-				maj_author = " ".join(current_paragraph.split()[2:])
+				maj_author = " ".join([word 
+								for word in current_paragraph.split()[2:]
+								if "JUSTICE" not in word and "Justice" not in word])
 
 			if re.search(alt_opinion_regex, current_paragraph):
 				maj_end_index = index - 1
@@ -108,7 +111,9 @@ class SupremeCourtOpinionParser():
 			maj_author = "PER CURIAM"
 
 		opinion_with_type = ("majority", "\n".join(maj_opinion))
-		self.write_opinion(opinion_with_type, maj_author, case_header)
+		# THE FOLLOWING LINE IS TEMPORARY!!!!!!
+		if "Scalia" in maj_author or "SCALIA" in maj_author:
+			self.write_opinion(opinion_with_type, maj_author, case_header)
 
 
 	def parse_alt_opinions(self, alt_opinions, case_header):
@@ -160,7 +165,9 @@ class SupremeCourtOpinionParser():
 		
 		for opinion in categorized_opinions:
 			opinion_author = self.get_author(opinion)
-			self.write_opinion(opinion, opinion_author, case_header)
+			# THE FOLLOWING LINE IS TEMPORARY!!!!!!
+			if "Scalia" in opinion_author or "SCALIA" in opinion_author:
+				self.write_opinion(opinion, opinion_author, case_header)
 
 
 	def get_delimiter(self):
@@ -243,6 +250,7 @@ class SupremeCourtOpinionParser():
 			# test output
 			print " * * * * * * ** "
 			#print opinion_lines[:10]
+			print "HERE IS OPINION SAMPLE"
 			print opinion_sample
 			print " * * * * * * ** "
 			# /test output
@@ -282,16 +290,20 @@ class SupremeCourtOpinionParser():
 		'''
 		Given a non-majority opinion, this method returns its author.
 		'''
+		opinion_author = "NONE"
 		author_found = False
 		for paragraph in opinion[1].split("\n")[:10]:
 			paragraph_words = paragraph.split()
 			author_sample = [re.sub(r'\xa0', '', word) for word in paragraph_words]
 			author_sample = [word for word in author_sample if word is not '']
 
-			if (len(paragraph_words) > 2) \
-			and (re.search(re.compile(r"(JUSTICE|Justice)"), " ".join(author_sample))):
+			if (len(paragraph_words) >= 2) \
+			and (re.search(re.compile(r"(JUSTICE|Justice)"), " ".join(author_sample))) \
+			or (re.search(re.compile(r"CONCUR BY"), " ".join(author_sample))) \
+			or (re.search(re.compile(r"DISSENT BY"), " ".join(author_sample))):
 				# test output
 				print "***********************"
+				print "HERE IS AUTHOR_SAMPLE"
 				print author_sample
 				print "***********************"
 				# /test output
@@ -301,11 +313,18 @@ class SupremeCourtOpinionParser():
 					opinion_author = "CHIEF"
 					author_found = True
 					break
+				elif re.match("CONCUR BY", " ".join(author_sample).strip()) \
+				or re.match("DISSENT BY", " ".join(author_sample).strip()):
+					for i in range(len(author_sample)):
+						if re.search(r"BY", author_sample[i]):
+							opinion_author = author_sample[i + 1].strip(",.;")
+							author_found = True
+							break
 				else:
-					for i in range(0, len(author_sample)):
-						if re.match(re.compile(r"(JUSTICE|Justice)"), author_sample[i]) \
-						or re.match(re.compile(r"(MR. JUSTICE|Mr. Justice)"), author_sample[i]):
-							opinion_author = author_sample[i + 1].strip(",.")
+					for i in range(len(author_sample)):
+						if re.search(re.compile(r"(JUSTICE|Justice)"), author_sample[i]) \
+						or re.search(re.compile(r"(MR. JUSTICE|Mr. Justice)"), author_sample[i]):
+							opinion_author = author_sample[i + 1].strip(",.;")
 							author_found = True
 							break
 			if author_found:

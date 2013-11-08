@@ -40,26 +40,34 @@ class WordCloudMain():
             input_path = os.path.join(OPINION_PATH, opinion_file)
             pickle_path = input_path + ".Document"
             converter = DocumentConverter(input_path, pickle_path)
+            print "converting file {0}...".format(opinion_file)
             opinion_list.append(converter.convert_file())
             del converter
         # test output
         print opinion_list
         print "there are {0} opinions in the list...".format(len(opinion_list))
+        '''
         for doc in opinion_list:
             print "DOC AUTHOR: {0}".format(doc.doc_metadata.opinion_author)
             print "US CITE: {0}".format(doc.doc_metadata.case_us_cite)
+        '''
         # /test output
         
         # now we sort them
+        print "sorting the opinions into subsets..."
         sorter = DocumentSorter(opinion_list)
-        sort_field = "opinion_author"
-        subsets = sorter.sort_docs(sort_field)
+        sort_field = "opinion_type"
+        concur_subset = sorter.create_subset(sort_field, ["concur"])
+        dissent_subset = sorter.create_subset(sort_field, ["dissent"])
+        subsets = [concur_subset, dissent_subset]
+        print "the set contains {0} subsets...".format(len(subsets))
         # test output
-        print subsets
-        for subset in subsets:
-            print "SUBSET {0}".format(subsets.index(subset))
-            for doc in subset:
-                print "DOC AUTHOR: {0}".format(doc.doc_metadata.opinion_author)
+        #print subsets
+        
+        #for subset in subsets:
+            #print "SUBSET {0}".format(subsets.index(subset))
+            #for doc in subset:
+                #print "DOC AUTHOR: {0}".format(doc.doc_metadata.opinion_author)
         # /test output
         print "running analysis..."
         analysis_engine = AnalysisEngine(subsets)
@@ -67,13 +75,21 @@ class WordCloudMain():
         ###
         # right now I'm just generating a word cloud for the first
         # subset in the set.
-        test_terms = subset_lists[1][1]
-        test_file = subset_lists[1][0] + "_wordcloud.jpg"
+        concur_terms = subset_lists[0][1]
+        concur_file = subset_lists[0][0] + "_scalia_concurs.jpg"
+        dissent_terms = subset_lists[1][1]
+        dissent_file = subset_lists[1][0] + "_scalia_dissents.jpg"
         # test output
-        print "TERMS: {0}".format(test_terms)
-        print "OUTPUT FILE: {0}".format(test_file)
+        print "CONCUR TERMS: {0}".format(concur_terms)
+        print "CONCUR OUTPUT FILE: {0}".format(concur_file)
+        print "DISSENT TERMS: {0}".format(dissent_terms)
+        print "DISSENT OUTPUT FILE: {0}".format(dissent_file)
         # /test output
-        cloud_generator = WordCloudGenerator(test_terms, test_file)
+        print "generating a word cloud for each subset..."
+        cloud_generator = WordCloudGenerator(concur_terms, concur_file)
+        cloud_generator.generate_word_cloud()
+        
+        cloud_generator = WordCloudGenerator(dissent_terms, dissent_file)
         cloud_generator.generate_word_cloud()
         
         
