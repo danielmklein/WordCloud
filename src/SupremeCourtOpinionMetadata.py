@@ -10,7 +10,7 @@ class SupremeCourtOpinionMetadata(Metadata):
     10.16.2013
     
     This specializes the generic Metadata class to apply to Supreme Court 
-    opinions. Only the the constructure is overridden.
+    opinions. Only the the constructor is overridden.
     '''
 
 
@@ -21,7 +21,8 @@ class SupremeCourtOpinionMetadata(Metadata):
         self.field_names = (["case_title", "case_num", "case_us_cite",
                              "case_supreme_court_cite", "case_lawyers_ed_cite",
                              "case_lexis_cite", "case_full_cite", "case_dates", 
-                             "case_disposition", "opinion_author", "opinion_type"])
+                             "case_disposition", "opinion_author", 
+                             "opinion_type"])
         self.case_title = ""
         self.case_num = ""
         self.case_us_cite = ""

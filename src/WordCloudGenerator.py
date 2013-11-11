@@ -16,7 +16,7 @@ class WordCloudGenerator():
     The University of Alabama
     9.26.2013
     
-    This class and its functionality are really quite simple -- given a 
+    This class and its functionality are relatively simple -- given a 
     weighted list of terms (in a list of (term,weight) tuples) (and probably 
     a parameter specifying the number of terms to illustrate), this will return
     a word cloud that visualizes the most important terms and how important 
@@ -34,9 +34,6 @@ class WordCloudGenerator():
 
     def __init__(self, weighted_terms, output_filename, 
                  image_height=400, image_width=800):
-        '''
-        Constructor
-        '''
         self.weighted_terms = weighted_terms
         self.output_filename = output_filename
         self.image_height = image_height
@@ -51,7 +48,6 @@ class WordCloudGenerator():
         x = integral_image.shape[0]
         y = integral_image.shape[1]
         hits = 0
-        
         # count possible locations
         for i in xrange(x - size_x):
             for j in xrange(y - size_y):
@@ -97,15 +93,12 @@ class WordCloudGenerator():
             term_list = self.weighted_terms[:num_terms_to_visualize] 
         else:
             term_list = self.weighted_terms
-        
         # sort term list by weights
         term_list.sort(key=lambda pair: pair[1], reverse=True)
-        # test output
-        #print term_list
-        # /test output
         
         # create black&white image
-        black_white_image = Image.new("L", (self.image_width, self.image_height))
+        black_white_image = Image.new("L", (self.image_width, 
+                                            self.image_height))
         draw = ImageDraw.Draw(black_white_image)
         integral = numpy.zeros((self.image_height, self.image_width),
                                dtype=numpy.uint32)
@@ -138,7 +131,6 @@ class WordCloudGenerator():
             # if font_size hits 0, we cannot draw anymore
             if font_size == 0:
                 break
-                
             # set x and y coords for placing term and then draw it
             x, y = numpy.array(location_result) + margin // 2
             draw.text((y, x), term, fill="white")

@@ -4,6 +4,7 @@ import os, os.path
 from Document import Document
 from SupremeCourtOpinionMetadata import SupremeCourtOpinionMetadata
 
+
 class DocumentConverter():
     '''
     Daniel Klein

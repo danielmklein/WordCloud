@@ -13,9 +13,6 @@ class DocumentSorter():
 
 
     def __init__(self, doc_list = []):
-        '''
-        Constructor
-        '''
         self.doc_list = doc_list
         
         
@@ -33,7 +30,6 @@ class DocumentSorter():
                 print "A doc in doc_list doesn't have the metadata field: "\
                 "'{0}', so we can't sort on that field!".format(sort_field)
                 raise Exception
-            
         sorted_doc_list = sorted(self.doc_list, 
                         key = lambda doc:getattr(doc.doc_metadata, sort_field))
         # this splits the list into subsets -- all items in a subset have the

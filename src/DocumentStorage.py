@@ -5,6 +5,7 @@ from nltk.stem.porter import PorterStemmer
 from nltk.stem.lancaster import LancasterStemmer
 from nltk.corpus import stopwords
 
+
 class DocumentStorage(Document):
     '''
     Daniel Klein
@@ -21,17 +22,12 @@ class DocumentStorage(Document):
         Document.__init__(self, doc_metadata, doc_text, output_filename)
         self.identifier = self.doc_metadata.opinion_author + "_" \
                             + self.doc_metadata.case_lexis_cite
-        # remove footnotes?
-        # remove punctuation from doc_text
-        #self.doc_text = self.remove_footnotes(self.doc_text)
-        self.doc_text = re.sub('[%s]' % re.escape(punctuation), ' ', self.doc_text)
-        self.doc_text = re.sub('[\d]', '', self.doc_text)
-        self.doc_text = re.sub('\s.\s', ' ', self.doc_text)
+        self.doc_text = self.filter_text(self.doc_text)
         # split_text contains the full text of the document
         self.split_text = self.create_split_text(self.doc_text)
         # term_list is a list of unique terms in the document along with
         # each term's term frequency and tf_idf metric.
-        self.term_list = self.build_term_list()
+        self.term_list = self.build_term_list(self.split_text)
         
         
     def create_split_text(self, text):
@@ -45,7 +41,7 @@ class DocumentStorage(Document):
         return split_text
         
         
-    def build_term_list(self):
+    def build_term_list(self, split_text):
         '''
         Build term list of form 
         {term1: {'tf':0, 'tf_idf':0}, term2:{'tf':0, 'tf_idf':0}, ... , 
@@ -54,15 +50,39 @@ class DocumentStorage(Document):
         Term frequency is calculated when each term is added to the
         list, but tf_idf is not.
         '''
-        self.term_list = {}
-        for term in self.split_text:
-            if not term in self.term_list:
-                self.term_list[term] = {"tf":None, "tf_idf":None}
-                self.term_list[term]['tf'] = self.calculate_term_frequency(term)            
+        term_list = {}
+        for term in split_text:
+            if not term in term_list:
+                term_list[term] = {"tf":None, "tf_idf":None}
+                term_list[term]['tf'] = self.calculate_term_frequency(term)            
         # test output
         #print self.term_list
         # /test output
-        return self.term_list
+        return term_list
+    
+    
+    def filter_text(self, text):
+        # remove footnotes?
+        #text = self.remove_footnotes(text)
+        # remove punctuation from doc_text
+        filtered_text = self.remove_punctuation(text)
+        # remove numbers
+        filtered_text = self.remove_nums(filtered_text)
+        # remove single-letter words
+        filtered_text = self.remove_single_chars(filtered_text)
+        return filtered_text
+        
+          
+    def remove_punctuation(self, text):
+        return re.sub('[%s]' % re.escape(punctuation), ' ', text)
+    
+    
+    def remove_nums(self, text):
+        return re.sub('[\d]', '', text)
+    
+    
+    def remove_single_chars(self, text):
+        return re.sub('\s.\s', ' ', text) 
     
     
     def remove_footnotes(self, text):
@@ -81,7 +101,7 @@ class DocumentStorage(Document):
         # test output
         #print word_list
         #print filtered_text
-        # \ test output
+        # \test output
         return filtered_text
     
     
@@ -106,8 +126,9 @@ class DocumentStorage(Document):
         in that doc, ie
         (# times term appears in doc) / (# total terms in doc)
         '''
-        term_freq = self.split_text.count(term) / float(len(self.term_list))
-        return term_freq
+        rel_term_freq = self.split_text.count(term) \
+                        / float(len(self.term_list))
+        return rel_term_freq
     
     
     def calc_tfidf(self, term, doc_freq):
@@ -120,10 +141,10 @@ class DocumentStorage(Document):
         else:
             term_freq = 0
         tf_idf = term_freq / float(doc_freq)
-        # saves the tf_idf in the term_list... is this really necessary?
+        ### saves the tf_idf in the term_list... is this really necessary?
         if term in self.term_list:
             self.term_list[term]['tf_idf'] = tf_idf
-        #
+        ###
         return tf_idf
 
         

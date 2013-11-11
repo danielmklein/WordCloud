@@ -43,7 +43,6 @@ class SupremeCourtOpinionParser():
 		self.file_text = []
 		with open(source_file_path, 'r') as opinion_file:
 			self.all_opinions = opinion_file.readlines()
-
 		delimiter = self.get_delimiter()
 		# TODO: DO SOMETHING IF DELIMITER IS STILL NONE
 		# test output
@@ -244,7 +243,6 @@ class SupremeCourtOpinionParser():
 		for index in range(0, len(split_alt_opinions)):
 			is_concur = False
 			is_dissent = False
-
 			#opinion_lines = split_alt_opinions[index][:50].split("\n")
 			opinion_sample = " ".join(split_alt_opinions[index].split("\n")[:2])
 			# test output
@@ -254,21 +252,6 @@ class SupremeCourtOpinionParser():
 			print opinion_sample
 			print " * * * * * * ** "
 			# /test output
-			
-			# [:4] here is arbitrary -- a sample of the lines
-			'''
-			for line in opinion_lines[:4]: 
-				if re.search(concur_regex, line):
-					is_concur = True
-				if re.search(concur_regex, line):
-					is_dissent = True
-			if is_concur and is_dissent:
-				opinion_type = "concur-dissent"
-			elif is_concur:
-				opinion_type = "concur"
-			else:
-				opinion_type = "dissent"
-			'''
 			if re.search(concur_regex, opinion_sample):
 				is_concur = True
 			if re.search(dissent_regex, opinion_sample):

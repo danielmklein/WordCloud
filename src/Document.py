@@ -9,10 +9,10 @@ class Document():
     The University of Alabama
     9.12.2013
     
-    This class represents a document object (such as a single Supreme Court opinion).
-    A typical object will consist of the document's text and a metadata object
-    consisting of various fields relevant to the document. We will subclass this
-    class for each type of document we will use.
+    This class represents a document object (such as a single Supreme Court 
+    opinion). A typical object will consist of the document's text and a 
+    metadata object consisting of various fields relevant to the document. 
+    We will subclass the metadata class for each type of document we will use.
     '''
     
     def __init__(self, doc_metadata, doc_text, output_filename):
