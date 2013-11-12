@@ -26,8 +26,10 @@ class DocumentStorage(Document):
         # split_text contains the full text of the document
         self.split_text = self.create_split_text(self.doc_text)
         # term_list is a list of unique terms in the document along with
-        # each term's term frequency and tf_idf metric.
+        # each term's term frequency and tf_idf metric -- only term freq
+        # is calculated for each term at this point.
         self.term_list = self.build_term_list(self.split_text)
+        self.term_list = self.populate_term_freqs(self.term_list)
         
         
     def create_split_text(self, text):
@@ -46,18 +48,23 @@ class DocumentStorage(Document):
         Build term list of form 
         {term1: {'tf':0, 'tf_idf':0}, term2:{'tf':0, 'tf_idf':0}, ... , 
         termn:{'tf':0, 'tf_idf':0}}
-        
-        Term frequency is calculated when each term is added to the
-        list, but tf_idf is not.
         '''
         term_list = {}
         for term in split_text:
             if not term in term_list:
-                term_list[term] = {"tf":None, "tf_idf":None}
-                term_list[term]['tf'] = self.calculate_term_frequency(term)            
+                term_list[term] = {"tf":None, "tf_idf":None}            
         # test output
         #print self.term_list
         # /test output
+        return term_list
+    
+    
+    def populate_term_freqs(self, term_list):
+        '''
+        Calculates relative term frequency for each term in term_list.
+        '''
+        for term in term_list:
+            term_list[term]['tf'] = self.calculate_term_frequency(term)
         return term_list
     
     
@@ -127,7 +134,7 @@ class DocumentStorage(Document):
         (# times term appears in doc) / (# total terms in doc)
         '''
         rel_term_freq = self.split_text.count(term) \
-                        / float(len(self.term_list))
+                        / float(len(self.split_text))
         return rel_term_freq
     
     

@@ -63,16 +63,16 @@ class AnalysisEngine():
         for subset in subsets: 
             new_subset = []
             for doc in subset:
-                try:
-                    print ("converting doc {0} of {1} to Storage object..."
-                           .format(doc_num, self.num_docs))
-                    doc_num += 1
-                    doc = DocumentStorage(doc.doc_metadata, doc.doc_text, 
-                                      doc.output_filename)
-                    new_subset.append(doc)
-                except:
-                    raise Exception, "AnalysisEngine: The input seems to be of"\
-                        " the wrong type..."
+                #try:
+                print ("converting doc {0} of {1} to Storage object..."
+                       .format(doc_num, self.num_docs))
+                doc_num += 1
+                doc = DocumentStorage(doc.doc_metadata, doc.doc_text, 
+                                  doc.output_filename)
+                new_subset.append(doc)
+                #except:
+                #    raise Exception, "AnalysisEngine: The input seems to be of"\
+                #        " the wrong type..."
             converted_subsets.append(new_subset)
         return converted_subsets
             
@@ -101,6 +101,7 @@ class AnalysisEngine():
     def analyze_docs(self):
         '''
         Main method -- kicks off the analysis process.
+        NOTE: The return structure of this method is a list of (output_filename, weighted_list) pairs.
         '''
         '''
         for each term:

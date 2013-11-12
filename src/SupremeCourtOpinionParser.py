@@ -20,6 +20,8 @@ import re
 import glob
 import os, os.path
 
+SOURCE_DIR_PATH = r"C:\Users\Daniel\Dropbox\Class_files\CBH_301\Word_Cloud\supreme_court_opinions\test"
+OUTPUT_DIR_PATH = r"C:\Users\Daniel\Dropbox\Class_files\CBH_301\Word_Cloud\supreme_court_opinions\test_output"
 
 class SupremeCourtOpinionParser():
 
@@ -404,6 +406,7 @@ class SupremeCourtOpinionParser():
 				lexis_cite = cite_paragraph[index - 2:index + 2]
 				lexis_cite = " ".join(lexis_cite).strip(";")
 				return lexis_cite
+		return "NONE"
 	
 	
 	def get_us_cite(self, citation_string):
@@ -434,8 +437,8 @@ class SupremeCourtOpinionParser():
 
 
 def main():
-	source_dir = r"C:\Users\Daniel\Dropbox\Class_files\CBH_301\Word_Cloud\supreme_court_opinions\test"
-	output_dir = r"C:\Users\Daniel\Dropbox\Class_files\CBH_301\Word_Cloud\supreme_court_opinions\test_output"
+	source_dir = SOURCE_DIR_PATH
+	output_dir = OUTPUT_DIR_PATH
 
 	parser = SupremeCourtOpinionParser(output_dir)
 	print "Beginning to parse files in {0}".format(source_dir)
