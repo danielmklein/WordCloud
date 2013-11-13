@@ -21,16 +21,12 @@ import glob
 import os, os.path
 
 SOURCE_DIR_PATH = r"C:\Users\Daniel\Dropbox\Class_files\CBH_301\Word_Cloud\supreme_court_opinions\test"
-OUTPUT_DIR_PATH = r"C:\Users\Daniel\Dropbox\Class_files\CBH_301\Word_Cloud\supreme_court_opinions\test_output"
+OUTPUT_DIR_PATH = r"C:\Users\Daniel\Dropbox\Class_files\CBH_301\Word_Cloud\supreme_court_opinions\test_output\opinions"
 
 class SupremeCourtOpinionParser():
 
 	def __init__(self, output_dir):
 		self.output_dir = output_dir
-		self.majority_dir = os.path.join(output_dir, "majority")
-		self.dissent_dir = os.path.join(output_dir, "dissenting")
-		self.concur_dir = os.path.join(output_dir, "concurring")
-		self.concur_dissent_dir = os.path.join(output_dir, "concur-dissent")
 
 
 	def parse_file(self, source_file_path):
@@ -112,9 +108,7 @@ class SupremeCourtOpinionParser():
 			maj_author = "PER CURIAM"
 
 		opinion_with_type = ("majority", "\n".join(maj_opinion))
-		# THE FOLLOWING LINE IS TEMPORARY!!!!!!
-		if "Scalia" in maj_author or "SCALIA" in maj_author:
-			self.write_opinion(opinion_with_type, maj_author, case_header)
+		self.write_opinion(opinion_with_type, maj_author, case_header)
 
 
 	def parse_alt_opinions(self, alt_opinions, case_header):
@@ -166,9 +160,7 @@ class SupremeCourtOpinionParser():
 		
 		for opinion in categorized_opinions:
 			opinion_author = self.get_author(opinion)
-			# THE FOLLOWING LINE IS TEMPORARY!!!!!!
-			if "Scalia" in opinion_author or "SCALIA" in opinion_author:
-				self.write_opinion(opinion, opinion_author, case_header)
+			self.write_opinion(opinion, opinion_author, case_header)
 
 
 	def get_delimiter(self):
@@ -327,15 +319,7 @@ class SupremeCourtOpinionParser():
 		dates, disposition) = self.get_info(case_header)
 
 		opinion_filename = opinion_author + "_" + lexis_citation + ".txt"
-		if opinion_with_type[0] == "majority":
-			output_dir = self.majority_dir
-		elif opinion_with_type[0] == "concur-dissent":
-			output_dir = self.concur_dissent_dir
-		elif opinion_with_type[0] == "concur":
-			output_dir = self.concur_dir
-		else: 
-			output_dir = self.dissent_dir
-
+		output_dir = self.output_dir
 		output_path = os.path.join(output_dir, opinion_filename)
 		# test output
 		print "filename is: {0}".format(opinion_filename)
