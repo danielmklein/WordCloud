@@ -47,7 +47,7 @@ class SupremeCourtOpinionParser():
 		print "Delimiter is: {0}".format(delimiter)
 		# /test output
 		completion_message_line = self.remove_bracket_nums()
-		del self.file_text[completion_message_line :]
+		del self.file_text[completion_message_line + 1:]
 
 		self.cases = self.split_into_cases(delimiter)
 		for case in self.cases:
@@ -76,12 +76,11 @@ class SupremeCourtOpinionParser():
 		lexis_regex = re.compile("U.S.\n?\s*LEXIS")
 		for index in range(0, len(case_paragraphs)):
 			current_paragraph = case_paragraphs[index]
-				
 			if re.match("OPINION$", current_paragraph) and not maj_start_found:
 				case_header = ([re.sub(r'[\n]', ' ', line) 
 							for line in case_paragraphs[: index - 1]])
 				# test output
-				print "RAW: {0}".format(case_header)
+				#print "RAW: {0}".format(case_header)
 				# /test output
 				# this filters out this fishy character
 				case_header = [re.sub(r'[\xa0]', '', line) for line in case_header]
@@ -94,7 +93,7 @@ class SupremeCourtOpinionParser():
 								for word in current_paragraph.split()[2:]
 								if "JUSTICE" not in word and "Justice" not in word])
 
-			if re.search(alt_opinion_regex, current_paragraph):
+			if re.search(alt_opinion_regex, current_paragraph) and maj_start_found:
 				maj_end_index = index - 1
 				alt_start_index = index
 				alt_opinions_found = True
@@ -279,10 +278,10 @@ class SupremeCourtOpinionParser():
 			or (re.search(re.compile(r"CONCUR BY"), " ".join(author_sample))) \
 			or (re.search(re.compile(r"DISSENT BY"), " ".join(author_sample))):
 				# test output
-				print "***********************"
-				print "HERE IS AUTHOR_SAMPLE"
-				print author_sample
-				print "***********************"
+				#print "***********************"
+				#print "HERE IS AUTHOR_SAMPLE"
+				#print author_sample
+				#print "***********************"
 				# /test output
 				if re.match("THE CHIEF JUSTICE", " ".join(author_sample).strip()) \
 				or re.match("MR. CHIEF JUSTICE", " ".join(author_sample).strip()) \
@@ -428,7 +427,8 @@ def main():
 	print "Beginning to parse files in {0}".format(source_dir)
 	for opinion_file in os.listdir(source_dir):
 		full_path = os.path.join(source_dir, opinion_file)
-		parser.parse_file(full_path)
+		if os.path.isfile(full_path):
+			parser.parse_file(full_path)
 		
 
 main()
