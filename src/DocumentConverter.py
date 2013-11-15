@@ -29,6 +29,15 @@ class DocumentConverter():
         '''
         Returns a Document object created from file.
         '''
+        # check to make sure the input file exists
+        if not os.path.exists(self.input_path):
+            raise IOError, "The path {0} does not exist!".format(self.input_path)
+        # and check to be sure it's a txt file
+        txtfile_regex = re.compile(r"\.txt$")
+        if not re.search(txtfile_regex, self.input_path):
+            raise IOError, ("The file {0} is not a text file and thus cannot "
+                            "be converted.".format(self.input_path)) 
+        
         title = ""
         case_num = ""
         us_cite = ""
@@ -45,9 +54,6 @@ class DocumentConverter():
         break_regex = re.compile(r"\* \* \* \* \* \* \* \*")
         found_break = False
         opinion_lines = []
-        # check to make sure the input file exists
-        if not os.path.exists(self.input_path):
-            raise IOError
         
         title_regex = re.compile(r"TITLE: (.*)")
         case_num_regex = re.compile(r"CASE NUMBER: (.*)")

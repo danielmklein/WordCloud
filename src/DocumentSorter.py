@@ -65,8 +65,10 @@ class DocumentSorter():
                 print "A doc in doc_list doesn't have the metadata field: "\
                 "'{0}', so we can't sort on that field!".format(sort_field)
                 raise Exception
-            if getattr(doc.doc_metadata, sort_field) in allowed_values:
-                subset.append(doc)
+            # exact match not necessary
+            for value in allowed_values:
+                if value in getattr(doc.doc_metadata, sort_field):
+                    subset.append(doc)
         return subset
     
     

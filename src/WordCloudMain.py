@@ -1,4 +1,5 @@
 import os, os.path
+import re
 from SupremeCourtOpinionMetadata import SupremeCourtOpinionMetadata
 from Document import Document
 from DocumentConverter import DocumentConverter
@@ -73,8 +74,14 @@ class WordCloudMain():
         
     def convert_opinions(self):
         opinion_list = []
+        txtfile_regex = re.compile(r"\.txt$")
         for opinion_file in os.listdir(OPINION_PATH):
             input_path = os.path.join(OPINION_PATH, opinion_file)
+            is_text_file = re.search(txtfile_regex, input_path)
+            if not is_text_file:
+                print ("{0} is not a text file, so we can't convert it!"
+                       .format(input_path))
+                continue
             pickle_path = input_path + ".Document"
             converter = DocumentConverter(input_path, pickle_path)
             print "converting file {0}...".format(opinion_file)
@@ -117,7 +124,7 @@ class WordCloudMain():
         '''
         subset_lists = [(output_filename, weighted_list), (filename, list), ... , (filename, list)]
         '''
-        free_speech_file = subset_lists[0][0] + "_scalia_concurs.jpg"
+        free_speech_file = subset_lists[0][0] + "_free_speech.jpg"
         free_speech_terms = subset_lists[0][1]
         # test output
         print "FREE SPEECH TERMS: {0}".format(free_speech_terms)
