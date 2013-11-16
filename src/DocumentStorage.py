@@ -2,7 +2,6 @@ import re
 from string import punctuation
 from Document import Document
 from nltk.stem.porter import PorterStemmer
-from nltk.stem.lancaster import LancasterStemmer
 from nltk.corpus import stopwords
 
 
@@ -25,10 +24,11 @@ class DocumentStorage(Document):
         self.doc_text = self.filter_text(self.doc_text)
         # split_text contains the full text of the document
         self.split_text = self.create_split_text(self.doc_text)
+        self.stemmed_text = self.stem_text(self.split_text)
         # term_list is a list of unique terms in the document along with
         # each term's term frequency and tf_idf metric -- only term freq
         # is calculated for each term at this point.
-        self.term_list = self.build_term_list(self.split_text)
+        self.term_list = self.build_term_list(self.stemmed_text)
         self.term_list = self.populate_term_freqs(self.term_list)
         
         
@@ -39,7 +39,6 @@ class DocumentStorage(Document):
         '''
         split_text = [word.lower() for word in text.split()]
         split_text = self.remove_stop_words(split_text)
-        split_text = self.stem_text(split_text)
         return split_text
         
         
@@ -142,7 +141,6 @@ class DocumentStorage(Document):
         '''
         stemmed_list = []
         stemmer = PorterStemmer()
-        #stemmer = LancasterStemmer()
         for word in word_list:
             stemmed_list.append(stemmer.stem(word))
         # test output
@@ -157,8 +155,8 @@ class DocumentStorage(Document):
         in that doc, ie
         (# times term appears in doc) / (# total terms in doc)
         '''
-        rel_term_freq = self.split_text.count(term) \
-                        / float(len(self.split_text))
+        rel_term_freq = self.stemmed_text.count(term) \
+                        / float(len(self.stemmed_text))
         return rel_term_freq
     
     

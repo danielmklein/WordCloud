@@ -1,6 +1,7 @@
 from DocumentStorage import DocumentStorage
 import os, os.path
 import pickle
+from nltk.stem.porter import PorterStemmer
 from numpy import mean, median
 
 class AnalysisEngine():
@@ -131,7 +132,7 @@ class AnalysisEngine():
         return subset_lists
             
     
-    def process_subset(self, subset):
+    def process_subset(self, subset, num_terms=50):
         '''
         Constructs the list of weighted terms.
         
@@ -152,13 +153,16 @@ class AnalysisEngine():
         weighted_terms = []
         # since list is reverse sorted, first element has highest weight
         scale_factor = raw_weighted_terms[0][1] 
-        #scale_factor = max([item[1] for item in raw_weighted_terms])
-        for pair in raw_weighted_terms:
+        for pair in raw_weighted_terms[:num_terms+1]:
             weighted_terms.append((pair[0], pair[1] / scale_factor))
+        # destem the terms in the weighted list  
+        for i in range(0, len(weighted_terms)):
+            cur_pair = weighted_terms[i]
+            weighted_terms[i] = (self.destem(cur_pair[0]), cur_pair[1])
         # test output
         #print "SCALED WEIGHTED TERMS: {0}".format(weighted_terms)
         # /test output
-        return (subset[0].output_filename, weighted_terms[:51])
+        return (subset[0].output_filename, weighted_terms)
     
     
     def calc_doc_frequency(self, term):
@@ -213,5 +217,34 @@ class AnalysisEngine():
             print "An error occurred while saving the subset "\
                     "to {0}...".format(output_path)
             raise IOError
-    
+        
+        
+    def destem(self, stemmed_term):
+        '''
+        Given a stemmed term, we look through the text of every document
+        involved, determine the most common "parent" version of the 
+        given stemmed term, and return it. 
+        This process is very time-consuming with large document sets.
+        '''
+        print "Destemming term {0}".format(stemmed_term)
+        candidates = {}
+        stemmer = PorterStemmer()
+        for subset in self.subsets:
+            for doc in subset:
+                for term in doc.split_text:
+                    if stemmer.stem(term) == stemmed_term:
+                        if term in candidates:
+                            candidates[term] += 1
+                        else:
+                            candidates[term] = 1
+        # test output
+        #print candidates
+        # /test output
+        sorted_candidates = candidates.keys()
+        sorted_candidates.sort(key=lambda 
+                                term: candidates[term], reverse=True)
+        destemmed_term = sorted_candidates[0]
+        print "Term {0} destemmed to {1}".format(stemmed_term, destemmed_term)
+        return destemmed_term
+
         
