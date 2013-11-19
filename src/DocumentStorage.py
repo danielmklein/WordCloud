@@ -51,7 +51,7 @@ class DocumentStorage(Document):
         term_list = {}
         for term in split_text:
             if not term in term_list:
-                term_list[term] = {"tf":None, "tf_idf":None}            
+                term_list[term] = {"tf":None}            
         # test output
         #print self.term_list
         # /test output
@@ -171,8 +171,8 @@ class DocumentStorage(Document):
             term_freq = 0
         tf_idf = term_freq / float(doc_freq)
         ### saves the tf_idf in the term_list... is this really necessary?
-        if term in self.term_list:
-            self.term_list[term]['tf_idf'] = tf_idf
+        #if term in self.term_list:
+        #    self.term_list[term]['tf_idf'] = tf_idf
         ###
         return tf_idf
 
