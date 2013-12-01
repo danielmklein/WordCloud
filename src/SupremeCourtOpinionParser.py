@@ -125,10 +125,11 @@ class SupremeCourtOpinionParser():
 
 		for index in range(0, len(alt_opinions)):
 			current_paragraph = alt_opinions[index]
-			if (re.search(concur_start_regex, current_paragraph) 
+			if ((re.search(concur_start_regex, current_paragraph) 
 				or re.search(dissent_start_regex, current_paragraph)
 				or re.search(alt_opinion_regex, current_paragraph)
-				or re.match(justice_regex, current_paragraph)):
+				or re.match(justice_regex, current_paragraph)) 
+				and not ("Footnotes" in current_paragraph)):
 				if (len(alt_start_indices) == 0) or (index > alt_start_indices[-1] + 2):
 					alt_start_indices.append(index)
 		

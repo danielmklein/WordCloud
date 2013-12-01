@@ -38,7 +38,7 @@ class DocumentStorage(Document):
         stop words and stemming words when necessary.
         '''
         split_text = [word.lower() for word in text.split()]
-        split_text = self.remove_stop_words(split_text)
+        #split_text = self.remove_stop_words(split_text)
         return split_text
         
         
@@ -67,7 +67,7 @@ class DocumentStorage(Document):
         return term_list
     
     
-    def filter_text(self, text, should_drop_prop_nouns=True):
+    def filter_text(self, text, should_drop_prop_nouns=False):
         filtered_text = text
         # remove footnotes?
         #text = self.remove_footnotes(text)
@@ -97,7 +97,8 @@ class DocumentStorage(Document):
         for i in range(1,len(split_text)):
             prev_term = split_text[i-1]
             cur_term = split_text[i]
-            is_proper_noun = cap_regex.match(cur_term) and (not '.' in prev_term)
+            is_proper_noun = (cap_regex.match(cur_term)
+                            and (not '.' in prev_term))
             if not is_proper_noun:
                 filtered_text.append(cur_term)
         return " ".join(filtered_text)

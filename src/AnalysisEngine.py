@@ -99,10 +99,66 @@ class AnalysisEngine():
         return term_list
     
     
-    def analyze_docs(self):
+    def get_most_freq_terms(self, subsets, num_terms):
+        '''
+        Given num_terms, compile list of all terms in set and return
+        the num_terms most frequent terms (num_terms = 1000/5000/15000/etc)
+        '''
+        terms_with_freqs = {}
+        for subset in subsets:
+            for doc in subset:
+                for term in doc.stemmed_text:
+                    if term in terms_with_freqs:
+                        terms_with_freqs[term] += 1
+                    else:
+                        terms_with_freqs[term] = 1
+        # test output
+        print "TERMS WITH FREQS: {0}".format(terms_with_freqs)
+        # /test output
+        term_list = terms_with_freqs.keys()
+        term_list.sort(key=lambda 
+                        term: terms_with_freqs[term], reverse=True)
+        # test output
+        print "{0} MOST FREQUENTLY USED TERMS:".format(num_terms)
+        for term in term_list[:num_terms+1]:
+            print "{0} : {1}".format(term, terms_with_freqs[term])
+        # /test output
+        return term_list[:num_terms + 1]
+    
+    
+    def determine_relevant_terms(self, subsets, term_list):
+        '''
+        Given set of subsets and list of terms, we get rid of the terms
+        that appear in more than 99% or less than 1% of the opinions.
+        '''
+        relevant_terms = []
+        # test output
+        print "TOTAL NUM OF DOCS: {0}".format(self.num_docs)
+        # /test output
+        for term in term_list:
+            doc_freq = 0
+            for subset in subsets:
+                for doc in subset:
+                    if term in doc.term_list:
+                        doc_freq += 1
+            percentage_of_docs = doc_freq / float(self.num_docs)
+            term_within_range = ((percentage_of_docs > 0.05)
+                                 and percentage_of_docs < 0.95)
+            
+            if term_within_range:
+                relevant_terms.append(term)
+            print "TERM {0} appears in {1} docs; {2}% of all docs".format(term, doc_freq, percentage_of_docs)
+        # test output
+        print "RELEVANT TERMS: {0}".format(relevant_terms)
+        # /test output
+        return relevant_terms
+        
+
+    def analyze_docs(self, num_relevant_terms=1000):
         '''
         Main method -- kicks off the analysis process.
-        NOTE: The return structure of this method is a list of (output_filename, weighted_list) pairs.
+        NOTE: The return structure of this method is a list of 
+        (output_filename, weighted_list) pairs.
         '''
         '''
         for each term:
@@ -117,9 +173,11 @@ class AnalysisEngine():
             build, save, and return list of terms in subset sorted by tf-idf
         '''
         subset_lists = []
+        most_freq_terms = self.get_most_freq_terms(self.subsets, num_relevant_terms)
+        relevant_terms = self.determine_relevant_terms(self.subsets, most_freq_terms)
         for subset in self.subsets:
             print "processing subset {0}...".format(self.subsets.index(subset))
-            weighted_terms = self.process_subset(subset)
+            weighted_terms = self.process_subset(subset, relevant_terms)
             ##
             curdir = os.path.abspath(os.curdir)
             output_path = os.path.join(curdir, 
@@ -132,7 +190,7 @@ class AnalysisEngine():
         return subset_lists
             
     
-    def process_subset(self, subset, num_terms=50):
+    def process_subset(self, subset, relevant_terms, num_terms=50):
         '''
         Constructs the list of weighted terms.
         
@@ -141,7 +199,7 @@ class AnalysisEngine():
         '''
         # build list of terms with their tf_idf weights
         raw_weighted_terms = []
-        for term in self.term_list:
+        for term in relevant_terms:
             tfidf = self.calc_tfidf_for_subset(term, subset)
             raw_weighted_terms.append((term, tfidf))
         raw_weighted_terms.sort(key=lambda pair: pair[1], reverse=True)
@@ -209,14 +267,14 @@ class AnalysisEngine():
         # test output
         print "PATH: {0}".format(output_path)
         # /test output
-        try:
-            with open(output_path, 'w') as output_file:
-                for pair in weighted_list:
-                    output_file.write(str(pair) + '\n')
-        except IOError:
+        #try:
+        with open(output_path, 'w') as output_file:
+            for pair in weighted_list:
+                output_file.write(str(pair) + '\n')
+        '''except IOError:
             print "An error occurred while saving the subset "\
                     "to {0}...".format(output_path)
-            raise IOError
+            raise IOError'''
         
         
     def destem(self, stemmed_term):
