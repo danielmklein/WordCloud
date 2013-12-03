@@ -142,8 +142,8 @@ class AnalysisEngine():
                     if term in doc.term_list:
                         doc_freq += 1
             percentage_of_docs = doc_freq / float(self.num_docs)
-            term_within_range = ((percentage_of_docs > 0.05)
-                                 and percentage_of_docs < 0.95)
+            term_within_range = ((percentage_of_docs > 0.10)
+                                 and (percentage_of_docs < 0.95))
             
             if term_within_range:
                 relevant_terms.append(term)

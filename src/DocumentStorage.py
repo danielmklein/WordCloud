@@ -38,7 +38,7 @@ class DocumentStorage(Document):
         stop words and stemming words when necessary.
         '''
         split_text = [word.lower() for word in text.split()]
-        #split_text = self.remove_stop_words(split_text)
+        split_text = self.remove_stop_words(split_text)
         return split_text
         
         
@@ -78,7 +78,7 @@ class DocumentStorage(Document):
         # remove numbers
         filtered_text = self.remove_nums(filtered_text)
         # remove single-letter words
-        filtered_text = self.remove_single_chars(filtered_text)
+        filtered_text = self.remove_short_words(filtered_text)
         return filtered_text
         
     
@@ -112,8 +112,14 @@ class DocumentStorage(Document):
         return re.sub('[\d]', '', text)
     
     
-    def remove_single_chars(self, text):
-        return re.sub('\s.\s', ' ', text) 
+    def remove_short_words(self, text):
+        #return re.sub(r'\s.\s', ' ', text) 
+        filtered_words = []
+        for term in text.split():
+            if len(term) > 2:
+                filtered_words.append(term)
+        return ' '.join(filtered_words)
+            
     
     
     def remove_footnotes(self, text):
