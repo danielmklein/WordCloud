@@ -21,9 +21,11 @@ class DocumentStorage(Document):
         Document.__init__(self, doc_metadata, doc_text, output_filename)
         self.identifier = self.doc_metadata.opinion_author + "_" \
                             + self.doc_metadata.case_lexis_cite
+                            
         self.doc_text = self.filter_text(self.doc_text)
-        # split_text contains the full text of the document
+        # split_text contains the full filtered text of the document
         self.split_text = self.create_split_text(self.doc_text)
+        # stemmed_text contains full filtered text with all words stemmed
         self.stemmed_text = self.stem_text(self.split_text)
         # term_list is a list of unique terms in the document along with
         # each term's term frequency and tf_idf metric -- only term freq
@@ -34,8 +36,8 @@ class DocumentStorage(Document):
         
     def create_split_text(self, text):
         '''
-        Turns the text of the document into a list of terms, removing
-        stop words and stemming words when necessary.
+        Turns the text of the document into a list of terms
+        with stop words removed.
         '''
         split_text = [word.lower() for word in text.split()]
         split_text = self.remove_stop_words(split_text)
@@ -68,6 +70,11 @@ class DocumentStorage(Document):
     
     
     def filter_text(self, text, should_drop_prop_nouns=False):
+        '''
+        Remove certain items from text. Currently we're removing
+        punctuation, digits, and short words. Optionally we can
+        dumbly remove proper nouns.
+        '''
         filtered_text = text
         # remove footnotes?
         #text = self.remove_footnotes(text)
@@ -105,14 +112,23 @@ class DocumentStorage(Document):
         
     
     def remove_punctuation(self, text):
+        '''
+        Delete all punctuation from text -- replaced with space.
+        '''
         return re.sub('[%s]' % re.escape(punctuation), ' ', text)
     
     
     def remove_nums(self, text):
+        '''
+        Delete all digits from text.
+        '''
         return re.sub('[\d]', '', text)
     
     
     def remove_short_words(self, text):
+        '''
+        Remove all words shorter than 3 letters long.
+        '''
         #return re.sub(r'\s.\s', ' ', text) 
         filtered_words = []
         for term in text.split():
@@ -125,6 +141,7 @@ class DocumentStorage(Document):
     def remove_footnotes(self, text):
         '''
         Removes footnotes sections from the text of the document.
+        Not used in the project currently.
         '''
         pass
     

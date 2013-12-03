@@ -1,6 +1,5 @@
 from DocumentStorage import DocumentStorage
 import os, os.path
-import pickle
 from nltk.stem.porter import PorterStemmer
 from numpy import mean, median
 
@@ -14,7 +13,7 @@ class AnalysisEngine():
     Given a set of Documents (divided into subsets) (and perhaps analysis 
     parameters TBD), this class will perform natural language text processing 
     on the collection of documents and return a weighted list of the "most 
-    important" terms in the collection. This will likely utilize term 
+    important" terms in the collection. This utilizes term 
     frequency-inverse document frequency analysis as its basis for weighting 
     terms (http://en.wikipedia.org/wiki/Tf%E2%80%93idf).
     '''
@@ -58,32 +57,32 @@ class AnalysisEngine():
         which makes them much easier to deal with as we perform our
         calculations.
         '''
-        print "converting docs into DocumentStorage objects..."
+        print "Converting documents into DocumentStorage objects..."
         doc_num = 1
         converted_subsets = []
         for subset in subsets: 
             new_subset = []
             for doc in subset:
-                #try:
-                print ("converting doc {0} of {1} to Storage object..."
-                       .format(doc_num, self.num_docs))
-                doc_num += 1
-                doc = DocumentStorage(doc.doc_metadata, doc.doc_text, 
-                                  doc.output_filename)
-                new_subset.append(doc)
-                #except:
-                #    raise Exception, "AnalysisEngine: The input seems to be of"\
-                #        " the wrong type..."
+                try:
+                    print ("Converting document {0} of {1} to Storage object..."
+                           .format(doc_num, self.num_docs))
+                    doc_num += 1
+                    doc = DocumentStorage(doc.doc_metadata, doc.doc_text, 
+                                      doc.output_filename)
+                    new_subset.append(doc)
+                except:
+                    raise Exception, "AnalysisEngine: The input seems to be of"\
+                        " the wrong type..."
             converted_subsets.append(new_subset)
         return converted_subsets
             
     
     def build_full_term_list(self, subsets):
         '''
-        constructs a list of all terms used in the entire set along
-        with each one's doc frequency
+        Constructs a list of all terms used in the entire set along
+        with each term's doc frequency
         '''
-        print "building list of all terms in document set..."
+        print "Building list of all terms in document set..."
         term_list = {}
         for subset in subsets:
             for doc in subset:
@@ -116,21 +115,24 @@ class AnalysisEngine():
         print "TERMS WITH FREQS: {0}".format(terms_with_freqs)
         # /test output
         term_list = terms_with_freqs.keys()
-        term_list.sort(key=lambda 
+        # sort terms in decreasing order by frequency
+        term_list.sort(key = lambda 
                         term: terms_with_freqs[term], reverse=True)
         # test output
         print "{0} MOST FREQUENTLY USED TERMS:".format(num_terms)
-        for term in term_list[:num_terms+1]:
+        for term in term_list[:num_terms]:
             print "{0} : {1}".format(term, terms_with_freqs[term])
         # /test output
-        return term_list[:num_terms + 1]
+        return term_list[:num_terms]
     
     
     def determine_relevant_terms(self, subsets, term_list):
         '''
         Given set of subsets and list of terms, we get rid of the terms
-        that appear in more than 99% or less than 1% of the opinions.
+        that appear in more than x% or less than y% of the opinions.
         '''
+        upper_bound = 0.95
+        lower_bound = 0.10
         relevant_terms = []
         # test output
         print "TOTAL NUM OF DOCS: {0}".format(self.num_docs)
@@ -139,11 +141,12 @@ class AnalysisEngine():
             doc_freq = 0
             for subset in subsets:
                 for doc in subset:
+                    # doc.term_list is filtered and stemmed
                     if term in doc.term_list:
                         doc_freq += 1
             percentage_of_docs = doc_freq / float(self.num_docs)
-            term_within_range = ((percentage_of_docs > 0.10)
-                                 and (percentage_of_docs < 0.95))
+            term_within_range = ((percentage_of_docs > lower_bound)
+                                 and (percentage_of_docs < upper_bound))
             
             if term_within_range:
                 relevant_terms.append(term)
@@ -160,23 +163,12 @@ class AnalysisEngine():
         NOTE: The return structure of this method is a list of 
         (output_filename, weighted_list) pairs.
         '''
-        '''
-        for each term:
-            calculate_doc_frequency (performed in self.build_full_term_list)
-            for each doc in set_of_docs:
-                calc_term_frequency(term, doc)
-        for each subset in set: (self.process_subset)
-            for each term in subset:
-                for each doc:
-                    calculate tf-idf for term in doc (if term appears, else 0)
-                calculate tf-idf for term in subset (median/mean)
-            build, save, and return list of terms in subset sorted by tf-idf
-        '''
         subset_lists = []
+        # determine which terms we care about
         most_freq_terms = self.get_most_freq_terms(self.subsets, num_relevant_terms)
         relevant_terms = self.determine_relevant_terms(self.subsets, most_freq_terms)
         for subset in self.subsets:
-            print "processing subset {0}...".format(self.subsets.index(subset))
+            print "Processing subset {0}...".format(self.subsets.index(subset))
             weighted_terms = self.process_subset(subset, relevant_terms)
             ##
             curdir = os.path.abspath(os.curdir)
@@ -267,14 +259,14 @@ class AnalysisEngine():
         # test output
         print "PATH: {0}".format(output_path)
         # /test output
-        #try:
-        with open(output_path, 'w') as output_file:
-            for pair in weighted_list:
-                output_file.write(str(pair) + '\n')
-        '''except IOError:
+        try:
+            with open(output_path, 'w') as output_file:
+                for pair in weighted_list:
+                    output_file.write(str(pair) + '\n')
+        except IOError:
             print "An error occurred while saving the subset "\
                     "to {0}...".format(output_path)
-            raise IOError'''
+            raise IOError
         
         
     def destem(self, stemmed_term):
@@ -282,7 +274,7 @@ class AnalysisEngine():
         Given a stemmed term, we look through the text of every document
         involved, determine the most common "parent" version of the 
         given stemmed term, and return it. 
-        This process is very time-consuming with large document sets.
+        This process is very time-consuming with large document sets...
         '''
         print "Destemming term {0}".format(stemmed_term)
         candidates = {}
@@ -299,7 +291,8 @@ class AnalysisEngine():
         #print candidates
         # /test output
         sorted_candidates = candidates.keys()
-        sorted_candidates.sort(key=lambda 
+        # sort potential destemmed versions by frequency in decreasing order
+        sorted_candidates.sort(key = lambda 
                                 term: candidates[term], reverse=True)
         destemmed_term = sorted_candidates[0]
         print "Term {0} destemmed to {1}".format(stemmed_term, destemmed_term)
