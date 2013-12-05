@@ -132,7 +132,7 @@ class AnalysisEngine():
         that appear in more than x% or less than y% of the opinions.
         '''
         upper_bound = 0.95
-        lower_bound = 0.10
+        lower_bound = 0.05
         relevant_terms = []
         # test output
         print "TOTAL NUM OF DOCS: {0}".format(self.num_docs)
