@@ -112,17 +112,18 @@ class AnalysisEngine():
                     else:
                         terms_with_freqs[term] = 1
         # test output
-        print "TERMS WITH FREQS: {0}".format(terms_with_freqs)
+        #print "TERMS WITH FREQS: {0}".format(terms_with_freqs)
         # /test output
         term_list = terms_with_freqs.keys()
         # sort terms in decreasing order by frequency
         term_list.sort(key = lambda 
                         term: terms_with_freqs[term], reverse=True)
-        # test output
+        '''# test output
         print "{0} MOST FREQUENTLY USED TERMS:".format(num_terms)
         for term in term_list[:num_terms]:
             print "{0} : {1}".format(term, terms_with_freqs[term])
         # /test output
+        '''
         return term_list[:num_terms]
     
     
@@ -150,9 +151,9 @@ class AnalysisEngine():
             
             if term_within_range:
                 relevant_terms.append(term)
-            print "TERM {0} appears in {1} docs; {2}% of all docs".format(term, doc_freq, percentage_of_docs)
+            #print "TERM {0} appears in {1} docs; {2}% of all docs".format(term, doc_freq, percentage_of_docs)
         # test output
-        print "RELEVANT TERMS: {0}".format(relevant_terms)
+        #print "RELEVANT TERMS: {0}".format(relevant_terms)
         # /test output
         return relevant_terms
         

@@ -10,8 +10,7 @@ class DocumentSorter():
     objects, each subset having the same value for the sort field (subsets will
     be returned as a dictionary?).
     '''
-
-
+    
     def __init__(self, doc_list = []):
         self.doc_list = doc_list
         
@@ -32,6 +31,7 @@ class DocumentSorter():
                 raise Exception
         sorted_doc_list = sorted(self.doc_list, 
                         key = lambda doc:getattr(doc.doc_metadata, sort_field))
+        
         # this splits the list into subsets -- all items in a subset have the
         # same value for the given sort_field
         subsets = []
@@ -65,10 +65,23 @@ class DocumentSorter():
                 print "A doc in doc_list doesn't have the metadata field: "\
                 "'{0}', so we can't sort on that field!".format(sort_field)
                 raise Exception
+            
+            # the handling of dates here is super duper messy right now...
+            # TODO: this is going to need work in the future -- convert datestrings 
+            # to datetime objects in DocumentConverter
+            
+            # pick the items in the list whose value for the sort_field
+            # matches something in allowed_values
             # exact match not necessary
-            for value in allowed_values:
-                if value in getattr(doc.doc_metadata, sort_field):
-                    subset.append(doc)
+            if not "dates" in sort_field:
+                for value in allowed_values:
+                    if value in getattr(doc.doc_metadata, sort_field):
+                        subset.append(doc)
+            else: # the attribute is a list of dates (this is dirty)
+                for value in allowed_values:
+                    for date in getattr(doc.doc_metadata, sort_field):
+                        if value in date:
+                            subset.append(doc)
         return subset
     
     

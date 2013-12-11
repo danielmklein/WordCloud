@@ -110,10 +110,20 @@ class WordCloudMain():
         terror_concurs = sorter.create_subset(sort_field, 
                                                   ["concur"])        
         terror_dissents = sorter.create_subset(sort_field, 
-                                                  ["dissent"])        
-        subsets = [terror_majs, terror_concurs, terror_dissents]
+                                                  ["dissent"])
+        
+        oh_four_cases = sorter.create_subset("case_dates", ["2004"])  
+              
+        
+        subsets = [terror_majs, terror_concurs, terror_dissents, oh_four_cases]
         ###
         print "The set contains {0} subset(s)...".format(len(subsets))
+        # test output
+        subset_num = 0
+        for subset in subsets:
+            print "subset {0} contains {1} docs.".format(subset_num, len(subset))
+            subset_num += 1
+        # /test output
         return subsets
     
     

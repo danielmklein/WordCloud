@@ -76,6 +76,12 @@ class WordCloudGenerator():
         
         
     def generate_word_cloud(self, num_terms_to_visualize=50, margin=5):
+        '''
+        In simple terms, we size each term proportional to its weight
+        and then try to find a spot on the canvas where it fits. We 
+        first build a black & white image and then redraw in color, 
+        as this is faster than calculating and drawing in color the first time.
+        '''
         # check length of term dict -- must be GT 0
         if len(self.weighted_terms) <= 0:
             print "List of terms must contain at least one term and weight."
@@ -120,9 +126,8 @@ class WordCloudGenerator():
                 term_box_size = draw.textsize(term)
                 # query_integral_image to get possible places for current term
                 location_result = self.query_integral_image(integral, 
-                                                       term_box_size[1] + margin,
-                                                       term_box_size[0] + margin
-                                                       )
+                                                    term_box_size[1] + margin,
+                                                    term_box_size[0] + margin)
                 # if there are results or font_size hits 0, we're done
                 if location_result is not None or font_size == 0:
                     break
@@ -152,9 +157,9 @@ class WordCloudGenerator():
                 partial_integral += integral[x:, y-1][:, numpy.newaxis]
             integral[x:, y:] = partial_integral
         
-        
         # now redraw entire image in color
-        color_image = Image.new("RGB", (self.image_width, self.image_height), "white")
+        color_image = Image.new("RGB", (self.image_width, self.image_height),
+                                "white")
         color_draw = ImageDraw.Draw(color_image)
         # build a list of big tuples with all the needed info for each term
         terms = [term for term, weight in term_list]
@@ -162,7 +167,7 @@ class WordCloudGenerator():
         for term, font_size, term_position, term_orientation in term_data:
             font = ImageFont.truetype(FONT_PATH, font_size)
             transposed_font = ImageFont.TransposedFont(font, 
-                                                    orientation=term_orientation)
+                                                orientation=term_orientation)
             color_draw.setfont(transposed_font)
             color_draw.text((term_position[1], term_position[0]),
                              term, fill="hsl(%d" % random.randint(0, 255)

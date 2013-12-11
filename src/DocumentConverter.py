@@ -69,7 +69,8 @@ class DocumentConverter():
         # parse out all of the necessary fields
         with open(self.input_path, 'r') as opinion:
             for line in opinion:
-                # this means we are in the body of the text
+                # this means we are in the body of the text and we should
+                # stop parsing fields 
                 if found_break:
                     opinion_lines.append(line.strip('\n'))
                 
@@ -135,7 +136,7 @@ class DocumentConverter():
         new_metadata.case_disposition = disposition
         new_metadata.opinion_author = author
         new_metadata.opinion_type = opinion_type
-        
+        # tie the entire new Document together and return it
         self.converted_doc = Document(new_metadata, body_text, 
                                       self.output_path)
         return self.converted_doc
@@ -150,7 +151,7 @@ class DocumentConverter():
     
     def get_author(self, file_path):
         '''
-        Parses the author out of text.
+        Parses the author out of the filename.
         '''
         author = ""
         author_regex = re.compile(r"([\w'\- ]+)_\d{4} U.S. LEXIS")
@@ -176,6 +177,7 @@ class DocumentConverter():
         '''
         Pulls the individual dates out of the dates line.
         '''
+        # TODO: convert datestrings into datetime objects
         dates = []
         datestring_regex = re.compile(r"\w+\s\d{1,2}-?\d?\d?,\s\d{4},\s\w+;")
         raw_dates = datestring_regex.findall(date_string)
@@ -186,7 +188,9 @@ class DocumentConverter():
             group_match = grouped_date_regex.search(raw_date)
             date = group_match.group(1)
             action = group_match.group(2)
-            dates.append((date, action))           
+            date_string = date + ' (' + action + ')'
+            #dates.append((date, action))
+            dates.append(date_string)           
         return dates
         
         
