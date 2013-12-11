@@ -150,8 +150,10 @@ class DocumentStorage(Document):
         '''
         Removes stop words from word_list.
         '''
-        filtered_text = ([word for word in word_list if not word in
-                         stopwords.words('english')])
+        extra_stop_words = ["concur", "dissent", "concurring", "dissenting", "case", "join"]
+        filtered_text = ([word for word in word_list if 
+                          (not word in stopwords.words('english'))
+                          and (not word in extra_stop_words)])
         # test output
         #print word_list
         #print filtered_text
