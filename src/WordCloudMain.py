@@ -112,10 +112,10 @@ class WordCloudMain():
         terror_dissents = sorter.create_subset(sort_field, 
                                                   ["dissent"])
         
-        oh_four_cases = sorter.create_subset("case_dates", ["2004"])  
+        #oh_four_cases = sorter.create_subset("case_dates", ["2004"])  
               
         
-        subsets = [terror_majs, terror_concurs, terror_dissents, oh_four_cases]
+        subsets = [terror_majs, terror_concurs, terror_dissents]
         ###
         print "The set contains {0} subset(s)...".format(len(subsets))
         # test output
@@ -143,14 +143,14 @@ class WordCloudMain():
         i.e. subset_lists = [(output_filename, weighted_list), 
                             (filename, list), ... , (filename, list)]
         '''
-        terror_maj_file = subset_lists[0][0] + "_terror_majority.jpg"
-        terror_maj_terms = subset_lists[0][1]
+        terror_maj_file = os.path.join(OPINION_PATH, "output", "terror_majority.jpg")
+        terror_maj_terms = subset_lists[0]
             
-        terror_concur_file = subset_lists[1][0] + "_terror_concurs.jpg"
-        terror_concur_terms = subset_lists[1][1]
+        terror_concur_file = os.path.join(OPINION_PATH, "output", "terror_concurs.jpg")
+        terror_concur_terms = subset_lists[1]
         
-        terror_dissent_file = subset_lists[2][0] + "_terror_dissents.jpg"
-        terror_dissent_terms = subset_lists[2][1]
+        terror_dissent_file = os.path.join(OPINION_PATH, "output", "terror_dissents.jpg")
+        terror_dissent_terms = subset_lists[2]
         
         # test output
         print "TERROR MAJORITY TERMS: {0}".format(terror_maj_terms)

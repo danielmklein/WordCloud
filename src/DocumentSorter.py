@@ -68,7 +68,7 @@ class DocumentSorter():
             
             # the handling of dates here is super duper messy right now...
             # TODO: this is going to need work in the future -- convert datestrings 
-            # to datetime objects in DocumentConverter
+            # to datetime objects in DocumentConverter??
             
             # pick the items in the list whose value for the sort_field
             # matches something in allowed_values

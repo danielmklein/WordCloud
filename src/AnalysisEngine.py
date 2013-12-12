@@ -170,19 +170,59 @@ class AnalysisEngine():
         relevant_terms = self.determine_relevant_terms(self.subsets, most_freq_terms)
         for subset in self.subsets:
             print "Processing subset {0}...".format(self.subsets.index(subset))
-            weighted_terms = self.process_subset(subset, relevant_terms)
+            raw_info = self.collect_term_info(subset, relevant_terms)
+            weighted_terms = self.build_weighted_pairs(raw_info)
+            #weighted_terms = self.process_subset(subset, relevant_terms)
             ##
             curdir = os.path.abspath(os.curdir)
             output_path = os.path.join(curdir, 
-                                       weighted_terms[0] 
+                                       subset[0].output_filename 
                                        + "_weighted_list.txt")
             ##
             subset_lists.append(weighted_terms)
-            self.save_weighted_list(weighted_terms[1], output_path)
+            #self.save_weighted_list(weighted_terms, output_path)
+            self.save_term_info(raw_info, output_path)
             
         return subset_lists
             
+            
+    def collect_term_info(self, subset, relevant_terms, num_terms=50):
+        '''
+        Builds collection of info (weight, tf-idf, tf, df) for each term
+        we care about. 
+        '''
+        raw_term_info = []
+        for term in relevant_terms:
+            tfidf = self.calc_tfidf_for_subset(term, subset)
+            weight = tfidf
+            doc_freq = self.term_list[term]
+            term_freq = tfidf * doc_freq
+            raw_term_info.append((term, weight, tfidf, term_freq, doc_freq))
+        raw_term_info.sort(key=lambda info_set: info_set[1], reverse=True)
+        
+        weighted_raw_terms = []
+        scale_factor = raw_term_info[0][1]
+        for info_set in raw_term_info[:num_terms]:
+            destemmed_term = self.destem(info_set[0])
+            weight = info_set[1] / scale_factor
+            tfidf = info_set[2]
+            tf = info_set[3]
+            df = info_set[4]
+            weighted_raw_terms.append((destemmed_term, weight, tfidf, tf,df))
+        return weighted_raw_terms
     
+    
+    def build_weighted_pairs(self, raw_term_info):
+        '''
+        Extracts the term weight pairs (that the WordCloudGenerator needs)
+        from our collection of term info.
+        '''
+        weighted_terms = []
+        for info_set in raw_term_info:
+            weighted_terms.append((info_set[0], info_set[1]))
+        return weighted_terms
+        
+            
     def process_subset(self, subset, relevant_terms, num_terms=50):
         '''
         Constructs the list of weighted terms.
@@ -253,21 +293,44 @@ class AnalysisEngine():
         return tfidf
     
 
-    def save_weighted_list(self, weighted_list, output_path):
+    def save_term_info(self, raw_info, output_path):
         '''
         Saves a generated weighted_list to file in a readable format.
         '''
         # test output
         print "PATH: {0}".format(output_path)
         # /test output
+        
         try:
             with open(output_path, 'w') as output_file:
-                for pair in weighted_list:
-                    output_file.write(str(pair) + '\n')
+                for info_set in raw_info:
+                    output_string = self.build_output(info_set)
+                    #output_file.write(str(pair) + '\n')
+                    output_file.write(output_string + '\n')
         except IOError:
             print "An error occurred while saving the subset "\
                     "to {0}...".format(output_path)
             raise IOError
+        
+        
+    def build_output(self, info_set):
+        '''
+        Constructs a line of term info to save to file.
+        '''
+        output_string = ""        
+        term = info_set[0]
+        weight = "{0:.4f}".format(info_set[1])
+        tfidf = "{0:.4f}".format(info_set[2])
+        term_freq = "{0:.4f}".format(info_set[3])
+        doc_freq = "{0:.4f}".format(info_set[4])
+        output_string += "["+ term +"]" 
+        if len(term) > 5:
+            output_string += "\tweight:" + weight
+        else:
+            output_string += "\t\tweight:" + weight
+        output_string +=  "\ttfidf:" + tfidf + "\ttf:" + term_freq \
+                        + "\tdf:" + doc_freq
+        return output_string
         
         
     def destem(self, stemmed_term):
@@ -277,7 +340,7 @@ class AnalysisEngine():
         given stemmed term, and return it. 
         This process is very time-consuming with large document sets...
         '''
-        print "Destemming term {0}".format(stemmed_term)
+        #print "Destemming term {0}".format(stemmed_term)
         candidates = {}
         stemmer = PorterStemmer()
         for subset in self.subsets:
@@ -296,7 +359,7 @@ class AnalysisEngine():
         sorted_candidates.sort(key = lambda 
                                 term: candidates[term], reverse=True)
         destemmed_term = sorted_candidates[0]
-        print "Term {0} destemmed to {1}".format(stemmed_term, destemmed_term)
+        print "Destemmed: {0} --> {1}".format(stemmed_term, destemmed_term)
         return destemmed_term
 
         
