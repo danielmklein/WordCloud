@@ -191,6 +191,7 @@ class AnalysisEngine():
         Builds collection of info (weight, tf-idf, tf, df) for each term
         we care about. 
         '''
+        # build initial list of info, set weight = tfidf for now
         raw_term_info = []
         for term in relevant_terms:
             tfidf = self.calc_tfidf_for_subset(term, subset)
@@ -200,6 +201,7 @@ class AnalysisEngine():
             raw_term_info.append((term, weight, tfidf, term_freq, doc_freq))
         raw_term_info.sort(key=lambda info_set: info_set[1], reverse=True)
         
+        # now scale the weight for each term so max weight == 1.0
         weighted_raw_terms = []
         scale_factor = raw_term_info[0][1]
         for info_set in raw_term_info[:num_terms]:
