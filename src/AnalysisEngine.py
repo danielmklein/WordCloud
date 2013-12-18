@@ -111,9 +111,7 @@ class AnalysisEngine():
                         terms_with_freqs[term] += 1
                     else:
                         terms_with_freqs[term] = 1
-        # test output
-        #print "TERMS WITH FREQS: {0}".format(terms_with_freqs)
-        # /test output
+                        
         term_list = terms_with_freqs.keys()
         # sort terms in decreasing order by frequency
         term_list.sort(key = lambda 
@@ -124,6 +122,7 @@ class AnalysisEngine():
             print "{0} : {1}".format(term, terms_with_freqs[term])
         # /test output
         '''
+        
         return term_list[:num_terms]
     
     
@@ -155,6 +154,7 @@ class AnalysisEngine():
         # test output
         #print "RELEVANT TERMS: {0}".format(relevant_terms)
         # /test output
+        
         return relevant_terms
         
 
@@ -162,7 +162,7 @@ class AnalysisEngine():
         '''
         Main method -- kicks off the analysis process.
         NOTE: The return structure of this method is a list of 
-        (output_filename, weighted_list) pairs.
+        weighted_lists.
         '''
         subset_lists = []
         # determine which terms we care about
@@ -180,7 +180,6 @@ class AnalysisEngine():
                                        + "_weighted_list.txt")
             ##
             subset_lists.append(weighted_terms)
-            #self.save_weighted_list(weighted_terms, output_path)
             self.save_term_info(raw_info, output_path)
             
         return subset_lists
@@ -211,6 +210,7 @@ class AnalysisEngine():
             tf = info_set[3]
             df = info_set[4]
             weighted_raw_terms.append((destemmed_term, weight, tfidf, tf,df))
+            
         return weighted_raw_terms
     
     
@@ -223,39 +223,6 @@ class AnalysisEngine():
         for info_set in raw_term_info:
             weighted_terms.append((info_set[0], info_set[1]))
         return weighted_terms
-        
-            
-    def process_subset(self, subset, relevant_terms, num_terms=50):
-        '''
-        Constructs the list of weighted terms.
-        
-        NOTE: output list must be of form [(term1,weight1),(term2,weight2),
-        ...,(termn,weightn)]
-        '''
-        # build list of terms with their tf_idf weights
-        raw_weighted_terms = []
-        for term in relevant_terms:
-            tfidf = self.calc_tfidf_for_subset(term, subset)
-            raw_weighted_terms.append((term, tfidf))
-        raw_weighted_terms.sort(key=lambda pair: pair[1], reverse=True)
-        # test output
-        #print "INITIAL WEIGHTED TERMS: {0}".format(raw_weighted_terms)
-        # /test output
-        
-        # scale the weights so that they are <= 1.0 (max weight == 1.0)
-        weighted_terms = []
-        # since list is reverse sorted, first element has highest weight
-        scale_factor = raw_weighted_terms[0][1] 
-        for pair in raw_weighted_terms[:num_terms+1]:
-            weighted_terms.append((pair[0], pair[1] / scale_factor))
-        # destem the terms in the weighted list  
-        for i in range(0, len(weighted_terms)):
-            cur_pair = weighted_terms[i]
-            weighted_terms[i] = (self.destem(cur_pair[0]), cur_pair[1])
-        # test output
-        #print "SCALED WEIGHTED TERMS: {0}".format(weighted_terms)
-        # /test output
-        return (subset[0].output_filename, weighted_terms)
     
     
     def calc_doc_frequency(self, term):
@@ -307,7 +274,6 @@ class AnalysisEngine():
             with open(output_path, 'w') as output_file:
                 for info_set in raw_info:
                     output_string = self.build_output(info_set)
-                    #output_file.write(str(pair) + '\n')
                     output_file.write(output_string + '\n')
         except IOError:
             print "An error occurred while saving the subset "\
@@ -340,7 +306,9 @@ class AnalysisEngine():
         Given a stemmed term, we look through the text of every document
         involved, determine the most common "parent" version of the 
         given stemmed term, and return it. 
+        
         This process is very time-consuming with large document sets...
+        TODO: figure out a way to make this faster with large sets.
         '''
         #print "Destemming term {0}".format(stemmed_term)
         candidates = {}
@@ -364,4 +332,34 @@ class AnalysisEngine():
         print "Destemmed: {0} --> {1}".format(stemmed_term, destemmed_term)
         return destemmed_term
 
-        
+
+    ###########################################################################
+    # def process_subset(self, subset, relevant_terms, num_terms=50):
+    #     '''
+    #     !!!!!!!NOTE: THIS METHOD IS NO LONGER USED!!!!!!
+    #     Constructs the list of weighted terms.
+    #     
+    #     NOTE: output list must be of form [(term1,weight1),(term2,weight2),
+    #     ...,(termn,weightn)]
+    #     '''
+    #     # build list of terms with their tf_idf weights
+    #     raw_weighted_terms = []
+    #     for term in relevant_terms:
+    #         tfidf = self.calc_tfidf_for_subset(term, subset)
+    #         raw_weighted_terms.append((term, tfidf))
+    #     raw_weighted_terms.sort(key=lambda pair: pair[1], reverse=True)
+    #     
+    #     # scale the weights so that they are <= 1.0 (max weight == 1.0)
+    #     weighted_terms = []
+    #     # since list is reverse sorted, first element has highest weight
+    #     scale_factor = raw_weighted_terms[0][1] 
+    #     for pair in raw_weighted_terms[:num_terms+1]:
+    #         weighted_terms.append((pair[0], pair[1] / scale_factor))
+    #     # destem the terms in the weighted list  
+    #     for i in range(0, len(weighted_terms)):
+    #         cur_pair = weighted_terms[i]
+    #         weighted_terms[i] = (self.destem(cur_pair[0]), cur_pair[1])
+    #         
+    #     return (subset[0].output_filename, weighted_terms)
+    ###########################################################################
+

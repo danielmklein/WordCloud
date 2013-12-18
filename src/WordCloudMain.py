@@ -16,23 +16,7 @@ PICKLE_PATH = r"C:\Users\Daniel\Dropbox\Class_Files\CBH_301\Word_Cloud\supreme_c
 OPINION_PATH = r"C:\Users\Daniel\Dropbox\Class_Files\CBH_301\Word_Cloud\supreme_court_opinions\test_output\opinions"
 PICKLE_PATH = r"C:\Users\Daniel\Dropbox\Class_Files\CBH_301\Word_Cloud\supreme_court_opinions\test_output\pickled"
 
-'''
-"War on Terror" cases
- 
-Rasul v. Bush and Al Odah v. United States 542 U.S. 466 (2004)
- 
-Hamdi v. Rumsfeld, 542 U.S. 507 (2004)
- 
-Rumsfeld v. Padilla, 542 U.S. 426 (2004)
- 
-Hamdan v. Rumsfeld, 548 U.S. 557 (2006)
- 
-Boumediene v. Bush, 553 U.S. 723 (2008)
- 
-Munaf v. Geren / Geren v. Omar, 553 U.S. 674 (2008)
-
-Holder v. Humanitarian Law Project, 130 S. Ct. 2705 (2010)
-'''
+# these are the cases dealing wit the War on Terror
 ACCEPTED_CITES = (["542 U.S. 466","542 U.S. 507","542 U.S. 426","548 U.S. 557","553 U.S. 723","553 U.S. 674"])
 
 class WordCloudMain():
@@ -46,72 +30,40 @@ class WordCloudMain():
     all of the components into a functional application.
     '''
     
+    
     def __init__(self):
         pass
-        
-        
-    '''
-    write method to 
-    '''
+
    
     def main(self, should_pack_opinions=False):
-        num_relevant_terms = 1000
-        print "Here's the main method..."
         '''
         Take all the opinions we want to convert, convert them,
         sort them into subsets, then analyze subsets and create 
         word cloud for each subset.
         '''
+        num_relevant_terms = 1000
+        print "Initializing analysis..."
+        
+        # if this is the first time running, we should convert all
+        # opinions and save the Document objects for future use.
         if should_pack_opinions:
-            '''
-            run through files in OPINION_PATH, convert each opinion to a Document,
-            and pickle each one to a file in PICKLE_PATH
-            '''
             self.pack_opinions()
             return
+        
         # unpickle opinions
         opinion_list = self.unpack_opinions()
         
-        # first we convert the opinion files into Document objects
-        #opinion_list = self.convert_opinions()
         # now we sort them
         subsets = self.sort_opinions(opinion_list)
         
-        # should I del opinion_list now??
+        # delete the list to save memory (it isn't used anymore)
         del opinion_list
         
         # perform the analysis
         subset_lists = self.run_analysis(subsets, num_relevant_terms)
         # and generate the word cloud
         self.generate_clouds(subset_lists)
-                
-        
-    def convert_opinions(self):
-        '''
-        Convert each given opinion into a Document object.
-        
-        THIS METHOD IS NOT USED NOW.
-        '''
-        opinion_list = []
-        txtfile_regex = re.compile(r"\.txt$")
-        for opinion_file in os.listdir(OPINION_PATH):
-            input_path = os.path.join(OPINION_PATH, opinion_file)
-            is_text_file = re.search(txtfile_regex, input_path)
-            if not is_text_file:
-                print ("{0} is not a text file, so we can't convert it!"
-                       .format(input_path))
-                continue
-            pickle_path = os.path.join(OPINION_PATH, "output", 
-                                       opinion_file + ".Document")
-            converter = DocumentConverter(input_path, pickle_path)
-            print "Converting file {0}...".format(opinion_file)
-            opinion_list.append(converter.convert_file())
-            del converter
-        # test output
-        #print opinion_list
-        print "There are {0} opinions in the list...".format(len(opinion_list))
-        # /test output
-        return opinion_list
+        print "Analysis and word cloud generation complete."
     
     
     def pack_opinions(self):
@@ -121,20 +73,25 @@ class WordCloudMain():
         '''
         print "Converting files in {0} to Document objects".format(OPINION_PATH)
         print "and serializing them to files in {0}...".format(PICKLE_PATH)
+        
         txtfile_regex = re.compile(r"\.txt$")
         num_converted = 0
         num_failed = 0
+        
         file_list = os.listdir(OPINION_PATH)
         for opinion_file in file_list:
             input_path = os.path.join(OPINION_PATH, opinion_file)
+            # if a file doesn't have a .txt extension, we ignore it
             is_text_file = re.search(txtfile_regex, input_path)
             if not is_text_file:
                 print ("{0} is not a text file, so we can't convert it!"
                        .format(input_path))
+                num_failed += 1
                 continue
             pickle_path = os.path.join(PICKLE_PATH, 
                                        opinion_file + ".Document")
             converter = DocumentConverter(input_path, pickle_path)
+            # we attempt to convert, to a Document object and pickle it
             try:
                 print "Converting file {0} ({1} of {2})...".format(opinion_file,
                                                             num_converted+1, 
@@ -147,9 +104,7 @@ class WordCloudMain():
                 num_failed += 1
                 continue
             del converter
-        # test output
-        #print opinion_list
-        # /test output
+            
         print "Opinion conversion and pickling complete."
         print "{0} opinions converted...".format(num_converted)
         print "{0} opinions failed to be converted.".format(num_failed)
@@ -159,23 +114,28 @@ class WordCloudMain():
     def unpack_opinions(self):
         '''
         Unpickle all of the Document files from PICKLE_PATH into 
-        Document objects.        
+        Document objects.      
         '''
         print "Unpacking Document objects from serialized files..."
+        
         opinion_list = []    
         doc_regex = re.compile(r"\.Document$")
         num_unpacked = 0
         num_failed = 0
+        
         file_list = os.listdir(PICKLE_PATH)
         for pickle_file in os.listdir(PICKLE_PATH):
             print "Unpacking Document object from {0}... "\
                     "({1} of {2})".format(pickle_file, num_unpacked+1, 
                                           len(file_list))
+            # if a file doesn't have a .Document extension, we ignore it
             is_document_file = re.search(doc_regex, pickle_file)
             if not is_document_file:
                 print ("{0} is not file containing a pickled Document,"
                        "so we can't unpack it!".format(pickle_file))
+                num_failed += 1
                 continue
+            # we attempt to un-pickle the file into a Document object
             full_path = os.path.join(PICKLE_PATH, pickle_file)
             with open(full_path, 'r') as doc_file:
                 try:
@@ -186,6 +146,8 @@ class WordCloudMain():
                     print "Unable to unpack Document contained in "\
                         "{0}!".format(pickle_file)
                     num_failed += 1
+                    continue
+                
         print "Unpacking complete."
         print "{0} Documents unpacked.".format(num_unpacked)
         print "{0} Documents failed to unpack.".format(num_failed)
@@ -211,24 +173,18 @@ class WordCloudMain():
         terror_concurs = sorter.create_subset(sort_field, 
                                                   ["concur"])        
         terror_dissents = sorter.create_subset(sort_field, 
-                                                  ["dissent"])
-        
-        #oh_four_cases = sorter.create_subset("case_dates", ["2004"])  
-              
+                                                  ["dissent"])              
         
         subsets = [terror_majs, terror_concurs, terror_dissents]
         ###
         print "The set contains {0} subset(s)...".format(len(subsets))
-        # test output
-        subset_num = 0
-        for subset in subsets:
-            print "subset {0} contains {1} docs.".format(subset_num, len(subset))
-            subset_num += 1
-        # /test output
         return subsets
     
     
     def run_analysis(self, subsets, num_terms):
+        '''
+        Performs term analysis on the given subsets.
+        '''
         print "Running analysis..."
         analysis_engine = AnalysisEngine(subsets)
         subset_lists = analysis_engine.analyze_docs(num_terms)
@@ -241,9 +197,9 @@ class WordCloudMain():
         NOTE that subset_lists is a list of (output_filename, weighted_list) 
         pairs.
         
-        i.e. subset_lists = [(output_filename, weighted_list), 
-                            (filename, list), ... , (filename, list)]
+        i.e. subset_lists = [weighted_list, weighted_list, ... , weighted_list]
         '''
+        # define the image output file paths and name each weighted list.
         terror_maj_file = os.path.join(OPINION_PATH, "output", "terror_majority.jpg")
         terror_maj_terms = subset_lists[0]
             
@@ -279,6 +235,41 @@ class WordCloudMain():
         
         return
     
+    
+    ###########################################################################
+    # def convert_opinions(self):
+    #     '''
+    #     !!!!!!THIS METHOD IS NO LONGER USED!!!!!
+    #     
+    #     Convert each given opinion into a Document object.
+    #     '''
+    #     opinion_list = []
+    #     txtfile_regex = re.compile(r"\.txt$")
+    #     for opinion_file in os.listdir(OPINION_PATH):
+    #         input_path = os.path.join(OPINION_PATH, opinion_file)
+    #         is_text_file = re.search(txtfile_regex, input_path)
+    #         if not is_text_file:
+    #             print ("{0} is not a text file, so we can't convert it!"
+    #                    .format(input_path))
+    #             continue
+    #         pickle_path = os.path.join(OPINION_PATH, "output", 
+    #                                    opinion_file + ".Document")
+    #         converter = DocumentConverter(input_path, pickle_path)
+    #         print "Converting file {0}...".format(opinion_file)
+    #         opinion_list.append(converter.convert_file())
+    #         del converter
+    #     print "There are {0} opinions in the list...".format(len(opinion_list))
+    #     return opinion_list
+    ###########################################################################
+    
 
+'''
+NOTE: If should_pack_opinions=True, main() will take all the opinions living in 
+OPINION_PATH, convert them to Document objects, and pickle them to PICKLE_PATH.
+This process need only be done once to pack all the pickled Documents.
+
+If should_pack_opinions=False, main() runs as normal, creating subsets, 
+performing analysis, and creating word clouds and weighted list output.
+'''
 word_cloud_app = WordCloudMain()
 word_cloud_app.main(should_pack_opinions=False)  
