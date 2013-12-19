@@ -204,12 +204,14 @@ class AnalysisEngine():
         weighted_raw_terms = []
         scale_factor = raw_term_info[0][1]
         for info_set in raw_term_info[:num_terms]:
-            destemmed_term = self.destem(info_set[0])
+            #destemmed_term = self.destem(info_set[0])
+            term = info_set[0]
             weight = info_set[1] / scale_factor
             tfidf = info_set[2]
             tf = info_set[3]
             df = info_set[4]
-            weighted_raw_terms.append((destemmed_term, weight, tfidf, tf,df))
+            #weighted_raw_terms.append((destemmed_term, weight, tfidf, tf,df))
+            weighted_raw_terms.append((term, weight, tfidf, tf,df))
             
         return weighted_raw_terms
     

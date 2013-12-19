@@ -77,11 +77,19 @@ class DocumentSorter():
                 for value in allowed_values:
                     if value in getattr(doc.doc_metadata, sort_field):
                         subset.append(doc)
-            else: # the attribute is a list of dates (this is dirty)
+                        # if we hit a match, we break to avoid adding a doc
+                        # to the subset multiple times.
+                        break
+            else: # the attribute is a string containing dates (this is dirty)
+                # this code is redundant, but I want to remember that it might
+                # change in the future, and keep it separate
                 for value in allowed_values:
-                    for date in getattr(doc.doc_metadata, sort_field):
-                        if value in date:
-                            subset.append(doc)
+                    if value in getattr(doc.doc_metadata, sort_field):
+                        subset.append(doc)
+                        # if we hit a match, we break to avoid adding a doc
+                        # to the subset multiple times.
+                        break
+                    
         return subset
     
     
