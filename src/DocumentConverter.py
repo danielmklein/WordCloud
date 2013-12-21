@@ -178,7 +178,7 @@ class DocumentConverter():
         Pulls the individual dates out of the dates line.
         '''
         # TODO: convert datestrings into datetime objects??
-        dates = []
+        dates = ""
         datestring_regex = re.compile(r"\w+\s\d{1,2}-?\d?\d?,\s\d{4},\s\w+;")
         raw_dates = datestring_regex.findall(date_string)
         
@@ -188,9 +188,8 @@ class DocumentConverter():
             group_match = grouped_date_regex.search(raw_date)
             date = group_match.group(1)
             action = group_match.group(2)
-            date_string = date + ' (' + action + ')'
+            date_string = date + ' (' + action + ') '
             #dates.append((date, action))
-            dates.append(date_string)           
+            dates += date_string
         return dates
-        
-        
+

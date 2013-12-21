@@ -30,7 +30,7 @@ class SupremeCourtOpinionMetadata(Metadata):
         self.case_lawyers_ed_cite = ""
         self.case_lexis_cite = ""
         self.case_full_cite = ""
-        self.case_dates = []
+        self.case_dates = ""
         self.case_disposition= ""
         self.opinion_author = ""
         self.opinion_type = ""

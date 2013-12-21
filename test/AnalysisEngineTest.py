@@ -158,33 +158,44 @@ class AnalysisEngineTest(unittest.TestCase):
 
 
     def testAnalyzeWithSingleSubset(self):
+        print "Testing AnalysisEngine.analyze_docs() with single subset..."
         self.test_engine.set_subsets([self.subsets[2]])
         print self.test_engine.subsets
         ##
         self.test_engine.analyze_docs()
         ##
+        self.fail("haven't written this test yet")
+        print "Finished testing AnalysisEngine.analyze_docs()..."
         
     
     def testAnalyzeWithMultipleSubsets(self):
+        print "Testing AnalysisEngine.analyze_docs() with multiple subsets..."
         self.test_engine.set_subsets(self.subsets)
         print self.test_engine.subsets
         ##
         self.test_engine.analyze_docs()
         ##
-    
+        self.fail("haven't written this test yet")
+        print "Finished testing AnalysisEngine.analyze_docs()..."
     
     def testAnalyzeWithZeroSubsets(self):
+        print "Testing AnalysisEngine.analyze_docs() with zero subsets..."
         self.test_engine.set_subsets([])
         print self.test_engine.subsets
         ##
         self.test_engine.analyze_docs()
         ##
+        self.fail("haven't written this test yet")
+        print "Finished testing AnalysisEngine.analyze_docs()..."
     
     
     def testAnalysisWithInvalidInput(self):
+        print "Testing AnalysisEngine.analyze_docs() with invalid input..."
         self.subsets.append(["not a doc", "nor is this"])
         self.assertRaises(Exception, self.test_engine.set_subsets, self.subsets)
         print self.test_engine.subsets
+        self.fail("haven't written this test yet")
+        print "Finished testing AnalysisEngine.analyze_docs()..."
     
 
 if __name__ == "__main__":

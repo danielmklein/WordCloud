@@ -105,7 +105,9 @@ class DocumentStorage(Document):
             prev_term = split_text[i-1]
             cur_term = split_text[i]
             is_proper_noun = (cap_regex.match(cur_term)
-                            and (not '.' in prev_term))
+                              and (not "." in prev_term)
+                              and (not '?' in prev_term)
+                              and (not '!' in prev_term))
             if not is_proper_noun:
                 filtered_text.append(cur_term)
         return " ".join(filtered_text)

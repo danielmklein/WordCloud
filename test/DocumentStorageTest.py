@@ -24,6 +24,17 @@ you may go to Camp Green Lake." \
 Stanley was from a poor family. He had never been to camp before.\
 """
 
+NO_PROPER_NOUNS =\
+"""\
+The reader is probably asking: would anyone go to \
+Most campers weren't given a choice. Camp is a camp for bad boys. \
+If you take a bad boy and make him dig a hole every day in the hot sun, it \
+will turn him into a good boy. That was what some people thought. \
+Stanley was given a choice. The judge said, "You may go to jail, or \
+you may go to \
+Stanley was from a poor family. He had never been to camp before.\
+"""
+
 EXPECTED_SPLIT_TEXT = (['reader', 'probably', 'asking:', 'would', 'anyone', 'go',
                         'camp', 'green', 'lake?', 'campers', "weren't", 'given', 
                         'choice.', 'camp', 'green', 'lake', 'camp', 'bad', 'boys.', 
@@ -50,7 +61,7 @@ EXPECTED_TERM_LIST = ({'lake?': {'tf': None}, 'camp': {'tf': None}, 'people': {'
                        "weren't": {'tf': None}, 'jail,': {'tf': None}, 'make': {'tf': None}})
 
 
-class DocumentTest(unittest.TestCase):
+class DocumentStorageTest(unittest.TestCase):
 
 
     def setUp(self):
@@ -69,6 +80,9 @@ class DocumentTest(unittest.TestCase):
                                                                       
 
     def test_serialization(self):
+        '''
+        passing
+        '''
         print "Testing DocumentStorage.write_to_file()..."
         test_output_path = self.test_document.output_filename
         if not self.test_document.write_to_file():
@@ -84,6 +98,9 @@ class DocumentTest(unittest.TestCase):
         
     
     def test_serialization_output_nonwritable(self):
+        '''
+        passing
+        '''
         print "Testing DocumentStorage.write_to_file() with read-only output file..."
         test_output_path = self.test_document.output_filename
         with open(test_output_path, 'w') as touch:
@@ -104,24 +121,36 @@ class DocumentTest(unittest.TestCase):
         
     
     def test_count_words(self):
+        '''
+        passing
+        '''
         print "Testing DocumentStorage.count_words()..."
         expected_word_count = 15
         self.assertEqual(self.test_document.word_count, expected_word_count)
         
         
     def test_print_doc(self):
+        '''
+        passing
+        '''
         print "Testing DocumentStorage.print_doc()..."
         self.test_document.print_doc()
         print "DocumentStorage.print_doc() testing finished.***"
         
     
     def test_print_metadata(self):
+        '''
+        passing
+        '''
         print "Testing DocumentStorage.print_metadata()..."
         self.test_document.print_metadata()
         print "DocumentStorage.print_metadata() testing finished.***"
 
     
     def test_create_split_text(self):
+        '''
+        passing
+        '''
         print "Testing DocumentStorage.create_split_text()..."
         split_text = self.test_document.create_split_text(TEST_TEXT)
         self.assertEqual(EXPECTED_SPLIT_TEXT, split_text)
@@ -129,6 +158,9 @@ class DocumentTest(unittest.TestCase):
 
 
     def test_build_term_list(self):
+        '''
+        passing
+        '''
         print "Testing DocumentStorage.build_term_list()..."
         term_list = self.test_document.build_term_list(EXPECTED_SPLIT_TEXT)
         self.assertEqual(EXPECTED_TERM_LIST, term_list)
@@ -148,8 +180,16 @@ class DocumentTest(unittest.TestCase):
 
 
     def test_remove_proper_nouns(self):
+        '''
+        passing
+        '''
         print "Testing DocumentStorage.remove_proper_nouns()..."
-        self.fail("haven't written this test yet")
+        expected = NO_PROPER_NOUNS
+        actual = self.test_document.remove_proper_nouns(TEST_TEXT)
+        print "Expected text: {0}".format(expected)
+        print "Actual text  : {0}".format(actual)
+        self.assertEqual(expected, actual)
+        #self.fail("haven't written this test yet")
         print "DocumentStorage.remove_proper_nouns() testing finished.***"
 
 
