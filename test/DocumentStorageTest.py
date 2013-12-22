@@ -13,6 +13,9 @@ from SupremeCourtOpinionMetadata import SupremeCourtOpinionMetadata
 from DocumentStorage import DocumentStorage
 import os, os.path
 
+###############################################################################
+# here's all the test data
+###############################################################################
 TEST_TEXT =\
 """\
 The reader is probably asking: Why would anyone go to Camp Green Lake? \
@@ -35,17 +38,57 @@ you may go to \
 Stanley was from a poor family. He had never been to camp before.\
 """
 
-EXPECTED_SPLIT_TEXT = (['reader', 'probably', 'asking:', 'would', 'anyone', 'go',
-                        'camp', 'green', 'lake?', 'campers', "weren't", 'given', 
-                        'choice.', 'camp', 'green', 'lake', 'camp', 'bad', 'boys.', 
-                        'take', 'bad', 'boy', 'make', 'dig', 'hole', 'every', 'day', 
-                        'hot', 'sun,', 'turn', 'good', 'boy.', 'people', 'thought.', 
-                        'stanley', 'yelnats', 'given', 'choice.', 'judge', 'said,', 
-                        '"you', 'may', 'go', 'jail,', 'may', 'go', 'camp', 'green', 
-                        'lake."', 'stanley', 'poor', 'family.', 'never', 'camp', 
-                        'before.'])
+NO_PUNCTUATION =\
+"""\
+The reader is probably asking  Why would anyone go to Camp Green Lake  Most \
+campers weren t given a choice  Camp Green Lake is a camp for bad boys  If \
+you take a bad boy and make him dig a hole every day in the hot sun  it will \
+turn him into a good boy  That was what some people thought  Stanley Yelnats \
+was given a choice  The judge said   You may go to jail  or you may go to Camp \
+Green Lake   Stanley was from a poor family  He had never been to camp before \
+"""
 
-EXPECTED_TERM_LIST = ({'lake?': {'tf': None}, 'camp': {'tf': None}, 'people': {'tf': None}, 
+NO_SHORT_WORDS =\
+"""\
+The reader probably asking Why would anyone Camp Green Lake Most campers weren \
+given choice Camp Green Lake camp for bad boys you take bad boy and make him \
+dig hole every day the hot sun will turn him into good boy That was what some \
+people thought Stanley Yelnats was given choice The judge said You may jail \
+you may Camp Green Lake Stanley was from poor family had never been camp before\
+"""
+
+FILTERED_TEXT = """\
+The reader probably asking Why would anyone Camp Green Lake Most campers weren \
+given choice Camp Green Lake camp for bad boys you take bad boy and make him \
+dig hole every day the hot sun will turn him into good boy That was what some \
+people thought Stanley Yelnats was given choice The judge said You may jail \
+you may Camp Green Lake Stanley was from poor family had never been camp \
+before\
+"""
+
+NO_STOP_WORDS = ()
+
+SPLIT_TEXT = (['reader', 'probably', 'asking', 'would', 'anyone', 
+                        'camp', 'green', 'lake', 'campers', 'weren', 'given', 
+                        'choice', 'camp', 'green', 'lake', 'camp', 'bad', 
+                        'boys', 'take', 'bad', 'boy', 'make', 'dig', 'hole', 
+                        'every', 'day', 'hot', 'sun', 'turn', 'good', 'boy', 
+                        'people', 'thought', 'stanley', 'yelnats', 'given', 
+                        'choice', 'judge', 'said', 'may', 'jail', 'may', 
+                        'camp', 'green', 'lake', 'stanley', 'poor', 'family', 
+                        'never', 'camp'])
+
+STEMMED_TEXT = (['reader', 'probabl', 'ask', 'would', 'anyon', 
+                          'camp', 'green', 'lake', 'camper', 'weren', 
+                          'given', 'choic', 'camp', 'green', 'lake', 'camp', 
+                          'bad', 'boy', 'take', 'bad', 'boy', 'make', 'dig', 
+                          'hole', 'everi', 'day', 'hot', 'sun', 'turn', 
+                          'good', 'boy', 'peopl', 'thought', 'stanley', 
+                          'yelnat', 'given', 'choic', 'judg', 'said', 'may', 
+                          'jail', 'may', 'camp', 'green', 'lake', 'stanley', 
+                          'poor', 'famili', 'never', 'camp'])
+
+TERM_LIST = ({'lake?': {'tf': None}, 'camp': {'tf': None}, 'people': {'tf': None}, 
                        'boy.': {'tf': None}, 'thought.': {'tf': None}, 'boys.': {'tf': None},
                        'yelnats': {'tf': None}, 'go': {'tf': None}, 'stanley': {'tf': None}, 
                        'said,': {'tf': None}, 'given': {'tf': None}, 'would': {'tf': None}, 
@@ -60,6 +103,8 @@ EXPECTED_TERM_LIST = ({'lake?': {'tf': None}, 'camp': {'tf': None}, 'people': {'
                        'turn': {'tf': None}, 'bad': {'tf': None}, 'green': {'tf': None}, 
                        "weren't": {'tf': None}, 'jail,': {'tf': None}, 'make': {'tf': None}})
 
+###############################################################################
+###############################################################################
 
 class DocumentStorageTest(unittest.TestCase):
 
@@ -113,11 +158,17 @@ class DocumentStorageTest(unittest.TestCase):
     
     
     def test_convert_to_string(self):
+        '''
+        passing
+        '''
         print "Testing DocumentStorage.__str__()..."
-        expected_string = ""
-        expected_string += str(self.test_metadata)
-        expected_string += "Here is some test text  Blah blah blah blah em"
-        self.assertEqual(str(self.test_document), expected_string)
+        expected = str(self.test_metadata) \
+                    + "Here some test text Blah blah blah blah "\
+                    "Yea Alabama Drown Tide"
+        actual = str(self.test_document)
+        print "expected: {0}".format(expected)
+        print "actual  : {0}".format(actual)
+        self.assertEqual(expected, actual)
         
     
     def test_count_words(self):
@@ -152,8 +203,11 @@ class DocumentStorageTest(unittest.TestCase):
         passing
         '''
         print "Testing DocumentStorage.create_split_text()..."
-        split_text = self.test_document.create_split_text(TEST_TEXT)
-        self.assertEqual(EXPECTED_SPLIT_TEXT, split_text)
+        expected = SPLIT_TEXT
+        actual = self.test_document.create_split_text(FILTERED_TEXT)
+        print "expected: {0}".format(expected)
+        print "actual  : {0}".format(actual)
+        self.assertEqual(expected, actual)
         print "DocumentStorage.create_split_text() testing finished.***"
 
 
@@ -162,8 +216,8 @@ class DocumentStorageTest(unittest.TestCase):
         passing
         '''
         print "Testing DocumentStorage.build_term_list()..."
-        term_list = self.test_document.build_term_list(EXPECTED_SPLIT_TEXT)
-        self.assertEqual(EXPECTED_TERM_LIST, term_list)
+        term_list = self.test_document.build_term_list(SPLIT_TEXT)
+        self.assertEqual(TERM_LIST, term_list)
         print "DocumentStorage.build_term_list() testing finished.***"        
 
 
@@ -174,8 +228,15 @@ class DocumentStorageTest(unittest.TestCase):
 
 
     def test_filter_text(self):
+        '''
+        passing
+        '''
         print "Testing DocumentStorage.filter_text()..."
-        self.fail("haven't written this test yet")
+        expected = FILTERED_TEXT
+        actual = self.test_document.filter_text(TEST_TEXT)
+        print "expected: {0}".format(expected)
+        print "actual  : {0}".format(actual)
+        self.assertEqual(expected, actual)
         print "DocumentStorage.filter_text() testing finished.***"
 
 
@@ -186,51 +247,106 @@ class DocumentStorageTest(unittest.TestCase):
         print "Testing DocumentStorage.remove_proper_nouns()..."
         expected = NO_PROPER_NOUNS
         actual = self.test_document.remove_proper_nouns(TEST_TEXT)
-        print "Expected text: {0}".format(expected)
-        print "Actual text  : {0}".format(actual)
+        print "Expected: {0}".format(expected)
+        print "Actual  : {0}".format(actual)
         self.assertEqual(expected, actual)
         #self.fail("haven't written this test yet")
         print "DocumentStorage.remove_proper_nouns() testing finished.***"
 
 
     def test_remove_punctuation(self):
+        '''
+        passing
+        '''
         print "Testing DocumentStorage.remove_punctuation()..."
-        self.fail("haven't written this test yet")
+        expected = NO_PUNCTUATION
+        actual = self.test_document.remove_punctuation(TEST_TEXT)
+        print "expected: {0}".format(expected)
+        print "actual  : {0}".format(actual)
+        self.assertEqual(expected, actual)
+        #self.fail("haven't written this test yet")
         print "DocumentStorage.remove_punctuation() testing finished.***"
         
         
     def test_remove_nums(self):
+        '''
+        passing
+        '''
         print "Testing DocumentStorage.remove_nums()..."
-        self.fail("haven't written this test yet")
+        text = "Here is some test text. Blah blah blah blah "\
+                "1234567890987654321 Yea Alabama Drown 'em Tide!"
+        expected = "Here is some test text. Blah blah blah blah "\
+                " Yea Alabama Drown 'em Tide!"
+        actual = self.test_document.remove_nums(text)
+        print "expected: {0}".format(expected)
+        print "actual  : {0}".format(actual)
+        self.assertEqual(expected, actual)
+        #self.fail("haven't written this test yet")
         print "DocumentStorage.remove_nums() testing finished.***"
         
         
-    def test_remove_single_chars(self):
+    def test_remove_short_words(self):
+        '''
+        passing
+        '''
         print "Testing DocumentStorage.remove_single_chars()..."
-        self.fail("haven't written this test yet")
+        expected = NO_SHORT_WORDS
+        actual = self.test_document.remove_short_words(NO_PUNCTUATION)
+        print "expected: {0}".format(expected)
+        print "actual  : {0}".format(actual)
+        self.assertEqual(expected, actual)
+        #self.fail("haven't written this test yet")
         print "DocumentStorage.remove_single_chars() testing finished.***"
         
         
     def test_remove_stop_words(self):
+        '''
+        passing
+        '''
         print "Testing DocumentStorage.remove_stop_words()..."
-        self.fail("haven't written this test yet")
+        text = [word.lower() for word in FILTERED_TEXT.split()]
+        expected = SPLIT_TEXT
+        actual = self.test_document.remove_stop_words(text)
+        print "expected: {0}".format(expected)
+        print "actual  : {0}".format(actual)
+        self.assertEqual(expected, actual)
+        #self.fail("haven't written this test yet")
         print "DocumentStorage.remove_stop_words() testing finished.***"
         
         
     def test_stem_text(self):
+        '''
+        passing
+        '''
         print "Testing DocumentStorage.stem_text()..."
-        self.fail("haven't written this test yet")
+        expected = STEMMED_TEXT
+        actual = self.test_document.stem_text(SPLIT_TEXT)
+        print "expected: {0}".format(expected)
+        print "actual  : {0}".format(actual)
+        self.assertEqual(expected, actual)
+        #self.fail("haven't written this test yet")
         print "DocumentStorage.stem_text() testing finished.***"
         
 
     def test_calculate_term_frequency(self):
+        '''
+        passing
+        '''
         print "Testing DocumentStorage.remove_stop_words()..."
-        self.fail("haven't written this test yet")
+        for term in self.test_document.term_list:
+            print "Checking term frequency of term: {0}".format(term)
+            expected = self.test_document.stemmed_text.count(term) \
+                        / float(len(self.test_document.stemmed_text))
+            actual = self.test_document.calculate_term_frequency(term)
+            self.assertEqual(expected, actual)
+        #self.fail("haven't written this test yet")
         print "DocumentStorage.remove_stop_words() testing finished.***"
     
     
     def test_calc_tfidf(self):
+        
         print "Testing DocumentStorage.remove_stop_words()..."
+
         self.fail("haven't written this test yet")
         print "DocumentStorage.remove_stop_words() testing finished.***"
 
