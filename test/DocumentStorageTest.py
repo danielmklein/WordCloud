@@ -66,7 +66,7 @@ you may Camp Green Lake Stanley was from poor family had never been camp \
 before\
 """
 
-NO_STOP_WORDS = ()
+#NO_STOP_WORDS = ()
 
 SPLIT_TEXT = (['reader', 'probably', 'asking', 'would', 'anyone', 
                         'camp', 'green', 'lake', 'campers', 'weren', 'given', 
@@ -88,20 +88,37 @@ STEMMED_TEXT = (['reader', 'probabl', 'ask', 'would', 'anyon',
                           'jail', 'may', 'camp', 'green', 'lake', 'stanley', 
                           'poor', 'famili', 'never', 'camp'])
 
-TERM_LIST = ({'lake?': {'tf': None}, 'camp': {'tf': None}, 'people': {'tf': None}, 
-                       'boy.': {'tf': None}, 'thought.': {'tf': None}, 'boys.': {'tf': None},
-                       'yelnats': {'tf': None}, 'go': {'tf': None}, 'stanley': {'tf': None}, 
-                       'said,': {'tf': None}, 'given': {'tf': None}, 'would': {'tf': None}, 
-                       '"you': {'tf': None}, 'family.': {'tf': None}, 'campers': {'tf': None}, 
-                       'lake': {'tf': None}, 'anyone': {'tf': None}, 'choice.': {'tf': None}, 
-                       'take': {'tf': None}, 'reader': {'tf': None}, 'probably': {'tf': None}, 
-                       'poor': {'tf': None}, 'good': {'tf': None}, 'may': {'tf': None}, 
-                       'never': {'tf': None}, 'before.': {'tf': None}, 'every': {'tf': None}, 
-                       'sun,': {'tf': None}, 'judge': {'tf': None}, 'hole': {'tf': None}, 
-                       'lake."': {'tf': None}, 'day': {'tf': None}, 'boy': {'tf': None}, 
-                       'asking:': {'tf': None}, 'dig': {'tf': None}, 'hot': {'tf': None}, 
-                       'turn': {'tf': None}, 'bad': {'tf': None}, 'green': {'tf': None}, 
-                       "weren't": {'tf': None}, 'jail,': {'tf': None}, 'make': {'tf': None}})
+TERM_LIST = ({'camp': {'tf': None}, 'weren': {'tf': None}, 'famili': {'tf': None}, 
+              'stanley': {'tf': None}, 'probabl': {'tf': None}, 
+              'given': {'tf': None}, 'said': {'tf': None}, 'would': {'tf': None}, 
+              'sun': {'tf': None}, 'make': {'tf': None}, 'lake': {'tf': None}, 
+              'hot': {'tf': None}, 'anyon': {'tf': None}, 'take': {'tf': None}, 
+              'reader': {'tf': None}, 'jail': {'tf': None}, 'poor': {'tf': None}, 
+              'good': {'tf': None}, 'everi': {'tf': None}, 'boy': {'tf': None}, 
+              'may': {'tf': None}, 'peopl': {'tf': None}, 'never': {'tf': None}, 
+              'camper': {'tf': None}, 'yelnat': {'tf': None}, 'ask': {'tf': None}, 
+              'hole': {'tf': None}, 'day': {'tf': None}, 'choic': {'tf': None}, 
+              'dig': {'tf': None}, 'judg': {'tf': None}, 'thought': {'tf': None}, 
+              'turn': {'tf': None}, 'bad': {'tf': None}, 'green': {'tf': None}})
+
+POPULATED_TERM_LIST = ({'poor': {'tf': 0.02}, 'good': {'tf': 0.02}, 
+                        'everi': {'tf': 0.02}, 'bad': {'tf': 0.04}, 
+                        'choic': {'tf': 0.04}, 'may': {'tf': 0.04}, 
+                        'peopl': {'tf': 0.02}, 'green': {'tf': 0.06}, 
+                        'never': {'tf': 0.02}, 'camper': {'tf': 0.02}, 
+                        'yelnat': {'tf': 0.02}, 'dig': {'tf': 0.02}, 
+                        'famili': {'tf': 0.02}, 'ask': {'tf': 0.02}, 
+                        'stanley': {'tf': 0.04}, 'hole': {'tf': 0.02}, 
+                        'day': {'tf': 0.02}, 'probabl': {'tf': 0.02}, 
+                        'boy': {'tf': 0.06}, 'given': {'tf': 0.04}, 
+                        'said': {'tf': 0.02}, 'would': {'tf': 0.02}, 
+                        'sun': {'tf': 0.02}, 'make': {'tf': 0.02}, 
+                        'camp': {'tf': 0.1}, 'judg': {'tf': 0.02}, 
+                        'lake': {'tf': 0.06}, 'hot': {'tf': 0.02}, 
+                        'thought': {'tf': 0.02}, 'turn': {'tf': 0.02}, 
+                        'weren': {'tf': 0.02}, 'anyon': {'tf': 0.02}, 
+                        'take': {'tf': 0.02}, 'reader': {'tf': 0.02}, 
+                        'jail': {'tf': 0.02}})
 
 ###############################################################################
 ###############################################################################
@@ -110,8 +127,7 @@ class DocumentStorageTest(unittest.TestCase):
 
 
     def setUp(self):
-        self.test_text = ("Here is some test text. Blah blah blah blah \n"
-                          + "1234567890987654321 Yea Alabama Drown 'em Tide!\n")
+        self.test_text = TEST_TEXT
         self.test_metadata = SupremeCourtOpinionMetadata()
         self.test_filename = "test_document.txt"
         self.test_document = DocumentStorage(self.test_metadata, 
@@ -162,9 +178,7 @@ class DocumentStorageTest(unittest.TestCase):
         passing
         '''
         print "Testing DocumentStorage.__str__()..."
-        expected = str(self.test_metadata) \
-                    + "Here some test text Blah blah blah blah "\
-                    "Yea Alabama Drown Tide"
+        expected = str(self.test_metadata) + FILTERED_TEXT
         actual = str(self.test_document)
         print "expected: {0}".format(expected)
         print "actual  : {0}".format(actual)
@@ -176,7 +190,7 @@ class DocumentStorageTest(unittest.TestCase):
         passing
         '''
         print "Testing DocumentStorage.count_words()..."
-        expected_word_count = 15
+        expected_word_count = 95
         self.assertEqual(self.test_document.word_count, expected_word_count)
         
         
@@ -216,14 +230,25 @@ class DocumentStorageTest(unittest.TestCase):
         passing
         '''
         print "Testing DocumentStorage.build_term_list()..."
-        term_list = self.test_document.build_term_list(SPLIT_TEXT)
-        self.assertEqual(TERM_LIST, term_list)
+        expected = TERM_LIST
+        actual = self.test_document.build_term_list(STEMMED_TEXT)
+        print "expected: {0}".format(expected)
+        print "actual  : {0}".format(actual)
+        self.assertEqual(expected, actual)
         print "DocumentStorage.build_term_list() testing finished.***"        
 
 
     def test_populate_term_freqs(self):
+        '''
+        passing
+        '''
         print "Testing DocumentStorage.populate_term_freqs()..."
-        self.fail("haven't written this test yet")
+        expected = POPULATED_TERM_LIST
+        actual = self.test_document.populate_term_freqs(TERM_LIST)
+        print "expected: {0}".format(expected)
+        print "actual  : {0}".format(actual)
+        self.assertEqual(expected, actual)
+        #self.fail("haven't written this test yet")
         print "DocumentStorage.populate_term_freqs() testing finished.***"
 
 
@@ -344,10 +369,20 @@ class DocumentStorageTest(unittest.TestCase):
     
     
     def test_calc_tfidf(self):
-        
         print "Testing DocumentStorage.remove_stop_words()..."
-
-        self.fail("haven't written this test yet")
+        test_doc_freq = 0.1
+        print "Relative doc frequency for testing "\
+            "purposes is: {0}".format(test_doc_freq)
+        for term in self.test_document.term_list:
+            print "Checking tfidf for term: {0}".format(term)
+            expected = POPULATED_TERM_LIST[term]['tf'] / test_doc_freq
+            actual = self.test_document.calc_tfidf(term, test_doc_freq)
+            self.assertEqual(expected, actual)
+        # now test the calculation for a term we know isn't in the list
+        expected = 0
+        actual = self.test_document.calc_tfidf("kalamazoo", test_doc_freq)
+        self.assertEqual(expected, actual)
+        #self.fail("haven't written this test yet")
         print "DocumentStorage.remove_stop_words() testing finished.***"
 
 
