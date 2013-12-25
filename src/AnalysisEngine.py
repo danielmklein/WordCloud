@@ -204,14 +204,14 @@ class AnalysisEngine():
         weighted_raw_terms = []
         scale_factor = raw_term_info[0][1]
         for info_set in raw_term_info[:num_terms]:
-            #destemmed_term = self.destem(info_set[0])
-            term = info_set[0]
+            destemmed_term = self.destem(info_set[0], self.subsets)
+            #term = info_set[0]
             weight = info_set[1] / scale_factor
             tfidf = info_set[2]
             tf = info_set[3]
             df = info_set[4]
-            #weighted_raw_terms.append((destemmed_term, weight, tfidf, tf,df))
-            weighted_raw_terms.append((term, weight, tfidf, tf,df))
+            weighted_raw_terms.append((destemmed_term, weight, tfidf, tf,df))
+            #weighted_raw_terms.append((term, weight, tfidf, tf,df))
             
         return weighted_raw_terms
     
@@ -303,34 +303,113 @@ class AnalysisEngine():
         return output_string
         
         
-    def destem(self, stemmed_term):
+#     def destem(self, stemmed_term, subsets):
+#         '''
+#         Given a stemmed term, we look through the text of every document
+#         involved, determine the most common "parent" version of the 
+#         given stemmed term, and return it. 
+#         
+#         This process is very time-consuming with large document sets...
+#         TODO: figure out a way to make this faster with large sets.
+#         '''
+#         #print "Destemming term {0}".format(stemmed_term)
+#         candidates = {}
+#         stemmer = PorterStemmer()
+#         for subset in subsets:
+#             for doc in subset:
+#                 for term in doc.split_text:
+#                     if stemmer.stem(term) == stemmed_term:
+#                         if term in candidates:
+#                             candidates[term] += 1
+#                         else:
+#                             candidates[term] = 1
+#         # test output
+#         #print candidates
+#         # /test output
+#         sorted_candidates = candidates.keys()
+#         # sort potential destemmed versions by frequency in decreasing order
+#         sorted_candidates.sort(key = lambda 
+#                                 term: candidates[term], reverse=True)
+#         destemmed_term = sorted_candidates[0]
+#         print "Destemmed: {0} --> {1}".format(stemmed_term, destemmed_term)
+#         return destemmed_term
+    
+    
+    def destem(self, stemmed_term, subsets):
         '''
         Given a stemmed term, we look through the text of every document
         involved, determine the most common "parent" version of the 
         given stemmed term, and return it. 
-        
+         
         This process is very time-consuming with large document sets...
         TODO: figure out a way to make this faster with large sets.
         '''
-        #print "Destemming term {0}".format(stemmed_term)
+        destemmed_term = ""
+        min_num_terms = 5000
+        min_percentage = 0.20
         candidates = {}
         stemmer = PorterStemmer()
-        for subset in self.subsets:
+        num_terms_checked = 0
+        num_docs_checked = 0
+        found_match = False
+        
+        for subset in subsets:
+            
             for doc in subset:
-                for term in doc.split_text:
-                    if stemmer.stem(term) == stemmed_term:
-                        if term in candidates:
-                            candidates[term] += 1
-                        else:
-                            candidates[term] = 1
-        # test output
-        #print candidates
-        # /test output
-        sorted_candidates = candidates.keys()
-        # sort potential destemmed versions by frequency in decreasing order
-        sorted_candidates.sort(key = lambda 
-                                term: candidates[term], reverse=True)
-        destemmed_term = sorted_candidates[0]
+                # matches is the list of all term in the current text that are
+                # "ancestor" versions of the stemmed term.
+                matches = ([term for term in doc.split_text 
+                            if stemmer.stem(term) == stemmed_term])
+                num_terms_checked += len(doc.split_text)
+                num_docs_checked += 1
+                
+                # we keep a tally of the number of times each "ancestor"
+                # appears in our text
+                for match in matches:
+                    if match in candidates:
+                        candidates[match] += 1
+                    else:
+                        candidates[match] = 1
+                
+                # sort potential destemmed versions in descending order
+                # by frequency
+                sorted_candidates = candidates.keys()
+                sorted_candidates.sort(key = lambda 
+                                       term: candidates[term], reverse=True)
+                if not sorted_candidates:
+                    continue
+                
+                if num_docs_checked == self.num_docs: 
+                    # this means we've run through every doc, so the
+                    # most frequent ancestor version of the stemmed
+                    # term is the best destemmed result.
+                    destemmed_term = sorted_candidates[0]
+                    found_match = True
+                    break
+                
+                if min_num_terms <= num_terms_checked:
+                    # if we've reviewed enough total words, we can start trying
+                    # to find a suitable destemmed term from what we have so far
+                    total_matches = 0
+                    for candidate in candidates:
+                        total_matches += candidates[candidate]
+                    
+                    # this is the most frequent ancestor version of the
+                    # stemmed term
+                    possible_match = sorted_candidates[0]
+                    test_percentage = candidates[possible_match] \
+                                        / float(total_matches)
+                    # if the potential destemmed version accounts for a 
+                    # sufficient percentage of the total matches, we can
+                    # decide that it's a suitable destemmed result.
+                    if min_percentage <= test_percentage:
+                        destemmed_term = possible_match
+                        found_match = True
+                        break
+                    
+            if found_match:
+                break
+            
         print "Destemmed: {0} --> {1}".format(stemmed_term, destemmed_term)
         return destemmed_term
 
