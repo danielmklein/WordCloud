@@ -22,7 +22,8 @@ class DocumentStorage(Document):
         self.identifier = self.doc_metadata.opinion_author + "_" \
                             + self.doc_metadata.case_lexis_cite
                             
-        self.doc_text = self.filter_text(self.doc_text)
+        self.doc_text = self.filter_text(self.doc_text,
+                                         should_drop_prop_nouns=True)
         # split_text contains the full filtered text of the document
         self.split_text = self.create_split_text(self.doc_text)
         # stemmed_text contains full filtered text with all words stemmed

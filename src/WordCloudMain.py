@@ -176,7 +176,7 @@ class WordCloudMain():
                                                   ["dissent"])  
         '''
         
-        #sorter = DocumentSorter(terror_cases)
+        sorter = DocumentSorter(terror_cases)
         sort_field = "case_dates"
         oh_three_cases = sorter.create_subset(sort_field, ["2003"])  
         oh_four_cases = sorter.create_subset(sort_field, ["2004"])  
@@ -282,7 +282,6 @@ class WordCloudMain():
         oh_five_cloud = WordCloudGenerator(oh_three_terms, oh_five_file)
         oh_five_cloud.generate_word_cloud()
         print "Word cloud generated and saved to {0}".format(oh_five_file)
-        
         
         return
     
