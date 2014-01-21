@@ -176,7 +176,7 @@ class WordCloudMain():
                                                   ["dissent"])  
         '''
         
-        sorter = DocumentSorter(terror_cases)
+        #sorter = DocumentSorter(terror_cases)
         sort_field = "case_dates"
         oh_three_cases = sorter.create_subset(sort_field, ["2003"])  
         oh_four_cases = sorter.create_subset(sort_field, ["2004"])  

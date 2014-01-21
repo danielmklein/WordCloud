@@ -115,14 +115,7 @@ class AnalysisEngine():
         term_list = sorted(terms_with_freqs.keys(), 
                            key = lambda 
                            term: terms_with_freqs[term], 
-                           reverse=True)
-        '''# test output
-        print "{0} MOST FREQUENTLY USED TERMS:".format(num_terms)
-        for term in term_list[:num_terms]:
-            print "{0} : {1}".format(term, terms_with_freqs[term])
-        # /test output
-        '''
-        
+                           reverse=True)        
         return term_list[:num_terms]
     
     
@@ -151,10 +144,6 @@ class AnalysisEngine():
             if term_within_range:
                 relevant_terms.append(term)
             #print "TERM {0} appears in {1} docs; {2}% of all docs".format(term, doc_freq, percentage_of_docs)
-        # test output
-        #print "RELEVANT TERMS: {0}".format(relevant_terms)
-        # /test output
-        
         return relevant_terms
         
 
@@ -249,7 +238,7 @@ class AnalysisEngine():
         the term in that subset -- ie the median of the tf-idf's for
         the term for each document in the subset.
         
-        TODO: possibly switch this from mean to median
+        TODO: possibly switch this from mean to median??
         '''
         doc_freq = self.term_list[term]
         tfidf_list = []
@@ -258,7 +247,6 @@ class AnalysisEngine():
             tfidf_list.append(new_tfidf)
         tfidf = mean(tfidf_list)
         #tfidf = median(tfidf_list)
-        
         # test output
         #print "TFIDF LIST FOR TERM {0} : {1}".format(term, tfidf_list)
         #print "MEAN TFIDF FOR TERM {0} : {1}".format(term, tfidf)
