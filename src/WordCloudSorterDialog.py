@@ -13,3 +13,11 @@ class WordCloudSorterDialog(wx.Dialog):
         wx.Dialog.__init__(self, parent, id, title, size=(350,300))
         # build sorter builder dialog here... dropdown, text boxes, button, etc
         
+        
+    def OnCreateSubset(self):
+        pass
+    
+    
+    def OnCancel(self):
+        pass
+        
