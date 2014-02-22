@@ -87,7 +87,10 @@ class WordCloudFrame(wx.Frame):
     def OnStart(self):
         dia = WordCloudInitDialog(self, -1, 'Word Cloud Setup')
         dia.ShowModal()
-        
+        self.opinions = dia.opinion_list
+        for opin in self.opinions:
+            print opin.output_filename
+                
         
     def OnAddSubset(self, event):
         dia = WordCloudSorterDialog(self, -1, 'Subset Builder')
