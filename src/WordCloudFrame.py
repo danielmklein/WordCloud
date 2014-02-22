@@ -1,13 +1,16 @@
 import wx
 from WordCloudSorterDialog import WordCloudSorterDialog
-from WordCloudInitDialog import WordCloudInitDialog
+from WordCloudCore import WordCloudCore
 
 class WordCloudFrame(wx.Frame): 
     
     def __init__(self, parent, id, title="Word Cloud Creator"):
-        wx.Frame.__init__(self, parent, id, title, size=(550,500))
+        wx.Frame.__init__(self, parent, id, title, size=(1500,1500))
+        
+        self.wc_core = WordCloudCore()
 
-        panel = wx.Panel(self, -1)
+         
+        panel = wx.Panel(self, -1, size=(1500,1500))
 
         main_box = wx.BoxSizer(wx.VERTICAL)
 
@@ -29,7 +32,7 @@ class WordCloudFrame(wx.Frame):
         # two scroll lists will go in second box
         list_box = wx.BoxSizer(wx.HORIZONTAL) # this variable name sucks.
         
-        subset_list = wx.ListBox(panel, choices = ["herp", "derp"])
+        subset_list = wx.ListBox(panel, size = (500,500), choices = ["herp", "derp"])
         list_box.Add(subset_list, flag = wx.ALIGN_LEFT)
         
         # buttons for adding/removing subsets from corpus list go in here
@@ -53,7 +56,7 @@ class WordCloudFrame(wx.Frame):
         
         list_box.Add(switch_box, flag = wx.ALIGN_CENTER)
         
-        corpus_list = wx.ListBox(panel, choices = ["lerp", "nerp"])
+        corpus_list = wx.ListBox(panel, size = (500,500), choices = ["lerp", "nerp"])
         list_box.Add(corpus_list, flag = wx.ALIGN_RIGHT)
         
         main_box.Add(list_box)
@@ -82,14 +85,18 @@ class WordCloudFrame(wx.Frame):
         
         
         self.OnStart()
-        
+        subset_list.Set(self.wc_core.opinion_labels)
         
     def OnStart(self):
-        dia = WordCloudInitDialog(self, -1, 'Word Cloud Setup')
-        dia.ShowModal()
-        self.opinions = dia.opinion_list
-        for opin in self.opinions:
-            print opin.output_filename
+        self.Hide()
+        wait = wx.BusyInfo("Loading opinions...", parent=self)
+        
+        self.wc_core.unpack_opinions()
+
+        wait = None
+        
+        self.Show()
+        return
                 
         
     def OnAddSubset(self, event):

@@ -6,7 +6,7 @@ from WordCloudFrame import WordCloudFrame
 
 # then we want to display the main dialog window
 #   from the main dialog window the user can build a new subset,
-#   view the list of opinions in a current subset, add/delete subsets
+#   view the8 list of opinions in a current subset, add/delete subsets
 #   from the corpus, and select a subset from which to generate a WC
 
 # if the user clicks on "Build New Subset", the sorter dialog box opens,
