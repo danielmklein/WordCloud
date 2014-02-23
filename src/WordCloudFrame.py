@@ -9,7 +9,6 @@ class WordCloudFrame(wx.Frame):
         
         self.wc_core = WordCloudCore()
 
-         
         panel = wx.Panel(self, -1, size=(1500,1500))
 
         main_box = wx.BoxSizer(wx.VERTICAL)
@@ -32,8 +31,8 @@ class WordCloudFrame(wx.Frame):
         # two scroll lists will go in second box
         list_box = wx.BoxSizer(wx.HORIZONTAL) # this variable name sucks.
         
-        subset_list = wx.ListBox(panel, size = (500,500), choices = ["herp", "derp"])
-        list_box.Add(subset_list, flag = wx.ALIGN_LEFT)
+        self.subset_list = wx.ListBox(panel, size = (500,500), choices = ["herp", "derp"])
+        list_box.Add(self.subset_list, flag = wx.ALIGN_LEFT)
         
         # buttons for adding/removing subsets from corpus list go in here
         switch_box = wx.BoxSizer(wx.VERTICAL)
@@ -82,10 +81,8 @@ class WordCloudFrame(wx.Frame):
         panel.SetSizer(main_box)
         panel.Layout()
         
-        
-        
         self.OnStart()
-        subset_list.Set(self.wc_core.opinion_labels)
+        
         
     def OnStart(self):
         self.Hide()

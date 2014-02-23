@@ -23,17 +23,23 @@ class WordCloudCore():
     Computer-Based Honors Program
     The University of Alabama
     2.22.2014
-    This class is the core functionality with which the GUI components
+    This class contains the core functionality with which the GUI components
     interact when running the app.
     '''
 
 
     def __init__(self):
-        '''
-        Constructor
-        '''
         self.opinion_list = []
         self.opinion_labels = []
+        
+        self.subsets = {}
+        self.subset_names = []
+        
+        self.corpus_subsets = {}
+        self.corpus_subset_names = []
+        
+        self.field_names = SupremeCourtOpinionMetadata().field_names
+        
         
     def unpack_opinions(self):
         '''
@@ -78,4 +84,15 @@ class WordCloudCore():
         self.opinion_labels = ([opin.doc_metadata.case_title  
                                for opin in self.opinion_list])
         return self.opinion_list
-        
+    
+    
+    def create_subset(self, opinion_list, sort_field, accepted_values):
+        '''
+        Sort the opinions into subset(s).
+        '''
+        print "Sorting the opinions into subsets..."
+        sorter = DocumentSorter(opinion_list)
+  
+        subset = sorter.create_subset(sort_field, accepted_values)
+        return subset
+    
