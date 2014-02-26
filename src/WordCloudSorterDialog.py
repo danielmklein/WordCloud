@@ -59,8 +59,8 @@ class WordCloudSorterDialog(wx.Dialog):
         
         invert_box = wx.BoxSizer(wx.HORIZONTAL)
         
-        checkbox = wx.CheckBox(panel, label = "Invert Subset")
-        invert_box.Add(checkbox, flag = wx.ALIGN_LEFT)
+        self.checkbox = wx.CheckBox(panel, label = "Invert Subset")
+        invert_box.Add(self.checkbox, flag = wx.ALIGN_LEFT)
         main_box.Add(invert_box)
         
         button_box = wx.BoxSizer(wx.HORIZONTAL)
@@ -84,20 +84,22 @@ class WordCloudSorterDialog(wx.Dialog):
     
     
     def OnCreateSubset(self, event):
-        #self.parent.wc_core.create_subset(self.parent.wc_core.opinion_list,
-        #                                  self.sort_field,
-        #                                  self.accepted_values)
         subset_name = self.name_input.GetValue()
         sort_field_index = self.field_selector.GetCurrentSelection()
         sort_field = self.parent.wc_core.field_names[sort_field_index]
-        accepted_values = self.allowed_input.GetValue()
+        accepted_values = self.parse_accepted_values( 
+                                self.allowed_input.GetValue())
+        shouldInvert = self.checkbox.GetValue()
+        new_subset = self.parent.wc_core.create_subset(
+                                        self.parent.wc_core.opinion_list,
+                                        sort_field, accepted_values,
+                                        shouldInvert)
+        test_list = [subset_name, sort_field, accepted_values, new_subset]
         
-        test_list = [subset_name, sort_field, accepted_values]
-        
-        self.parent.wc_core.subsets[subset_name] = test_list
-        self.parent.wc_core.subset_names.append(subset_name)
-        self.parent.subset_list.Set(self.parent.wc_core.subset_names)
+        self.parent.wc_core.add_subset(subset_name, new_subset)
+        # test output
         print str(test_list)
+        # /test output
         self.Destroy()
         
     
@@ -110,6 +112,7 @@ class WordCloudSorterDialog(wx.Dialog):
         This method should take a string of the entered accepted values
         and return a python list of accepted values.
         '''
-        pass
+        raw_values = value_string.split(",")
+        return [value.strip() for value in raw_values]
     
     

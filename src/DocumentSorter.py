@@ -49,11 +49,13 @@ class DocumentSorter():
         return subsets
     
     
-    def create_subset(self, sort_field, allowed_values):
+    def create_subset(self, sort_field, allowed_values, shouldInvert=False):
         '''
         Given a sort field and a list of values to accept for that field,
         this will return a list of Document objects, each of whose value
         for the sort field is in the list of allowed_values.
+        If shouldInvert=True, this will return the set of documents whose
+        value for sort_field != anything in allowed_values.
         '''
         subset = []
         for doc in self.doc_list:
@@ -89,8 +91,12 @@ class DocumentSorter():
                         # if we hit a match, we break to avoid adding a doc
                         # to the subset multiple times.
                         break
-                    
-        return subset
+        # TODO: potentially work this into the code above, though this way
+        # of inverting is super simple and straightforward (but sometimes slow)
+        if shouldInvert:
+            return [doc for doc in self.doc_list if doc not in subset]
+        else:
+            return subset
     
     
     def add_doc(self, doc_to_add):

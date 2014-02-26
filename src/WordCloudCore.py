@@ -86,13 +86,36 @@ class WordCloudCore():
         return self.opinion_list
     
     
-    def create_subset(self, opinion_list, sort_field, accepted_values):
+    def create_subset(self, opinion_list, sort_field, 
+                      accepted_values, shouldInvert=False):
         '''
         Sort the opinions into subset(s).
         '''
         print "Sorting the opinions into subsets..."
         sorter = DocumentSorter(opinion_list)
   
-        subset = sorter.create_subset(sort_field, accepted_values)
+        subset = sorter.create_subset(sort_field, accepted_values, 
+                                      shouldInvert)
         return subset
+    
+    
+    def add_subset(self, subset_name, subset_opinions):
+        self.subsets[subset_name] = subset_opinions
+        self.subset_names.append(subset_name)
+        
+        
+    def run_analysis(self, subsets, num_terms):
+        '''
+        Performs term analysis on the given subsets.
+        '''
+        print "Running analysis..."
+        analysis_engine = AnalysisEngine(subsets)
+        subset_lists = analysis_engine.analyze_docs(num_terms)
+        return subset_lists
+    
+    
+    def generate_cloud(self, subset, corpus):
+        pass
+        
+        
     

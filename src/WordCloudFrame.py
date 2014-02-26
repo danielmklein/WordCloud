@@ -31,7 +31,8 @@ class WordCloudFrame(wx.Frame):
         # two scroll lists will go in second box
         list_box = wx.BoxSizer(wx.HORIZONTAL) # this variable name sucks.
         
-        self.subset_list = wx.ListBox(panel, size = (500,500), choices = ["herp", "derp"])
+        self.subset_list = wx.ListBox(panel, size = (500,500), 
+                                      choices = self.wc_core.subset_names)
         list_box.Add(self.subset_list, flag = wx.ALIGN_LEFT)
         
         # buttons for adding/removing subsets from corpus list go in here
@@ -55,11 +56,11 @@ class WordCloudFrame(wx.Frame):
         
         list_box.Add(switch_box, flag = wx.ALIGN_CENTER)
         
-        corpus_list = wx.ListBox(panel, size = (500,500), choices = ["lerp", "nerp"])
-        list_box.Add(corpus_list, flag = wx.ALIGN_RIGHT)
+        self.corpus_list = wx.ListBox(panel, size = (500,500), 
+                                      choices = self.wc_core.corpus_subset_names)
+        list_box.Add(self.corpus_list, flag = wx.ALIGN_RIGHT)
         
         main_box.Add(list_box)
-        
         
         # buttons go in third box
         button_box = wx.BoxSizer(wx.HORIZONTAL)
@@ -100,30 +101,85 @@ class WordCloudFrame(wx.Frame):
         dia = WordCloudSorterDialog(self, -1, 'Subset Builder')
         dia.ShowModal()
         dia.Destroy()
+        self.subset_list.Set(self.wc_core.subset_names)
         
     
     def OnViewSubset(self, event):
-        pass
-    
+        '''
+        TODO: This is terrible. Make it better. It's also really really slow.
+        '''
+        indexes = self.subset_list.GetSelections()
+        for i in indexes:
+            subset_name = self.wc_core.subset_names[i]
+            subset = self.wc_core.subsets[subset_name]
+            info_string = self.build_info_string(subset)
+            wx.MessageDialog(None, info_string, subset_name, wx.OK).ShowModal()
+        
     
     def OnCreateWordCloud(self, event):
         pass
     
     
     def OnAddOne(self, event):
-        pass
+        '''
+        Add selected subset(s) to corpus.
+        '''
+        indexes = self.subset_list.GetSelections()
+        for i in indexes:
+            subset_name = self.wc_core.subset_names[i]
+            subset = self.wc_core.subsets[subset_name]
+            self.wc_core.corpus_subsets[subset_name] = subset
+            self.wc_core.corpus_subset_names.append(subset_name)
+            self.corpus_list.Set(self.wc_core.corpus_subset_names)
     
     
     def OnRemoveOne(self, event):
-        pass
-    
+        '''
+        Remove selected corpus subset(s) from corpus.
+        '''
+        indexes = self.corpus_list.GetSelections()
+        for i in indexes:
+            subset_name = self.wc_core.corpus_subset_names[i]
+            self.wc_core.corpus_subsets.pop(subset_name)
+            self.wc_core.corpus_subset_names.pop(i)
+        self.corpus_list.Set(self.wc_core.corpus_subset_names)
+            
     
     def OnAddAll(self, event):
-        pass
+        '''
+        Add all subsets to corpus.
+        NOTE: this could also be done by setting the corpus name list equal
+        to the subset name list, and the corpus dict equal to the subset dict.
+        '''
+        for subset_name in self.wc_core.subset_names:
+            if subset_name not in self.wc_core.corpus_subset_names:
+                subset = self.wc_core.subsets[subset_name]
+                self.wc_core.corpus_subsets[subset_name] = subset
+                self.wc_core.corpus_subset_names.append(subset_name)
+        self.corpus_list.Set(self.wc_core.corpus_subset_names)
     
     
     def OnRemoveAll(self, event):
-        pass
+        '''
+        Remove all corpus subsets from corpus.
+        '''
+        self.wc_core.corpus_subset_names = []
+        self.wc_core.corpus_subsets = {}
+        self.corpus_list.Set(self.wc_core.corpus_subset_names)
+            
+            
+    def build_info_string(self, subset):
+        '''
+        TODO: This is terrible. Make it better. It's also really really slow.
+        '''
+        info_string = "CASE TITLE                 OPINION AUTHOR  OPINION TYPE\n"
+        for opinion in subset:
+            info_string += opinion.doc_metadata.case_title + "\t"
+            info_string += opinion.doc_metadata.opinion_author + "\t"
+            info_string += opinion.doc_metadata.opinion_type +"\n"
+        return info_string
+            
+            
     
     
         
