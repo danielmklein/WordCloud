@@ -23,7 +23,7 @@ import os, os.path
 SOURCE_DIR_PATH = r"C:\Users\Daniel\Dropbox\Class_files\CBH_301\Word_Cloud\supreme_court_opinions\test"
 OUTPUT_DIR_PATH = r"C:\Users\Daniel\Dropbox\Class_files\CBH_301\Word_Cloud\supreme_court_opinions\test_output\opinions"
 
-class SupremeCourtOpinionParser():
+class SupremeCourtOpinionParser(object):
 
 	def __init__(self, output_dir):
 		self.output_dir = output_dir

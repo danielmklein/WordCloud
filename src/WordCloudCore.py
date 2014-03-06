@@ -17,7 +17,7 @@ OPINION_PATH = r"C:\Users\Daniel\Dropbox\Class_Files\CBH_301\Word_Cloud\supreme_
 PICKLE_PATH = r"C:\Users\Daniel\Dropbox\Class_Files\CBH_301\Word_Cloud\supreme_court_opinions\test_output\pickled"
 '''
 
-class WordCloudCore():
+class WordCloudCore(object):
     '''
     Daniel Klein
     Computer-Based Honors Program
@@ -76,7 +76,8 @@ class WordCloudCore():
                     print "Unable to unpack Document contained in "\
                         "{0}!".format(pickle_file)
                     num_failed += 1
-                    continue
+                    raise
+                    #continue
                 
         print "Unpacking complete."
         print "{0} Documents unpacked.".format(num_unpacked)

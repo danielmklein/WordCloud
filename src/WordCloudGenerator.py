@@ -9,7 +9,7 @@ import numpy
 
 FONT_PATH = "C:/Windows/Fonts/FRABK.ttf"
 
-class WordCloudGenerator():
+class WordCloudGenerator(object):
     '''
     Daniel Klein
     Computer-Based Honors Program

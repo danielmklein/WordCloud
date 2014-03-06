@@ -1,15 +1,16 @@
 from DocumentStorage import DocumentStorage
 import os, os.path
 from nltk.stem.porter import PorterStemmer
-from numpy import mean, median
+from numpy import mean
+# from numpy import median
 
-class AnalysisEngine():
+class AnalysisEngine(object):
     '''
     Daniel Klein
     Computer-Based Honors Program
     The University of Alabama
     9.26.2013
-    
+        
     Given a set of Documents (divided into subsets) (and perhaps analysis 
     parameters TBD), this class will perform natural language text processing 
     on the collection of documents and return a weighted list of the "most 
@@ -88,7 +89,7 @@ class AnalysisEngine():
         # test output
         #print "TERM LIST"
         #print term_list
-        #print "END TERM LIST"
+        #print "END TERM LIST" 
         # /test output
         return term_list
     
@@ -145,8 +146,10 @@ class AnalysisEngine():
         Main method -- kicks off the analysis process.
         '''
         # determine which terms we care about
-        most_freq_terms = self.get_most_freq_terms(self.corpus, num_relevant_terms)
-        relevant_terms = self.determine_relevant_terms(self.corpus, most_freq_terms)
+        most_freq_terms = self.get_most_freq_terms(self.corpus, 
+                                                   num_relevant_terms)
+        relevant_terms = self.determine_relevant_terms(self.corpus,
+                                                       most_freq_terms)
         
         print "Analyzing subset against corpus..."
         raw_info = self.collect_term_info(self.subset, relevant_terms)
@@ -188,9 +191,10 @@ class AnalysisEngine():
             #term = info_set[0]
             weight = info_set[1] / scale_factor
             tfidf = info_set[2]
-            tf = info_set[3]
-            df = info_set[4]
-            weighted_raw_terms.append((destemmed_term, weight, tfidf, tf,df))
+            term_freq = info_set[3]
+            doc_freq = info_set[4]
+            weighted_raw_terms.append((destemmed_term, weight, tfidf, 
+                                       term_freq, doc_freq))
             #weighted_raw_terms.append((term, weight, tfidf, tf,df))
             
         return weighted_raw_terms
@@ -276,7 +280,7 @@ class AnalysisEngine():
             output_string += "\tweight:" + weight
         else:
             output_string += "\t\tweight:" + weight
-        output_string +=  "\ttfidf:" + tfidf + "\ttf:" + term_freq \
+        output_string += "\ttfidf:" + tfidf + "\ttf:" + term_freq \
                         + "\tdf:" + doc_freq
         return output_string
     
@@ -316,9 +320,9 @@ class AnalysisEngine():
             # sort potential destemmed versions in descending order
             # by frequency
             sorted_candidates = sorted(candidates.keys(), 
-                                       key = lambda 
+                                       key=lambda 
                                        term: candidates[term], 
-                                       reverse = True)
+                                       reverse=True)
             if num_docs_checked == self.num_docs: 
                 # we've run through every doc, so the most frequent 
                 # ancestor of the stemmed term is the best destemmed 

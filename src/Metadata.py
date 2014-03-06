@@ -1,4 +1,4 @@
-class Metadata():
+class Metadata(object):
     '''
     Metadata Class for Word Cloud Project
     

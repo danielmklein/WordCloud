@@ -1,4 +1,4 @@
-class DocumentSorter():
+class DocumentSorter(object):
     '''
     Daniel Klein
     Computer-Based Honors Program
@@ -77,7 +77,7 @@ class DocumentSorter():
             # exact match not necessary
             if not "dates" in sort_field:
                 for value in allowed_values:
-                    if value in getattr(doc.doc_metadata, sort_field):
+                    if value.upper() in getattr(doc.doc_metadata, sort_field).upper():
                         subset.append(doc)
                         # if we hit a match, we break to avoid adding a doc
                         # to the subset multiple times.
@@ -86,7 +86,7 @@ class DocumentSorter():
                 # this code is redundant, but I want to remember that it might
                 # change in the future, and keep it separate
                 for value in allowed_values:
-                    if value in getattr(doc.doc_metadata, sort_field):
+                    if value.upper() in getattr(doc.doc_metadata, sort_field).upper():
                         subset.append(doc)
                         # if we hit a match, we break to avoid adding a doc
                         # to the subset multiple times.

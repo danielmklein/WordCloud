@@ -5,7 +5,7 @@ from Document import Document
 from SupremeCourtOpinionMetadata import SupremeCourtOpinionMetadata
 
 
-class DocumentConverter():
+class DocumentConverter(object):
     '''
     Daniel Klein
     Computer-Based Honors Program
