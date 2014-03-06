@@ -19,77 +19,72 @@ class AnalysisEngine():
     '''
 
 
-    def __init__(self, set_of_docs):
-        '''
-        set_of_docs should be of the form 
-        [[doc1, doc2, doc3], [doc4, doc5] , ... , [docx, docy, docz]]
-        In other words, a list representing the full set of docs, broken
-        into sublists, each representing a subset.
-        '''
-        self.set_subsets(set_of_docs)
+    def __init__(self, corpus, subset):
+        self.set_corpus(corpus)
+        self.set_subset(subset)
+        
 
-
-    def set_subsets(self, set_of_docs):
+    def set_corpus(self, corpus):
         '''
-        Updates the list of subsets to be analyzed.
-        For every doc in set, create new DocumentStorage object from doc
-        build list of all terms in entire set (build_full_term_list)
+        Basic setup for the corpus list of documents.
         '''
-        self.subsets = set_of_docs
+        self.corpus = corpus
         self.num_docs = self.count_docs()
-        self.subsets = self.convert_docs(self.subsets)
-        self.term_list = self.build_full_term_list(self.subsets)
-        
-        
+        self.corpus = self.convert_docs(self.corpus)
+        self.term_list = self.build_full_term_list(self.corpus)
+    
+    
+    def set_subset(self, subset):
+        '''
+        Basic setup for the subset list of documents.
+        '''
+        self.subset = subset
+        self.subset = self.convert_docs(self.subset)
+    
+
     def count_docs(self):
         '''
-        Calculates the total number of docs in all subsets.
+        Calculates the total number of docs in corpus.
         '''
-        num_docs = 0
-        for subset in self.subsets:
-            num_docs += len(subset)
-        return num_docs
+        return len(self.corpus)
         
         
-    def convert_docs(self, subsets):
+    def convert_docs(self, doc_set):
         '''
-        Transforms each doc in each subset into a DocumentStorage object,
+        Transforms each doc in a set into a DocumentStorage object,
         which makes them much easier to deal with as we perform our
-        calculations.
+        calculations.  
         '''
         print "Converting documents into DocumentStorage objects..."
         doc_num = 1
-        converted_subsets = []
-        for subset in subsets: 
-            new_subset = []
-            for doc in subset:
-                try:
-                    print ("Converting document {0} of {1} to Storage object..."
-                           .format(doc_num, self.num_docs))
-                    doc_num += 1
-                    doc = DocumentStorage(doc.doc_metadata, doc.doc_text, 
-                                      doc.output_filename)
-                    new_subset.append(doc)
-                except:
-                    raise Exception, "AnalysisEngine: The input seems to be of"\
-                        " the wrong type..."
-            converted_subsets.append(new_subset)
-        return converted_subsets
+        num_docs = len(doc_set)
+        converted_set = []
+        for doc in doc_set:
+            try:
+                print ("Converting document {0} of {1} to Storage object..."
+                       .format(doc_num, num_docs))
+                doc_num += 1
+                doc = DocumentStorage(doc.doc_metadata, doc.doc_text, 
+                                  doc.output_filename)
+                converted_set.append(doc)
+            except:
+                raise Exception("AnalysisEngine: The input seems to be of "
+                                "the wrong type...")
+        return converted_set
             
     
-    def build_full_term_list(self, subsets):
+    def build_full_term_list(self, corpus):
         '''
-        Constructs a list of all terms used in the entire set along
+        Constructs a list of all terms used in the entire corpus along
         with each term's doc frequency
         '''
-        print "Building list of all terms in document set..."
+        print "Building list of all terms in document corpus..."
         term_list = {}
-        for subset in subsets:
-            for doc in subset:
-                new_terms = ([term for term in doc.term_list 
-                             if term not in term_list])
-                for term in new_terms:
-                    term_list[term] = self.calc_doc_frequency(term)
+        for doc in corpus:
+            new_terms = ([term for term in doc.term_list 
+                         if term not in term_list])
+            for term in new_terms:
+                term_list[term] = self.calc_doc_frequency(term)
         # test output
         #print "TERM LIST"
         #print term_list
@@ -98,19 +93,18 @@ class AnalysisEngine():
         return term_list
     
     
-    def get_most_freq_terms(self, subsets, num_terms):
+    def get_most_freq_terms(self, corpus, num_terms):
         '''
-        Given num_terms, compile list of all terms in set and return
+        Given num_terms, compile list of all terms in corpus and return
         the num_terms most frequent terms (num_terms = 1000/5000/15000/etc)
         '''
         terms_with_freqs = {}
-        for subset in subsets:
-            for doc in subset:
-                for term in doc.stemmed_text:
-                    if term in terms_with_freqs:
-                        terms_with_freqs[term] += 1
-                    else:
-                        terms_with_freqs[term] = 1
+        for doc in corpus:
+            for term in doc.stemmed_text:
+                if term in terms_with_freqs:
+                    terms_with_freqs[term] += 1
+                else:
+                    terms_with_freqs[term] = 1
         # sort terms in decreasing order by frequency
         term_list = sorted(terms_with_freqs.keys(), 
                            key = lambda 
@@ -119,9 +113,9 @@ class AnalysisEngine():
         return term_list[:num_terms]
     
     
-    def determine_relevant_terms(self, subsets, term_list):
+    def determine_relevant_terms(self, corpus, term_list):
         '''
-        Given set of subsets and list of terms, we get rid of the terms
+        Given corpus and list of terms, we get rid of the terms
         that appear in more than x% or less than y% of the opinions.
         '''
         upper_bound = 0.95
@@ -132,11 +126,10 @@ class AnalysisEngine():
         # /test output
         for term in term_list:
             doc_freq = 0
-            for subset in subsets:
-                for doc in subset:
-                    # doc.term_list is filtered and stemmed
-                    if term in doc.term_list:
-                        doc_freq += 1
+            for doc in corpus:
+                # doc.term_list is filtered and stemmed
+                if term in doc.term_list:
+                    doc_freq += 1
             percentage_of_docs = doc_freq / float(self.num_docs)
             term_within_range = ((percentage_of_docs > lower_bound)
                                  and (percentage_of_docs < upper_bound))
@@ -150,30 +143,26 @@ class AnalysisEngine():
     def analyze_docs(self, num_relevant_terms=1000):
         '''
         Main method -- kicks off the analysis process.
-        NOTE: The return structure of this method is a list of 
-        weighted_lists.
         '''
-        subset_lists = []
         # determine which terms we care about
-        most_freq_terms = self.get_most_freq_terms(self.subsets, num_relevant_terms)
-        relevant_terms = self.determine_relevant_terms(self.subsets, most_freq_terms)
-        for subset in self.subsets:
-            print "Processing subset {0}...".format(self.subsets.index(subset))
-            raw_info = self.collect_term_info(subset, relevant_terms)
-            weighted_terms = self.build_weighted_pairs(raw_info)
-            #weighted_terms = self.process_subset(subset, relevant_terms)
-            ##
-            curdir = os.path.abspath(os.curdir)
-            # TODO: if a subset is empty, the next line yields an error
-            # there's gotta be a be a better way to choose a filename.
-            output_path = os.path.join(curdir, 
-                                       subset[0].output_filename 
-                                       + "_weighted_list.txt")
-            ##
-            subset_lists.append(weighted_terms)
-            self.save_term_info(raw_info, output_path)
+        most_freq_terms = self.get_most_freq_terms(self.corpus, num_relevant_terms)
+        relevant_terms = self.determine_relevant_terms(self.corpus, most_freq_terms)
+        
+        print "Analyzing subset against corpus..."
+        raw_info = self.collect_term_info(self.subset, relevant_terms)
+        weighted_terms = self.build_weighted_pairs(raw_info)
+        #weighted_terms = self.process_subset(subset, relevant_terms)
+        ##
+        curdir = os.path.abspath(os.curdir)
+        # TODO: if a subset is empty, the next line yields an error
+        # there's gotta be a be a better way to choose a filename.
+        output_path = os.path.join(curdir, 
+                                   self.subset[0].output_filename 
+                                   + "_weighted_list.txt")
+        ##
+        self.save_term_info(raw_info, output_path)
             
-        return subset_lists
+        return weighted_terms
             
             
     def collect_term_info(self, subset, relevant_terms, num_terms=50):
@@ -195,7 +184,7 @@ class AnalysisEngine():
         weighted_raw_terms = []
         scale_factor = raw_term_info[0][1]
         for info_set in raw_term_info[:num_terms]:
-            destemmed_term = self.destem(info_set[0], self.subsets)
+            destemmed_term = self.destem(info_set[0], self.corpus)
             #term = info_set[0]
             weight = info_set[1] / scale_factor
             tfidf = info_set[2]
@@ -221,13 +210,12 @@ class AnalysisEngine():
     def calc_doc_frequency(self, term):
         '''
         Given a term, calculates its relative doc frequency, ie
-        (# docs term in which term appears) / (# docs total in set)
+        (# docs term in which term appears) / (# docs total in corpus)
         '''
         doc_frequency = 0
-        for subset in self.subsets:
-            for doc in subset:
-                if term in doc.term_list:
-                    doc_frequency += 1
+        for doc in self.corpus:
+            if term in doc.term_list:
+                doc_frequency += 1
         rel_frequency = doc_frequency / float(self.num_docs)
         return rel_frequency
     
@@ -293,10 +281,10 @@ class AnalysisEngine():
         return output_string
     
     
-    def destem(self, stemmed_term, subsets):
+    def destem(self, stemmed_term, corpus):
         '''
         Given a stemmed term, we look through the text of every document
-        involved, determine the most common "parent" version of the 
+        in corpus, determine the most common "parent" version of the 
         given stemmed term, and return it. 
         '''
         destemmed_term = ""
@@ -307,116 +295,50 @@ class AnalysisEngine():
         num_terms_checked = 0
         num_docs_checked = 0
         total_matches = 0
-        found_match = False
         
-        for subset in subsets:
-            for doc in subset:
-                # matches is the list of all term in the current text that are
-                # "ancestor" versions of the stemmed term.
-                matches = ([term for term in doc.split_text 
-                            if stemmer.stem(term) == stemmed_term])
-                num_terms_checked += len(doc.split_text)
-                num_docs_checked += 1
-                total_matches += len(matches)
-                if not matches:
-                    continue
-                # we keep a tally of the number of times each "ancestor"
-                # appears in our text
-                for match in matches:
-                    if match in candidates:
-                        candidates[match] += 1
-                    else:
-                        candidates[match] = 1
-                # sort potential destemmed versions in descending order
-                # by frequency
-                sorted_candidates = sorted(candidates.keys(), 
-                                           key = lambda 
-                                           term: candidates[term], 
-                                           reverse=True)
-                if num_docs_checked == self.num_docs: 
-                    # we've run through every doc, so the most frequent 
-                    # ancestor of the stemmed term is the best destemmed 
-                    # result.
-                    destemmed_term = sorted_candidates[0]
-                    found_match = True
-                    break
-                # if we've reviewed enough total words, we can start trying
-                # to find a suitable destemmed term from what we have so far 
-                if min_num_terms <= num_terms_checked:
-                    # this is the most frequent ancestor of the stemmed term
-                    possible_match = sorted_candidates[0]
-                    test_percentage = candidates[possible_match] \
-                                        / float(total_matches)
-                    # if the potential destemmed version accounts for a 
-                    # sufficient percentage of the total matches, we can
-                    # decide that it's a suitable destemmed result.
-                    if min_percentage <= test_percentage:
-                        destemmed_term = possible_match
-                        found_match = True
-                        break
-                    
-            if found_match:
+        for doc in corpus:
+            # matches is the list of all term in the current text that are
+            # "ancestor" versions of the stemmed term.
+            matches = ([term for term in doc.split_text 
+                        if stemmer.stem(term) == stemmed_term])
+            num_terms_checked += len(doc.split_text)
+            num_docs_checked += 1
+            total_matches += len(matches)
+            if not matches:
+                continue
+            # we keep a tally of the number of times each "ancestor"
+            # appears in our text
+            for match in matches:
+                if match in candidates:
+                    candidates[match] += 1
+                else:
+                    candidates[match] = 1
+            # sort potential destemmed versions in descending order
+            # by frequency
+            sorted_candidates = sorted(candidates.keys(), 
+                                       key = lambda 
+                                       term: candidates[term], 
+                                       reverse = True)
+            if num_docs_checked == self.num_docs: 
+                # we've run through every doc, so the most frequent 
+                # ancestor of the stemmed term is the best destemmed 
+                # result.
+                destemmed_term = sorted_candidates[0]
                 break
-            
+            # if we've reviewed enough total words, we can start trying
+            # to find a suitable destemmed term from what we have so far 
+            if min_num_terms <= num_terms_checked:
+                # this is the most frequent ancestor of the stemmed term
+                possible_match = sorted_candidates[0]
+                test_percentage = candidates[possible_match] \
+                                    / float(total_matches)
+                # if the potential destemmed version accounts for a 
+                # sufficient percentage of the total matches, we can
+                # decide that it's a suitable destemmed result.
+                if min_percentage <= test_percentage:
+                    destemmed_term = possible_match
+                    break
+                
         print "Destemmed: {0} --> {1}".format(stemmed_term, destemmed_term)
         return destemmed_term
-
-
-    ###########################################################################
-    # 
-    # def process_subset(self, subset, relevant_terms, num_terms=50):
-    #     '''
-    #     !!!!!!!NOTE: THIS METHOD IS NO LONGER USED!!!!!!
-    #
-    #     Constructs the list of weighted terms.
-    #     NOTE: output list must be of form [(term1,weight1),(term2,weight2),
-    #     ...,(termn,weightn)]
-    #     '''
-    #     # build list of terms with their tf_idf weights
-    #     raw_weighted_terms = []
-    #     for term in relevant_terms:
-    #         tfidf = self.calc_tfidf_for_subset(term, subset)
-    #         raw_weighted_terms.append((term, tfidf))
-    #     raw_weighted_terms.sort(key=lambda pair: pair[1], reverse=True)
-    #     # scale the weights so that they are <= 1.0 (max weight == 1.0)
-    #     weighted_terms = []
-    #     # since list is reverse sorted, first element has highest weight
-    #     scale_factor = raw_weighted_terms[0][1] 
-    #     for pair in raw_weighted_terms[:num_terms+1]:
-    #         weighted_terms.append((pair[0], pair[1] / scale_factor))
-    #     # destem the terms in the weighted list  
-    #     for i in range(0, len(weighted_terms)):
-    #         cur_pair = weighted_terms[i]
-    #         weighted_terms[i] = (self.destem(cur_pair[0]), cur_pair[1])
-    #     return (subset[0].output_filename, weighted_terms)
-    #
-    ###########################################################################
-    #
-    #     def destem(self, stemmed_term, subsets):
-    #         '''
-    #         !!!!THIS IS THE OLD VERSION OF THIS METHOD!!!!
-    #         
-    #         Given a stemmed term, we look through the text of every document
-    #         involved, determine the most common "parent" version of the 
-    #         given stemmed term, and return it. 
-    #         '''
-    #         candidates = {}
-    #         stemmer = PorterStemmer()
-    #         for subset in subsets:
-    #             for doc in subset:
-    #                 for term in doc.split_text:
-    #                     if stemmer.stem(term) == stemmed_term:
-    #                         if term in candidates:
-    #                             candidates[term] += 1
-    #                         else:
-    #                             candidates[term] = 1
-    #         sorted_candidates = candidates.keys()
-    #         # sort potential destemmed versions by frequency in decreasing order
-    #         sorted_candidates.sort(key = lambda 
-    #                                 term: candidates[term], reverse=True)
-    #         destemmed_term = sorted_candidates[0]
-    #         print "Destemmed: {0} --> {1}".format(stemmed_term, destemmed_term)
-    #         return destemmed_term
-    #
-    ###########################################################################
 

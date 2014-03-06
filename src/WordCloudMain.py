@@ -60,9 +60,9 @@ class WordCloudMain():
         del opinion_list
         
         # perform the analysis
-        subset_lists = self.run_analysis(subsets, num_relevant_terms)
+        weighted_terms = self.run_analysis(subsets, num_relevant_terms)
         # and generate the word cloud
-        self.generate_clouds(subset_lists)
+        self.generate_clouds(weighted_terms)
         print "Analysis and word cloud generation complete."
     
     
@@ -162,36 +162,16 @@ class WordCloudMain():
         '''
         print "Sorting the opinions into subsets..."
         sorter = DocumentSorter(opinion_list)
-        ###
-        sort_field = "case_us_cite"
-        terror_cases = sorter.create_subset(sort_field, ACCEPTED_CITES)
-        '''
-        sort_field = "opinion_type"
-        sorter = DocumentSorter(terror_cases)
-        terror_majs = sorter.create_subset(sort_field, 
-                                                  ["majority"])
-        terror_concurs = sorter.create_subset(sort_field, 
-                                                  ["concur"])        
-        terror_dissents = sorter.create_subset(sort_field, 
-                                                  ["dissent"])  
-        '''
         
-        #sorter = DocumentSorter(terror_cases)
         sort_field = "case_dates"
         oh_three_cases = sorter.create_subset(sort_field, ["2003"])  
         oh_four_cases = sorter.create_subset(sort_field, ["2004"])  
         oh_five_cases = sorter.create_subset(sort_field, ["2005"])       
-        '''
-        print "length of terror majority subset is {0}".format(len(terror_majs))
-        print "length of terror concur subset is {0}".format(len(terror_concurs))
-        print "length of terror dissent subset is {0}".format(len(terror_dissents))
-        print "length of 2004 subset is {0}".format(len(oh_four_cases))
-        '''
+
         print "length of 2003 subset is {0}".format(len(oh_three_cases))
         print "length of 2004 subset is {0}".format(len(oh_four_cases))
         print "length of 2005 subset is {0}".format(len(oh_five_cases))
         
-        #subsets = [terror_majs, terror_concurs, terror_dissents, oh_four_cases]
         subsets = [oh_three_cases, oh_four_cases, oh_five_cases]
         ###
         print "The set contains {0} subset(s)...".format(len(subsets))
@@ -203,12 +183,14 @@ class WordCloudMain():
         Performs term analysis on the given subsets.
         '''
         print "Running analysis..."
-        analysis_engine = AnalysisEngine(subsets)
-        subset_lists = analysis_engine.analyze_docs(num_terms)
-        return subset_lists
+        oh_three_cases = subsets[0]
+        corpus = subsets[0] + subsets[1] + subsets[2]
+        analysis_engine = AnalysisEngine(corpus, oh_three_cases)
+        weighted_terms = analysis_engine.analyze_docs(num_terms)
+        return weighted_terms
     
     
-    def generate_clouds(self, subset_lists):
+    def generate_clouds(self, weighted_terms):
         '''
         This method will be modified for your specific situation.
         NOTE that subset_lists is a list of (output_filename, weighted_list) 
@@ -217,100 +199,22 @@ class WordCloudMain():
         i.e. subset_lists = [weighted_list, weighted_list, ... , weighted_list]
         '''
         # define the image output file paths and name each weighted list.
-        '''
-        terror_maj_file = os.path.join(OPINION_PATH, "output", "terror_majority.jpg")
-        terror_maj_terms = subset_lists[0]
-            
-        terror_concur_file = os.path.join(OPINION_PATH, "output", "terror_concurs.jpg")
-        terror_concur_terms = subset_lists[1]
-        
-        terror_dissent_file = os.path.join(OPINION_PATH, "output", "terror_dissents.jpg")
-        terror_dissent_terms = subset_lists[2]
-        '''
         oh_three_file = os.path.join(OPINION_PATH, "output", "2003_opinions.jpg")
-        oh_three_terms = subset_lists[0]
-
-        oh_four_file = os.path.join(OPINION_PATH, "output", "2004_opinions.jpg")
-        oh_four_terms = subset_lists[1]
-        
-        oh_five_file = os.path.join(OPINION_PATH, "output", "2005_opinions.jpg")
-        oh_five_terms = subset_lists[2]
+        oh_three_terms = weighted_terms
         
         # test output
-        '''
-        print "TERROR MAJORITY TERMS: {0}".format(terror_maj_terms)
-        print "TERROR MAJORITY OUTPUT FILE: {0}".format(terror_maj_file)
-        
-        print "TERROR CONCUR TERMS: {0}".format(terror_concur_terms)
-        print "TERROR CONCUR OUTPUT FILE: {0}".format(terror_concur_file)
-        
-        print "TERROR DISSENT TERMS: {0}".format(terror_dissent_terms)
-        print "TERROR DISSENT OUTPUT FILE: {0}".format(terror_dissent_file)
-        '''
         print "2003 TERMS: {0}".format(oh_three_terms)
         print "2003 OUTPUT FILE: {0}".format(oh_three_file)
 
-        print "2004 TERMS: {0}".format(oh_four_terms)
-        print "2004 OUTPUT FILE: {0}".format(oh_four_file)
-        
-        print "2005 TERMS: {0}".format(oh_five_terms)
-        print "2005 OUTPUT FILE: {0}".format(oh_five_file)
         # /test output
         
-        print "Generating a word cloud for each subset..."
-        '''
-        terror_maj_cloud = WordCloudGenerator(terror_maj_terms, terror_maj_file)
-        terror_maj_cloud.generate_word_cloud()
-        print "Word cloud generated and saved to {0}".format(terror_maj_file)
-        
-        terror_concur_cloud = WordCloudGenerator(terror_concur_terms, terror_concur_file)
-        terror_concur_cloud.generate_word_cloud()
-        print "Word cloud generated and saved to {0}".format(terror_concur_file)
-        
-        terror_dissent_cloud = WordCloudGenerator(terror_dissent_terms, terror_dissent_file)
-        terror_dissent_cloud.generate_word_cloud()
-        print "Word cloud generated and saved to {0}".format(terror_dissent_file)
-        '''
+        print "Generating a word cloud for subset..."
+
         oh_three_cloud = WordCloudGenerator(oh_three_terms, oh_three_file)
         oh_three_cloud.generate_word_cloud()
         print "Word cloud generated and saved to {0}".format(oh_three_file)
         
-        oh_four_cloud = WordCloudGenerator(oh_four_terms, oh_four_file)
-        oh_four_cloud.generate_word_cloud()
-        print "Word cloud generated and saved to {0}".format(oh_four_file)
-        
-        oh_five_cloud = WordCloudGenerator(oh_three_terms, oh_five_file)
-        oh_five_cloud.generate_word_cloud()
-        print "Word cloud generated and saved to {0}".format(oh_five_file)
-        
         return
-    
-    
-    ###########################################################################
-    # def convert_opinions(self):
-    #     '''
-    #     !!!!!!THIS METHOD IS NO LONGER USED!!!!!
-    #     
-    #     Convert each given opinion into a Document object.
-    #     '''
-    #     opinion_list = []
-    #     txtfile_regex = re.compile(r"\.txt$")
-    #     for opinion_file in os.listdir(OPINION_PATH):
-    #         input_path = os.path.join(OPINION_PATH, opinion_file)
-    #         is_text_file = re.search(txtfile_regex, input_path)
-    #         if not is_text_file:
-    #             print ("{0} is not a text file, so we can't convert it!"
-    #                    .format(input_path))
-    #             continue
-    #         pickle_path = os.path.join(OPINION_PATH, "output", 
-    #                                    opinion_file + ".Document")
-    #         converter = DocumentConverter(input_path, pickle_path)
-    #         print "Converting file {0}...".format(opinion_file)
-    #         opinion_list.append(converter.convert_file())
-    #         del converter
-    #     print "There are {0} opinions in the list...".format(len(opinion_list))
-    #     return opinion_list
-    ###########################################################################
     
 
 '''
