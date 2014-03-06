@@ -18,6 +18,10 @@ primarily test-driven development. Final delivery of the initial version of the 
 but development will continue into the foreseeable future. 
 The GitHub repository for the project is viewable at https://github.com/dmarklein/WordCloud.
 
+We presented our work at the 2014 Southern Political Science Association Conference in New Orleans, Louisiana, and we will 
+also be presenting our work at the 2014 Undergraduate Research & Creative Activity Conference at the University of Alabama 
+in Tuscaloosa, Alabama.
+
 The basic idea for the flow of the project is this:
 (I)		Each document has a file to itself. The DocumentConverter parses each file and creates a Document object from each one.
 (II)	Given a group of these Document objects, the DocumentSorter creates subsets of them (by sorting on a given metadata 
@@ -26,6 +30,7 @@ field).
 on term frequency and whatnot and creates a list of (term, weight) tuples representing the most important terms in each 
 subset, which it passes to the WordCloudGenerator.
 (IV)	The WordCloudGenerator has the easy part: it takes the list of terms and weights and creates a visualization word cloud. 
+
 
 
 
