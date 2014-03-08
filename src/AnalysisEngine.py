@@ -1,4 +1,4 @@
-from DocumentStorage import DocumentStorage
+from src.DocumentStorage import DocumentStorage
 import os, os.path
 from nltk.stem.porter import PorterStemmer
 from numpy import mean
@@ -108,7 +108,7 @@ class AnalysisEngine(object):
                     terms_with_freqs[term] = 1
         # sort terms in decreasing order by frequency
         term_list = sorted(terms_with_freqs.keys(), 
-                           key = lambda 
+                           key=lambda 
                            term: terms_with_freqs[term], 
                            reverse=True)        
         return term_list[:num_terms]
@@ -137,7 +137,8 @@ class AnalysisEngine(object):
             
             if term_within_range:
                 relevant_terms.append(term)
-            #print "TERM {0} appears in {1} docs; {2}% of all docs".format(term, doc_freq, percentage_of_docs)
+            #print "TERM {0} appears in {1} docs; {2}% of all docs".format(term, 
+                                                 # doc_freq, percentage_of_docs)
         return relevant_terms
         
 

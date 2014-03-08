@@ -1,6 +1,6 @@
 import re
 from string import punctuation
-from Document import Document
+from src.Document import Document
 from nltk.stem.porter import PorterStemmer
 from nltk.corpus import stopwords
 
@@ -102,7 +102,7 @@ class DocumentStorage(Document):
         if len(split_text) < 1:
             return text
         filtered_text.append(split_text[0])
-        for i in range(1,len(split_text)):
+        for i in range(1, len(split_text)):
             prev_term = split_text[i-1]
             cur_term = split_text[i]
             is_proper_noun = (cap_regex.match(cur_term)
@@ -153,7 +153,8 @@ class DocumentStorage(Document):
         '''
         Removes stop words from word_list.
         '''
-        extra_stop_words = ["concur", "dissent", "concurring", "dissenting", "case", "join"]
+        extra_stop_words = (["concur", "dissent", "concurring", 
+                             "dissenting", "case", "join"])
         filtered_text = ([word for word in word_list if 
                           (not word in stopwords.words('english'))
                           and (not word in extra_stop_words)])

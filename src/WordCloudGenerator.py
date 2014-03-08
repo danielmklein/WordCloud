@@ -3,7 +3,6 @@ import random
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
-from PIL import ImageOps
 
 import numpy
 
@@ -45,12 +44,12 @@ class WordCloudGenerator(object):
         This is adapted from the word cloud GitHub project mentioned
         in the above comments.
         '''
-        x = integral_image.shape[0]
-        y = integral_image.shape[1]
+        x_coord = integral_image.shape[0]
+        y_coord = integral_image.shape[1]
         hits = 0
         # count possible locations
-        for i in xrange(x - size_x):
-            for j in xrange(y - size_y):
+        for i in xrange(x_coord - size_x):
+            for j in xrange(y_coord - size_y):
                 area = integral_image[i, j] \
                     + integral_image[i + size_x, j + size_y]
                 area -= integral_image[i + size_x, j] \
@@ -63,8 +62,8 @@ class WordCloudGenerator(object):
         # pick location at random
         goal = numpy.random.randint(hits)
         hits = 0
-        for i in xrange(x - size_x):
-            for j in xrange(y - size_y):
+        for i in xrange(x_coord - size_x):
+            for j in xrange(y_coord - size_y):
                 area = integral_image[i, j] \
                     + integral_image[i + size_x, j + size_y]
                 area -= integral_image[i + size_x, j] \
@@ -72,7 +71,7 @@ class WordCloudGenerator(object):
                 if not area:
                     hits += 1
                     if hits == goal:
-                        return i,j
+                        return (i, j)
         
         
     def generate_word_cloud(self, num_terms_to_visualize=50, margin=5):
@@ -137,25 +136,25 @@ class WordCloudGenerator(object):
             if font_size == 0:
                 break
             # set x and y coords for placing term and then draw it
-            x, y = numpy.array(location_result) + margin // 2
-            draw.text((y, x), term, fill="white")
-            term_positions.append((x, y))
+            x_coord, y_coord = numpy.array(location_result) + margin // 2
+            draw.text((y_coord, x_coord), term, fill="white")
+            term_positions.append((x_coord, y_coord))
             term_orientations.append(orientation)
             font_sizes.append(font_size) 
 
             image_array = numpy.asarray(black_white_image)
-            partial_integral = numpy.cumsum(numpy.cumsum(image_array[x:, y:],
-                                                         axis=1), axis=0)
+            temp_sum = numpy.cumsum(image_array[x_coord:, y_coord:], axis=1)
+            partial_integral = numpy.cumsum(temp_sum, axis=0)
             # paste recomputed part into old image
-            if x > 0:
-                if y > 0:
-                    partial_integral += (integral[x-1, y:]
-                                         - integral[x-1, y-1])
+            if x_coord > 0:
+                if y_coord > 0:
+                    partial_integral += (integral[x_coord-1, y_coord:]
+                                         - integral[x_coord-1, y_coord-1])
                 else:
-                    partial_integral += integral[x-1, y:]
-            if y > 0:
-                partial_integral += integral[x:, y-1][:, numpy.newaxis]
-            integral[x:, y:] = partial_integral
+                    partial_integral += integral[x_coord-1, y_coord:]
+            if y_coord > 0:
+                partial_integral += integral[x_coord:, y_coord-1][:, numpy.newaxis]
+            integral[x_coord:, y_coord:] = partial_integral
         
         # now redraw entire image in color
         color_image = Image.new("RGB", (self.image_width, self.image_height),
@@ -180,5 +179,3 @@ class WordCloudGenerator(object):
         # save image to file
         #black_white_image.save(self.output_filename)
         color_image.save(self.output_filename)
-
-

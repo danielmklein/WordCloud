@@ -1,12 +1,12 @@
 import os, os.path
 import re
 import cPickle as pickle
-from SupremeCourtOpinionMetadata import SupremeCourtOpinionMetadata
-from Document import Document
-from DocumentConverter import DocumentConverter
-from DocumentSorter import DocumentSorter
-from AnalysisEngine import AnalysisEngine
-from WordCloudGenerator import WordCloudGenerator
+from src.SupremeCourtOpinionMetadata import SupremeCourtOpinionMetadata
+from src.Document import Document
+from src.DocumentConverter import DocumentConverter
+from src.DocumentSorter import DocumentSorter
+from src.AnalysisEngine import AnalysisEngine
+from src.WordCloudGenerator import WordCloudGenerator
 
 # directory containing parsed opinions
 
@@ -88,7 +88,7 @@ class WordCloudCore(object):
     
     
     def create_subset(self, opinion_list, sort_field, 
-                      accepted_values, shouldInvert=False):
+                      accepted_values, should_invert=False):
         '''
         Sort the opinions into subset(s).
         '''
@@ -96,7 +96,7 @@ class WordCloudCore(object):
         sorter = DocumentSorter(opinion_list)
   
         subset = sorter.create_subset(sort_field, accepted_values, 
-                                      shouldInvert)
+                                      should_invert)
         return subset
     
     

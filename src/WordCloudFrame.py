@@ -1,15 +1,15 @@
 import wx
-from WordCloudSorterDialog import WordCloudSorterDialog
-from WordCloudCore import WordCloudCore
+from src.WordCloudSorterDialog import WordCloudSorterDialog
+from src.WordCloudCore import WordCloudCore
 
 class WordCloudFrame(wx.Frame): 
     
-    def __init__(self, parent, id, title="Word Cloud Creator"):
-        wx.Frame.__init__(self, parent, id, title, size=(1500,1500))
+    def __init__(self, parent, dialog_id, title="Word Cloud Creator"):
+        wx.Frame.__init__(self, parent, dialog_id, title, size=(1500, 1500))
         
         self.wc_core = WordCloudCore()
 
-        panel = wx.Panel(self, -1, size=(1500,1500))
+        panel = wx.Panel(self, -1, size=(1500, 1500))
 
         main_box = wx.BoxSizer(wx.VERTICAL)
 
@@ -19,21 +19,21 @@ class WordCloudFrame(wx.Frame):
         subsets_label = wx.StaticText(panel, -1, "Subsets")
         subsets_label.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
         subsets_label.SetSize(subsets_label.GetBestSize())
-        label_box.Add(subsets_label, flag = wx.ALIGN_LEFT)
+        label_box.Add(subsets_label, flag=wx.ALIGN_LEFT)
         
         corpus_label = wx.StaticText(panel, -1, "Corpus")
         corpus_label.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
         corpus_label.SetSize(subsets_label.GetBestSize())
-        label_box.Add(corpus_label, flag = wx.ALIGN_RIGHT)
+        label_box.Add(corpus_label, flag=wx.ALIGN_RIGHT)
         
         main_box.Add(label_box)
         
         # two scroll lists will go in second box
         list_box = wx.BoxSizer(wx.HORIZONTAL) # this variable name sucks.
         
-        self.subset_list = wx.ListBox(panel, size = (500,500), 
-                                      choices = self.wc_core.subset_names)
-        list_box.Add(self.subset_list, flag = wx.ALIGN_LEFT)
+        self.subset_list = wx.ListBox(panel, size=(500, 500), 
+                                      choices=self.wc_core.subset_names)
+        list_box.Add(self.subset_list, flag=wx.ALIGN_LEFT)
         
         # buttons for adding/removing subsets from corpus list go in here
         switch_box = wx.BoxSizer(wx.VERTICAL)
@@ -54,11 +54,11 @@ class WordCloudFrame(wx.Frame):
         remove_all.Bind(wx.EVT_BUTTON, self.OnRemoveAll)
         switch_box.Add(remove_all, 0, wx.ALL, 10)
         
-        list_box.Add(switch_box, flag = wx.ALIGN_CENTER)
+        list_box.Add(switch_box, flag=wx.ALIGN_CENTER)
         
-        self.corpus_list = wx.ListBox(panel, size = (500,500), 
-                                      choices = self.wc_core.corpus_subset_names)
-        list_box.Add(self.corpus_list, flag = wx.ALIGN_RIGHT)
+        self.corpus_list = wx.ListBox(panel, size=(500, 500), 
+                                      choices=self.wc_core.corpus_subset_names)
+        list_box.Add(self.corpus_list, flag=wx.ALIGN_RIGHT)
         
         main_box.Add(list_box)
         

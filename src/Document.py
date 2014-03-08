@@ -1,6 +1,6 @@
 import cPickle as pickle
 
-class Document():
+class Document(object):
     '''
     Document Class for Word Cloud Project
     

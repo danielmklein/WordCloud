@@ -11,7 +11,7 @@ class DocumentSorter(object):
     be returned as a dictionary?).
     '''
     
-    def __init__(self, doc_list = []):
+    def __init__(self, doc_list=[]):
         self.doc_list = doc_list
         
         
@@ -30,7 +30,7 @@ class DocumentSorter(object):
                 "'{0}', so we can't sort on that field!".format(sort_field)
                 raise Exception
         sorted_doc_list = sorted(self.doc_list, 
-                        key = lambda doc:getattr(doc.doc_metadata, sort_field))
+                        key=lambda doc: getattr(doc.doc_metadata, sort_field))
         
         # this splits the list into subsets -- all items in a subset have the
         # same value for the given sort_field
@@ -49,7 +49,7 @@ class DocumentSorter(object):
         return subsets
     
     
-    def create_subset(self, sort_field, allowed_values, shouldInvert=False):
+    def create_subset(self, sort_field, allowed_values, should_invert=False):
         '''
         Given a sort field and a list of values to accept for that field,
         this will return a list of Document objects, each of whose value
@@ -69,15 +69,16 @@ class DocumentSorter(object):
                 raise Exception
             
             # the handling of dates here is super duper messy right now...
-            # TODO: this is going to need work in the future -- convert datestrings 
-            # to datetime objects in DocumentConverter??
+            # TODO: this is going to need work in the future -- convert  
+            # datestrings to datetime objects in DocumentConverter??
             
             # pick the items in the list whose value for the sort_field
             # matches something in allowed_values
             # exact match not necessary
             if not "dates" in sort_field:
                 for value in allowed_values:
-                    if value.upper() in getattr(doc.doc_metadata, sort_field).upper():
+                    field_value = getattr(doc.doc_metadata, sort_field).upper()
+                    if value.upper() in field_value:
                         subset.append(doc)
                         # if we hit a match, we break to avoid adding a doc
                         # to the subset multiple times.
@@ -86,14 +87,15 @@ class DocumentSorter(object):
                 # this code is redundant, but I want to remember that it might
                 # change in the future, and keep it separate
                 for value in allowed_values:
-                    if value.upper() in getattr(doc.doc_metadata, sort_field).upper():
+                    field_value = getattr(doc.doc_metadata, sort_field).upper()
+                    if value.upper() in field_value:
                         subset.append(doc)
                         # if we hit a match, we break to avoid adding a doc
                         # to the subset multiple times.
                         break
         # TODO: potentially work this into the code above, though this way
         # of inverting is super simple and straightforward (but sometimes slow)
-        if shouldInvert:
+        if should_invert:
             return [doc for doc in self.doc_list if doc not in subset]
         else:
             return subset

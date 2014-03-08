@@ -1,8 +1,7 @@
-import pickle
 import re
 import os, os.path
-from Document import Document
-from SupremeCourtOpinionMetadata import SupremeCourtOpinionMetadata
+from src.Document import Document
+from src.SupremeCourtOpinionMetadata import SupremeCourtOpinionMetadata
 
 
 class DocumentConverter(object):
@@ -29,6 +28,9 @@ class DocumentConverter(object):
         '''
         Returns a Document object created from file.
         '''
+        # TODO: pylint says this method sucks -- too many branches, too many
+        # local variables, too many statements. Refactor it, maybe?
+        
         # check to make sure the input file exists
         if not os.path.exists(self.input_path):
             raise IOError, "The path {0} does not exist!".format(self.input_path)

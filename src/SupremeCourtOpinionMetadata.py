@@ -1,4 +1,4 @@
-from Metadata import Metadata
+from src.Metadata import Metadata
 
 class SupremeCourtOpinionMetadata(Metadata):
     '''
@@ -31,10 +31,7 @@ class SupremeCourtOpinionMetadata(Metadata):
         self.case_lexis_cite = ""
         self.case_full_cite = ""
         self.case_dates = ""
-        self.case_disposition= ""
+        self.case_disposition = ""
         self.opinion_author = ""
         self.opinion_type = ""
-        
-        
-    
-        
+           
