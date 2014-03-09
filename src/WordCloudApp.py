@@ -1,5 +1,5 @@
 import wx
-from WordCloudFrame import WordCloudFrame
+from src.WordCloudFrame import WordCloudFrame
 
 # so we load all the opinions first, display some
 # info about that process
@@ -13,11 +13,7 @@ from WordCloudFrame import WordCloudFrame
 # which allows the user to name the new subset, choose the field to sort on,
 # and enter allowed values for that field to build the subset. also present
 # should be a check box to invert the above subset (create the complement)
-
        
-
-        
-        
 word_cloud_app = wx.App()
 frame = WordCloudFrame(None, -1, 'Word Cloud Creator')
 frame.Show()

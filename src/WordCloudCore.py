@@ -105,18 +105,24 @@ class WordCloudCore(object):
         self.subset_names.append(subset_name)
         
         
-    def run_analysis(self, subsets, num_terms):
+    def run_analysis(self, corpus, subset, num_terms=1000):
         '''
         Performs term analysis on the given subsets.
         '''
         print "Running analysis..."
-        analysis_engine = AnalysisEngine(subsets)
-        subset_lists = analysis_engine.analyze_docs(num_terms)
-        return subset_lists
+        analysis_engine = AnalysisEngine(corpus, subset)
+        weighted_terms = analysis_engine.analyze_docs(num_terms)
+        return weighted_terms
     
     
-    def generate_cloud(self, subset, corpus):
-        pass
+    def generate_cloud(self, weighted_terms):
+        '''
+        Draws word cloud from given weighted term list.
+        '''
+        output_file = os.path.join(os.curdir, "wordcloud.jpg")
+        cloud_gen = WordCloudGenerator(weighted_terms, output_file)
+        cloud_gen.generate_word_cloud()
+        return
         
         
     

@@ -56,6 +56,9 @@ class AnalysisEngine(object):
         which makes them much easier to deal with as we perform our
         calculations.  
         '''
+        '''
+        TODO: wow, this is slow. Is there any way we can make it faster?
+        '''
         print "Converting documents into DocumentStorage objects..."
         doc_num = 1
         num_docs = len(doc_set)

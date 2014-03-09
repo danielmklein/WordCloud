@@ -117,8 +117,25 @@ class WordCloudFrame(wx.Frame):
         
     
     def OnCreateWordCloud(self, event):
-        pass
-    
+        '''
+        Create a word cloud using the selected subset and the current corpus.
+        '''
+        '''
+        get selected subset
+        get corpus and join into one list
+        pass them to core.run_analysis
+        pass the returned list to core.generate_cloud
+        '''
+        subset_index = self.subset_list.GetSelection()
+        subset_name = self.wc_core.subset_names[subset_index]
+        subset = self.wc_core.subsets[subset_name]
+        # flatten the corpus list of lists into one list
+        corpus = [opinion for subset in self.wc_core.corpus_subsets.values() 
+                            for opinion in subset]
+        weighted_terms = self.wc_core.run_analysis(corpus, subset)
+        self.wc_core.generate_cloud(weighted_terms)
+        return
+        
     
     def OnAddOne(self, event):
         '''

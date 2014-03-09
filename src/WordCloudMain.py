@@ -1,12 +1,12 @@
 import os, os.path
 import re
 import cPickle as pickle
-from SupremeCourtOpinionMetadata import SupremeCourtOpinionMetadata
-from Document import Document
-from DocumentConverter import DocumentConverter
-from DocumentSorter import DocumentSorter
-from AnalysisEngine import AnalysisEngine
-from WordCloudGenerator import WordCloudGenerator
+from src.SupremeCourtOpinionMetadata import SupremeCourtOpinionMetadata
+from src.Document import Document
+from src.DocumentConverter import DocumentConverter
+from src.DocumentSorter import DocumentSorter
+from src.AnalysisEngine import AnalysisEngine
+from src.WordCloudGenerator import WordCloudGenerator
 
 # directory containing parsed opinions
 
@@ -62,7 +62,7 @@ class WordCloudMain(object):
         # perform the analysis
         weighted_terms = self.run_analysis(subsets, num_relevant_terms)
         # and generate the word cloud
-        self.generate_clouds(weighted_terms)
+        self.generate_cloud(weighted_terms)
         print "Analysis and word cloud generation complete."
     
     
@@ -190,7 +190,7 @@ class WordCloudMain(object):
         return weighted_terms
     
     
-    def generate_clouds(self, weighted_terms):
+    def generate_cloud(self, weighted_terms):
         '''
         This method will be modified for your specific situation.
         NOTE that subset_lists is a list of (output_filename, weighted_list) 
