@@ -3,83 +3,100 @@ from src.WordCloudSorterDialog import WordCloudSorterDialog
 from src.WordCloudCore import WordCloudCore
 
 class WordCloudFrame(wx.Frame): 
+    '''
+    This is the primary frame for the WordCloud GUI app. It contains a list of
+    subsets and the corpus, along with various buttons for manipulating them.
+    It also has buttons for viewing a subset and creating a word cloud. 
+    '''
     
     def __init__(self, parent, dialog_id, title="Word Cloud Creator"):
-        wx.Frame.__init__(self, parent, dialog_id, title, size=(1500, 1500))
+        wx.Frame.__init__(self, parent, dialog_id, title, size=(800, 700))
         
         self.wc_core = WordCloudCore()
 
-        panel = wx.Panel(self, -1, size=(1500, 1500))
+        panel = wx.Panel(self, -1, size=(800, 700))
 
-        main_box = wx.BoxSizer(wx.VERTICAL)
+        self.main_box = wx.BoxSizer(wx.VERTICAL)
 
-        # these go in first box
-        label_box = wx.BoxSizer(wx.HORIZONTAL)
-        
+        #######################################################################
+        # "Subsets" and "Corpus" labels
+        #######################################################################
         subsets_label = wx.StaticText(panel, -1, "Subsets")
         subsets_label.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
         subsets_label.SetSize(subsets_label.GetBestSize())
-        label_box.Add(subsets_label, flag=wx.ALIGN_LEFT)
         
         corpus_label = wx.StaticText(panel, -1, "Corpus")
         corpus_label.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
         corpus_label.SetSize(subsets_label.GetBestSize())
-        label_box.Add(corpus_label, flag=wx.ALIGN_RIGHT)
         
-        main_box.Add(label_box)
+        label_box = wx.BoxSizer(wx.HORIZONTAL)
+        label_box.Add(subsets_label, flag=wx.LEFT)
+        label_box.Add(corpus_label, flag=wx.RIGHT)
         
-        # two scroll lists will go in second box
-        list_box = wx.BoxSizer(wx.HORIZONTAL) # this variable name sucks.
+        self.main_box.Add(label_box)
         
-        self.subset_list = wx.ListBox(panel, size=(500, 500), 
+        #######################################################################
+        # scroll list for subsets
+        #######################################################################
+        # TODO: this variable name sucks.
+        subsets_and_corpus = wx.BoxSizer(wx.HORIZONTAL) 
+        
+        self.subset_list = wx.ListBox(panel, size=(300, 500), 
                                       choices=self.wc_core.subset_names)
-        list_box.Add(self.subset_list, flag=wx.ALIGN_LEFT)
+        subsets_and_corpus.Add(self.subset_list, flag=wx.LEFT)
         
-        # buttons for adding/removing subsets from corpus list go in here
-        switch_box = wx.BoxSizer(wx.VERTICAL)
-        
+        #######################################################################
+        # buttons for adding/removing subsets from corpus list 
+        #######################################################################
         add_one = wx.Button(panel, wx.ID_CLOSE, " > ", style=wx.BU_EXACTFIT)
         add_one.Bind(wx.EVT_BUTTON, self.OnAddOne)
-        switch_box.Add(add_one, 0, wx.ALL, 10)
         
         remove_one = wx.Button(panel, wx.ID_CLOSE, " < ", style=wx.BU_EXACTFIT)
         remove_one.Bind(wx.EVT_BUTTON, self.OnRemoveOne)
-        switch_box.Add(remove_one, 0, wx.ALL, 10)
         
         add_all = wx.Button(panel, wx.ID_CLOSE, " >>", style=wx.BU_EXACTFIT)
         add_all.Bind(wx.EVT_BUTTON, self.OnAddAll)
-        switch_box.Add(add_all, 0, wx.ALL, 10)
         
         remove_all = wx.Button(panel, wx.ID_CLOSE, "<< ", style=wx.BU_EXACTFIT)
         remove_all.Bind(wx.EVT_BUTTON, self.OnRemoveAll)
+        
+        switch_box = wx.BoxSizer(wx.VERTICAL)
+        switch_box.Add(add_one, 0, wx.ALL, 10)
+        switch_box.Add(remove_one, 0, wx.ALL, 10)
+        switch_box.Add(add_all, 0, wx.ALL, 10)
         switch_box.Add(remove_all, 0, wx.ALL, 10)
         
-        list_box.Add(switch_box, flag=wx.ALIGN_CENTER)
+        subsets_and_corpus.Add(switch_box, flag=wx.ALIGN_CENTER)
         
-        self.corpus_list = wx.ListBox(panel, size=(500, 500), 
+        #######################################################################
+        # scroll list for corpus
+        #######################################################################
+        self.corpus_list = wx.ListBox(panel, size=(300, 500), 
                                       choices=self.wc_core.corpus_subset_names)
-        list_box.Add(self.corpus_list, flag=wx.ALIGN_RIGHT)
+        subsets_and_corpus.Add(self.corpus_list, flag=wx.RIGHT)
         
-        main_box.Add(list_box)
+        self.main_box.Add(subsets_and_corpus)
         
-        # buttons go in third box
-        button_box = wx.BoxSizer(wx.HORIZONTAL)
-        
+        #######################################################################
+        # add subset, view subset, and create wordcloud buttons
+        #######################################################################
         add_subset = wx.Button(panel, wx.ID_CLOSE, "Add Subset")
         add_subset.Bind(wx.EVT_BUTTON, self.OnAddSubset)
-        button_box.Add(add_subset, 0, wx.ALL, 10)
         
         view_subset = wx.Button(panel, wx.ID_CLOSE, "View Subset")
         view_subset.Bind(wx.EVT_BUTTON, self.OnViewSubset)
-        button_box.Add(view_subset, 0, wx.ALL, 10)
         
         create_wc = wx.Button(panel, wx.ID_CLOSE, "Create Word Cloud")
         create_wc.Bind(wx.EVT_BUTTON, self.OnCreateWordCloud)
-        button_box.Add(create_wc, 0, wx.ALL, 10)
         
-        main_box.Add(button_box)
+        button_box = wx.BoxSizer(wx.HORIZONTAL)
+        button_box.Add(add_subset, proportion=0, flag=wx.ALIGN_CENTER, border=10)
+        button_box.Add(view_subset, proportion=0, flag=wx.ALIGN_CENTER, border=10)
+        button_box.Add(create_wc, proportion=0, flag=wx.ALIGN_CENTER, border=10)
+        
+        self.main_box.Add(button_box)
 
-        panel.SetSizer(main_box)
+        panel.SetSizer(self.main_box)
         panel.Layout()
         
         self.OnStart()
@@ -88,11 +105,8 @@ class WordCloudFrame(wx.Frame):
     def OnStart(self):
         self.Hide()
         wait = wx.BusyInfo("Loading opinions...", parent=self)
-        
         self.wc_core.unpack_opinions()
-
         wait = None
-        
         self.Show()
         return
                 
