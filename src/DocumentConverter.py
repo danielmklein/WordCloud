@@ -47,7 +47,7 @@ class DocumentConverter(object):
         lawyers_ed_cite = ""
         lexis_cite = ""
         full_cite = ""
-        dates = []
+        dates = ""
         disposition = ""
         author = ""
         opinion_type = ""

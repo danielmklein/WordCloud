@@ -10,11 +10,11 @@ class WordCloudFrame(wx.Frame):
     '''
     
     def __init__(self, parent, dialog_id, title="Word Cloud Creator"):
-        wx.Frame.__init__(self, parent, dialog_id, title, size=(800, 700))
+        wx.Frame.__init__(self, parent, dialog_id, title, size=(750, 675))
         
         self.wc_core = WordCloudCore()
 
-        panel = wx.Panel(self, -1, size=(800, 700))
+        panel = wx.Panel(self, -1, size=(750, 675))
 
         self.main_box = wx.BoxSizer(wx.VERTICAL)
 
@@ -25,76 +25,87 @@ class WordCloudFrame(wx.Frame):
         subsets_label.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
         subsets_label.SetSize(subsets_label.GetBestSize())
         
+        spacer = wx.StaticText(panel, -1, "              ")
+        spacer.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
+        spacer.SetSize(spacer.GetBestSize())
+        
         corpus_label = wx.StaticText(panel, -1, "Corpus")
         corpus_label.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
         corpus_label.SetSize(subsets_label.GetBestSize())
         
         label_box = wx.BoxSizer(wx.HORIZONTAL)
-        label_box.Add(subsets_label, flag=wx.LEFT)
-        label_box.Add(corpus_label, flag=wx.RIGHT)
+        label_box.Add(subsets_label, flag=wx.CENTER)
+        label_box.Add(spacer, flag=wx.CENTER)
+        label_box.Add(corpus_label, flag=wx.CENTER)
         
-        self.main_box.Add(label_box)
+        self.main_box.Add(label_box, flag=wx.CENTER)
         
         #######################################################################
         # scroll list for subsets
         #######################################################################
-        # TODO: this variable name sucks.
         subsets_and_corpus = wx.BoxSizer(wx.HORIZONTAL) 
         
         self.subset_list = wx.ListBox(panel, size=(300, 500), 
                                       choices=self.wc_core.subset_names)
-        subsets_and_corpus.Add(self.subset_list, flag=wx.LEFT)
+        subsets_and_corpus.Add(self.subset_list, flag=wx.CENTER)
         
         #######################################################################
         # buttons for adding/removing subsets from corpus list 
         #######################################################################
-        add_one = wx.Button(panel, wx.ID_CLOSE, " > ", style=wx.BU_EXACTFIT)
+        add_one = wx.Button(panel, wx.ID_CLOSE, " > ", size=(50, 50), 
+                            style=wx.BU_EXACTFIT)
         add_one.Bind(wx.EVT_BUTTON, self.OnAddOne)
         
-        remove_one = wx.Button(panel, wx.ID_CLOSE, " < ", style=wx.BU_EXACTFIT)
+        remove_one = wx.Button(panel, wx.ID_CLOSE, " < ", size=(50, 50), 
+                               style=wx.BU_EXACTFIT)
         remove_one.Bind(wx.EVT_BUTTON, self.OnRemoveOne)
         
-        add_all = wx.Button(panel, wx.ID_CLOSE, " >>", style=wx.BU_EXACTFIT)
+        add_all = wx.Button(panel, wx.ID_CLOSE, " >>", size=(50, 50), 
+                            style=wx.BU_EXACTFIT)
         add_all.Bind(wx.EVT_BUTTON, self.OnAddAll)
         
-        remove_all = wx.Button(panel, wx.ID_CLOSE, "<< ", style=wx.BU_EXACTFIT)
+        remove_all = wx.Button(panel, wx.ID_CLOSE, "<< ", size=(50, 50), 
+                               style=wx.BU_EXACTFIT)
         remove_all.Bind(wx.EVT_BUTTON, self.OnRemoveAll)
         
         switch_box = wx.BoxSizer(wx.VERTICAL)
-        switch_box.Add(add_one, 0, wx.ALL, 10)
-        switch_box.Add(remove_one, 0, wx.ALL, 10)
-        switch_box.Add(add_all, 0, wx.ALL, 10)
-        switch_box.Add(remove_all, 0, wx.ALL, 10)
+        switch_box.Add(add_one, flag=wx.ALL, border=15)
+        switch_box.Add(remove_one, flag=wx.ALL, border=15)
+        switch_box.Add(add_all, flag=wx.ALL, border=15)
+        switch_box.Add(remove_all, flag=wx.ALL, border=15)
         
-        subsets_and_corpus.Add(switch_box, flag=wx.ALIGN_CENTER)
+        subsets_and_corpus.Add(switch_box, flag=wx.CENTER)
         
         #######################################################################
         # scroll list for corpus
         #######################################################################
         self.corpus_list = wx.ListBox(panel, size=(300, 500), 
                                       choices=self.wc_core.corpus_subset_names)
-        subsets_and_corpus.Add(self.corpus_list, flag=wx.RIGHT)
+        subsets_and_corpus.Add(self.corpus_list, flag=wx.CENTER)
         
-        self.main_box.Add(subsets_and_corpus)
+        self.main_box.Add(subsets_and_corpus, flag=wx.CENTER)
         
         #######################################################################
         # add subset, view subset, and create wordcloud buttons
         #######################################################################
-        add_subset = wx.Button(panel, wx.ID_CLOSE, "Add Subset")
+        add_subset = wx.Button(panel, wx.ID_CLOSE, "Add Subset", 
+                               size=(150, 100))
         add_subset.Bind(wx.EVT_BUTTON, self.OnAddSubset)
         
-        view_subset = wx.Button(panel, wx.ID_CLOSE, "View Subset")
+        view_subset = wx.Button(panel, wx.ID_CLOSE, "View Subset", 
+                                size=(150, 100))
         view_subset.Bind(wx.EVT_BUTTON, self.OnViewSubset)
         
-        create_wc = wx.Button(panel, wx.ID_CLOSE, "Create Word Cloud")
+        create_wc = wx.Button(panel, wx.ID_CLOSE, "Create Word Cloud", 
+                              size=(150, 100))
         create_wc.Bind(wx.EVT_BUTTON, self.OnCreateWordCloud)
         
         button_box = wx.BoxSizer(wx.HORIZONTAL)
-        button_box.Add(add_subset, proportion=0, flag=wx.ALIGN_CENTER, border=10)
-        button_box.Add(view_subset, proportion=0, flag=wx.ALIGN_CENTER, border=10)
-        button_box.Add(create_wc, proportion=0, flag=wx.ALIGN_CENTER, border=10)
+        button_box.Add(add_subset, flag=wx.ALL, border=25)
+        button_box.Add(view_subset, flag=wx.ALL, border=25)
+        button_box.Add(create_wc, flag=wx.ALL, border=25)
         
-        self.main_box.Add(button_box)
+        self.main_box.Add(button_box, flag=wx.CENTER)
 
         panel.SetSizer(self.main_box)
         panel.Layout()
@@ -134,12 +145,6 @@ class WordCloudFrame(wx.Frame):
         '''
         Create a word cloud using the selected subset and the current corpus.
         '''
-        '''
-        get selected subset
-        get corpus and join into one list
-        pass them to core.run_analysis
-        pass the returned list to core.generate_cloud
-        '''
         subset_index = self.subset_list.GetSelection()
         subset_name = self.wc_core.subset_names[subset_index]
         subset = self.wc_core.subsets[subset_name]
@@ -155,6 +160,7 @@ class WordCloudFrame(wx.Frame):
         '''
         Add selected subset(s) to corpus.
         '''
+        # TODO: make sure you can't add duplicate
         indexes = self.subset_list.GetSelections()
         for i in indexes:
             subset_name = self.wc_core.subset_names[i]
@@ -182,11 +188,15 @@ class WordCloudFrame(wx.Frame):
         NOTE: this could also be done by setting the corpus name list equal
         to the subset name list, and the corpus dict equal to the subset dict.
         '''
+        '''
         for subset_name in self.wc_core.subset_names:
             if subset_name not in self.wc_core.corpus_subset_names:
                 subset = self.wc_core.subsets[subset_name]
                 self.wc_core.corpus_subsets[subset_name] = subset
                 self.wc_core.corpus_subset_names.append(subset_name)
+        '''
+        self.wc_core.corpus_subsets = self.wc_core.subsets
+        self.wc_core.corpus_subset_names = self.wc_core.subset_names
         self.corpus_list.Set(self.wc_core.corpus_subset_names)
     
     
