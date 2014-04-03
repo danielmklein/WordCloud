@@ -18,7 +18,9 @@ def main():
     frame.Show()
     word_cloud_app.MainLoop()
     
-main()
+import cProfile
+
+cProfile.run('main()')
 
 
 

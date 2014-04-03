@@ -9,8 +9,8 @@ The University of Alabama
 
 import unittest
 import pickle
-from SupremeCourtOpinionMetadata import SupremeCourtOpinionMetadata
-from DocumentStorage import DocumentStorage
+from src.core.python.SupremeCourtOpinionMetadata import SupremeCourtOpinionMetadata
+from src.core.python.DocumentStorage import DocumentStorage
 import os, os.path
 
 ###############################################################################

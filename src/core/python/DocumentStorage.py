@@ -16,19 +16,20 @@ class DocumentStorage(Document):
     to store the list of terms in the document and each of their 
     frequencies.
     '''
-    
     def __init__(self, doc_metadata, doc_text, output_filename):
         Document.__init__(self, doc_metadata, doc_text, output_filename)
         # TODO: this identifier is useless, currently.
         self.identifier = self.doc_metadata.opinion_author + "_" \
                             + self.doc_metadata.case_lexis_cite
                             
-        self.doc_text = self.filter_text(self.doc_text,
-                                         should_drop_prop_nouns=True)
-        # TODO: filter_text() and split_text() can be rolled together.
-        
+        # TODO: filter_text() and create_split_text() can be rolled together.
+        # I don't think there's a reason for doc_text to be a filtered list...
+        # it could just be the raw doc_text passed into the constructor.
+        self.doc_text = doc_text
+        #self.split_text = self.filter_text(self.doc_text,
+        #                                 should_drop_prop_nouns=True)
         # split_text contains the full filtered text of the document
-        self.split_text = self.create_split_text(self.doc_text)
+        self.split_text = self.filter_text(self.doc_text)
         # stemmed_text contains full filtered text with all words stemmed
         self.stemmed_text = self.stem_text(self.split_text)
         # term_list is a list of unique terms in the document along with
@@ -73,12 +74,15 @@ class DocumentStorage(Document):
     def filter_text(self, text, should_drop_prop_nouns=False):
         '''
         Remove certain items from text. Currently we're removing
-        punctuation, digits, and short words. Optionally we can
-        dumbly remove proper nouns.
+        punctuation, digits, short words, and stop words. Optionally 
+        we can dumbly remove proper nouns. 
+        There is a possibility we might want to remove opinion footnotes
+        in the future, but we currently leave them in.
         '''
         '''
         TODO: we could speed this up by doing it all in one pass over the 
         text, instead of a pass per filter type.
+        '''
         '''
         filtered_text = text
         # remove footnotes?
@@ -92,13 +96,59 @@ class DocumentStorage(Document):
         # remove single-letter words
         filtered_text = self.remove_short_words(filtered_text)
         return filtered_text
+        '''
+        unfiltered_text = text.split()
+        filtered_text = []
+        for i in range(len(unfiltered_text)):
+            if i != 0:
+                prev_term = unfiltered_text[i - 1]
+            else:
+                prev_term = "null"
+            cur_term = unfiltered_text[i]
+            should_remove = False
+            # remove proper noun, if needed
+            if (should_drop_prop_nouns 
+                and self.is_proper_noun(cur_term, prev_term)):
+                    should_remove = True
+            # remove punctuation
+            cur_term = re.sub('[%s]' % re.escape(punctuation), ' ', cur_term)
+            # remove numbers
+            cur_term = re.sub('[\d]', '', cur_term)
+            # remove words less than 3 letters long
+            if len(cur_term) < 3:
+                should_remove = True
+            # convert term to lowercase
+            cur_term = cur_term.lower()
+            # check if term is a stopword -- remove if so.
+            if self.is_stop_word(cur_term):
+                should_remove = True
+                
+            if not should_remove:
+                filtered_text.append(cur_term.strip())
+                
+        return filtered_text
         
-    
+        
+    def is_proper_noun(self, cur_term, prev_term):
+        '''
+        Given a term and the preceding term, roughly determines if the 
+        given term is a proper noun. Keyword: roughly.
+        '''
+        cap_regex = re.compile("[A-Z]+")
+        punc_regex = re.compile("[\.\?!]")
+        is_proper_noun = (cap_regex.match(cur_term)
+                          and not (punc_regex.search(prev_term)))
+        return is_proper_noun
+        
+        
     def remove_proper_nouns(self, text):
         '''
         Remove the proper nouns from the text. More accurately, removes
         any word that starts with a capital letter and does not follow
         a period.
+        '''
+        '''
+        TODO: this method is no longer used
         '''
         cap_regex = re.compile("[A-Z]+")
         punc_regex = re.compile("[\.\?!]")
@@ -121,6 +171,9 @@ class DocumentStorage(Document):
         '''
         Delete all punctuation from text -- replaced with space.
         '''
+        '''
+        TODO: this method is no longer used.
+        '''
         return re.sub('[%s]' % re.escape(punctuation), ' ', text)
     
     
@@ -128,12 +181,18 @@ class DocumentStorage(Document):
         '''
         Delete all digits from text.
         '''
+        '''
+        TODO: this method is no longer used.
+        '''
         return re.sub('[\d]', '', text)
     
     
     def remove_short_words(self, text):
         '''
         Remove all words shorter than 3 letters long.
+        '''
+        '''
+        TODO: this method is no longer used.
         '''
         #return re.sub(r'\s.\s', ' ', text) 
         filtered_words = []
@@ -152,9 +211,23 @@ class DocumentStorage(Document):
         pass
     
     
+    def is_stop_word(self, word):
+        '''
+        Determines if a given word is considered a stop word.
+        '''
+        extra_stop_words = (["concur", "dissent", "concurring", 
+                             "dissenting", "case", "join"])
+        is_stop_word = ((word in stopwords.words('english'))
+                        or (word in extra_stop_words))
+        return is_stop_word
+    
+    
     def remove_stop_words(self, word_list):
         '''
         Removes stop words from word_list.
+        '''
+        '''
+        TODO: this method is no longer used.
         '''
         extra_stop_words = (["concur", "dissent", "concurring", 
                              "dissenting", "case", "join"])
