@@ -3,9 +3,16 @@ import wx
 from src.core.python.WordCloudCore import WordCloudCore
 
 class Phase(object):
-    def __init__(self, sort_field, allowed_values):
+    def __init__(self, sort_field, allowed_values, parent):
+        self.parent = parent
         self.sort_field = sort_field
         self.allowed_values = allowed_values
+        self.field_selector = wx.ComboBox(self.parent, 
+                                        choices=self.parent.wc_core.field_names)
+        self.allowed_input = wx.TextCtrl(self.parent, -1, 
+                                         "Enter comma-separated values", 
+                                         size=(400,30))
+        self.should_invert_box = wx.CheckBox(self.parent, label="Invert Subset")
         
 
 class WordCloudSorterDialog(wx.Dialog):
@@ -23,8 +30,7 @@ class WordCloudSorterDialog(wx.Dialog):
     def __init__(self, parent, dialog_id, title="Subset Builder"):
         wx.Dialog.__init__(self, parent, dialog_id, title, size=(500, 1000))
         self.parent = parent
-        self.phases = [Phase("", "")]
-        
+        self.phases = [Phase("", "", self.parent)]
         self.create_panel()
         
 
@@ -53,6 +59,9 @@ class WordCloudSorterDialog(wx.Dialog):
 
         self.main_box.Add(self.phase_box, flag=wx.ALL, border=10)
         
+
+        
+        
         #######################################################################
         # boxsizer for the button to add a phase
         #######################################################################
@@ -63,14 +72,7 @@ class WordCloudSorterDialog(wx.Dialog):
         self.add_phase_box.Add(add_phase, flag=wx.ALL, border=10)
         self.main_box.Add(self.add_phase_box, flag=wx.ALIGN_CENTER)
         
-        #######################################################################
-        # boxsizer for the invert checkbox
-        #######################################################################
-        self.invert_box = wx.BoxSizer(wx.HORIZONTAL)
-        self.checkbox = wx.CheckBox(self.panel, label="Invert Subset")
-        self.invert_box.Add(self.checkbox, flag=wx.ALIGN_LEFT)
-        self.main_box.Add(self.invert_box)
-        
+
         #######################################################################
         # sizer for create and cancel buttons
         #######################################################################
@@ -104,34 +106,42 @@ class WordCloudSorterDialog(wx.Dialog):
             field_box = wx.BoxSizer(wx.HORIZONTAL)
             field_label = wx.StaticText(self.panel, -1, "Field to Sort:")
             field_label.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD))
-            self.field_selector = wx.ComboBox(self.panel, 
+            self.phases[index].field_selector = wx.ComboBox(self.panel, 
                                         choices=self.parent.wc_core.field_names)
             field_box.Add(field_label, flag=wx.ALIGN_LEFT, border=10)
-            field_box.Add(self.field_selector, flag=wx.ALL, border=10)
+            field_box.Add(self.phases[index].field_selector, flag=wx.ALL, border=10)
             single_phase.Add(field_box, flag=wx.ALL, border=10)
             
             allowed_box = wx.BoxSizer(wx.HORIZONTAL)  
             allowed_label = wx.StaticText(self.panel, -1, "Allowed Values:")
             allowed_label.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD))        
-            self.allowed_input = wx.TextCtrl(self.panel, -1, 
+            self.phases[index].allowed_input = wx.TextCtrl(self.panel, -1, 
                                              "Enter comma-separated values", 
                                              size=(400,30))
             allowed_box.Add(allowed_label, flag=wx.ALIGN_LEFT, border=10)
-            allowed_box.Add(self.allowed_input, flag=wx.ALL, border=10)
+            allowed_box.Add(self.phases[index].allowed_input, flag=wx.ALL, border=10)
             single_phase.Add(allowed_box, flag=wx.ALL, border=10)
+            
+            #######################################################################
+            # boxsizer for the invert should_invert_box
+            #######################################################################
+            invert_box = wx.BoxSizer(wx.HORIZONTAL)
+            self.phases[index].should_invert_box = wx.CheckBox(self.panel, label="Invert Subset")
+            invert_box.Add(self.phases[index].should_invert_box, flag=wx.ALIGN_LEFT)
+            single_phase.Add(invert_box)
+            
             self.phase_box.Add(single_phase, flag=wx.ALL, border=10)
+            
+
         
         
     def OnAddPhase(self, event):
-        self.phases.append(Phase("", ""))
-        # test output
-        print self.phases
-        # /test output
-        #self.phase_box.Destroy()
-        # TODO: what the heck do I do here?
+        '''
+        TODO: make sure values in input boxes remain when adding phase
+        '''
+        self.phases.append(Phase("", "", self.parent))
         self.panel.Destroy()
         self.create_panel()
-        
         self.Fit()
     
     
@@ -141,25 +151,28 @@ class WordCloudSorterDialog(wx.Dialog):
         accepted values, and whether or not we should invert the subset,
         create a new subset from that info, and add it to the list.
         '''
-        '''
-        TODO: figure out what to do when we have multiple phases of filtering
-        '''
-        subset_name = self.name_input.GetValue()
-        sort_field_index = self.field_selector.GetCurrentSelection()
-        sort_field = self.parent.wc_core.field_names[sort_field_index]
-        accepted_values = self.parse_accepted_values( 
-                                self.allowed_input.GetValue())
-        should_invert = self.checkbox.GetValue()
-        new_subset = self.parent.wc_core.create_subset(
-                                        self.parent.wc_core.opinion_list,
-                                        sort_field, accepted_values,
-                                        should_invert)
-        test_list = [subset_name, sort_field, accepted_values, new_subset]
         
+        subset_name = self.name_input.GetValue()
+        
+        # start with all the opinions and filter through each phase
+        old_subset = self.parent.wc_core.opinion_list
+        for phase in self.phases:
+            sort_field_index = phase.field_selector.GetCurrentSelection()
+            sort_field = self.parent.wc_core.field_names[sort_field_index]
+            accepted_values = self.parse_accepted_values( 
+                                    phase.allowed_input.GetValue())
+            should_invert = phase.should_invert_box.GetValue()
+            new_subset = self.parent.wc_core.create_subset(
+                                            old_subset,
+                                            sort_field, accepted_values,
+                                            should_invert)
+            old_subset = new_subset
+            # test output
+            test_list = [subset_name, sort_field, accepted_values, new_subset]
+            print str(test_list)
+            # /test output
+            
         self.parent.wc_core.add_subset(subset_name, new_subset)
-        # test output
-        print str(test_list)
-        # /test output
         self.Destroy()
         
     
@@ -176,7 +189,7 @@ class WordCloudSorterDialog(wx.Dialog):
         raw_values = value_string.split(",")
         return [value.strip() for value in raw_values]
 
-
+'''
 # TODO DELETE ME, I'M JUST FOR TESTING
 app = wx.App()
 frame = wx.Frame(None, -1, "testing")
@@ -186,3 +199,4 @@ frame.wc_core = WordCloudCore()
 dia = WordCloudSorterDialog(frame, -1, 'Subset Builder')
 dia.ShowModal()
 dia.Destroy()
+'''
