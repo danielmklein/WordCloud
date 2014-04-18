@@ -23,8 +23,12 @@ class WordCloudSorterDialog(wx.Dialog):
     def __init__(self, parent, dialog_id, title="Subset Builder"):
         wx.Dialog.__init__(self, parent, dialog_id, title, size=(500, 1000))
         self.parent = parent
-        self.phases = [Phase("", ""), Phase("","")]
+        self.phases = [Phase("", "")]
         
+        self.create_panel()
+        
+
+    def create_panel(self):
         self.panel = wx.Panel(self, -1)
         self.main_box = wx.BoxSizer(wx.VERTICAL)
         
@@ -44,8 +48,54 @@ class WordCloudSorterDialog(wx.Dialog):
         # box sizer for "phase" -- field selector with allowed values input
         #######################################################################
         self.phase_box = wx.BoxSizer(wx.VERTICAL)
+        
+        self.build_phases()
+
+        self.main_box.Add(self.phase_box, flag=wx.ALL, border=10)
+        
+        #######################################################################
+        # boxsizer for the button to add a phase
+        #######################################################################
+        self.add_phase_box = wx.BoxSizer(wx.HORIZONTAL)
+        add_phase = wx.Button(self.panel, wx.ID_CLOSE, " + Add New Phase ", 
+                              style=wx.BU_EXACTFIT, size=(200,40))
+        add_phase.Bind(wx.EVT_BUTTON, self.OnAddPhase)
+        self.add_phase_box.Add(add_phase, flag=wx.ALL, border=10)
+        self.main_box.Add(self.add_phase_box, flag=wx.ALIGN_CENTER)
+        
+        #######################################################################
+        # boxsizer for the invert checkbox
+        #######################################################################
+        self.invert_box = wx.BoxSizer(wx.HORIZONTAL)
+        self.checkbox = wx.CheckBox(self.panel, label="Invert Subset")
+        self.invert_box.Add(self.checkbox, flag=wx.ALIGN_LEFT)
+        self.main_box.Add(self.invert_box)
+        
+        #######################################################################
+        # sizer for create and cancel buttons
+        #######################################################################
+        self.button_box = wx.BoxSizer(wx.HORIZONTAL)
+        
+        create = wx.Button(self.panel, wx.ID_CLOSE, "Create Subset")
+        create.Bind(wx.EVT_BUTTON, self.OnCreateSubset)
+        self.button_box.Add(create, 0, wx.ALL, 10)
+        
+        cancel = wx.Button(self.panel, wx.ID_CLOSE, "Cancel")
+        cancel.Bind(wx.EVT_BUTTON, self.OnCancel)
+        self.button_box.Add(cancel, 0, wx.ALL, 10)
+        
+        self.main_box.Add(self.button_box, flag=wx.ALIGN_CENTER)
+        self.panel.SetSizer(self.main_box)
+        self.panel.Layout()
+        self.panel.Fit()
+        self.Fit()
+        
+        
+    def build_phases(self):
+        
+        self.phase_box = wx.BoxSizer(wx.VERTICAL)
+        
         for index in range(len(self.phases)):  
-            
             single_phase = wx.BoxSizer(wx.VERTICAL)
             
             phase_label = wx.StaticText(self.panel, -1, "PHASE {0}".format(index+1))
@@ -70,43 +120,7 @@ class WordCloudSorterDialog(wx.Dialog):
             allowed_box.Add(self.allowed_input, flag=wx.ALL, border=10)
             single_phase.Add(allowed_box, flag=wx.ALL, border=10)
             self.phase_box.Add(single_phase, flag=wx.ALL, border=10)
-        self.main_box.Add(self.phase_box, flag=wx.ALL, border=10)
         
-        #######################################################################
-        # boxsizer for the button to add a phase
-        #######################################################################
-        add_phase_box = wx.BoxSizer(wx.HORIZONTAL)
-        add_phase = wx.Button(self.panel, wx.ID_CLOSE, " + Add New Phase ", 
-                              style=wx.BU_EXACTFIT, size=(200,40))
-        add_phase.Bind(wx.EVT_BUTTON, self.OnAddPhase)
-        add_phase_box.Add(add_phase, flag=wx.ALL, border=10)
-        self.main_box.Add(add_phase_box, flag=wx.ALIGN_CENTER)
-        
-        #######################################################################
-        # boxsizer for the invert checkbox
-        #######################################################################
-        invert_box = wx.BoxSizer(wx.HORIZONTAL)
-        self.checkbox = wx.CheckBox(self.panel, label="Invert Subset")
-        invert_box.Add(self.checkbox, flag=wx.ALIGN_LEFT)
-        self.main_box.Add(invert_box)
-        
-        #######################################################################
-        # sizer for create and cancel buttons
-        #######################################################################
-        button_box = wx.BoxSizer(wx.HORIZONTAL)
-        
-        create = wx.Button(self.panel, wx.ID_CLOSE, "Create Subset")
-        create.Bind(wx.EVT_BUTTON, self.OnCreateSubset)
-        button_box.Add(create, 0, wx.ALL, 10)
-        
-        cancel = wx.Button(self.panel, wx.ID_CLOSE, "Cancel")
-        cancel.Bind(wx.EVT_BUTTON, self.OnCancel)
-        button_box.Add(cancel, 0, wx.ALL, 10)
-        
-        self.main_box.Add(button_box, flag=wx.ALIGN_CENTER)
-        self.panel.SetSizer(self.main_box)
-        self.panel.Layout()
-            
         
     def OnAddPhase(self, event):
         self.phases.append(Phase("", ""))
@@ -115,6 +129,10 @@ class WordCloudSorterDialog(wx.Dialog):
         # /test output
         #self.phase_box.Destroy()
         # TODO: what the heck do I do here?
+        self.panel.Destroy()
+        self.create_panel()
+        
+        self.Fit()
     
     
     def OnCreateSubset(self, event):
@@ -158,7 +176,7 @@ class WordCloudSorterDialog(wx.Dialog):
         raw_values = value_string.split(",")
         return [value.strip() for value in raw_values]
 
-'''
+
 # TODO DELETE ME, I'M JUST FOR TESTING
 app = wx.App()
 frame = wx.Frame(None, -1, "testing")
@@ -168,4 +186,3 @@ frame.wc_core = WordCloudCore()
 dia = WordCloudSorterDialog(frame, -1, 'Subset Builder')
 dia.ShowModal()
 dia.Destroy()
-'''
