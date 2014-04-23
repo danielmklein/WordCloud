@@ -1,5 +1,6 @@
 import wx
 from src.gui.WordCloudSorterDialog import WordCloudSorterDialog
+from src.gui.WordCloudViewSubsetDialog import WordCloudViewSubsetDialog
 from src.core.python.WordCloudCore import WordCloudCore
 
 class WordCloudFrame(wx.Frame): 
@@ -135,15 +136,11 @@ class WordCloudFrame(wx.Frame):
         
     
     def OnViewSubset(self, event):
-        '''
-        TODO: This is terrible. Make it better. It's also really really slow.
-        '''
-        indexes = self.subset_list.GetSelections()
-        for i in indexes:
-            subset_name = self.wc_core.subset_names[i]
-            subset = self.wc_core.subsets[subset_name]
-            info_string = self.build_info_string(subset)
-            wx.MessageDialog(None, info_string, subset_name, wx.OK).ShowModal()
+        subset_name = self.wc_core.subset_names[self.subset_list.GetSelection()]
+        dia = WordCloudViewSubsetDialog(self, self.wc_core, subset_name, "View Subset")
+        dia.ShowModal()
+        dia.Destroy()
+
         
     
     def OnCreateWordCloud(self, event):
@@ -190,15 +187,6 @@ class WordCloudFrame(wx.Frame):
     def OnAddAll(self, event):
         '''
         Add all subsets to corpus.
-        NOTE: this could also be done by setting the corpus name list equal
-        to the subset name list, and the corpus dict equal to the subset dict.
-        '''
-        '''
-        for subset_name in self.wc_core.subset_names:
-            if subset_name not in self.wc_core.corpus_subset_names:
-                subset = self.wc_core.subsets[subset_name]
-                self.wc_core.corpus_subsets[subset_name] = subset
-                self.wc_core.corpus_subset_names.append(subset_name)
         '''
         self.wc_core.corpus_subsets = self.wc_core.subsets
         self.wc_core.corpus_subset_names = self.wc_core.subset_names
@@ -213,20 +201,3 @@ class WordCloudFrame(wx.Frame):
         self.wc_core.corpus_subsets = {}
         self.corpus_list.Set(self.wc_core.corpus_subset_names)
             
-            
-    def build_info_string(self, subset):
-        '''
-        TODO: This is terrible. Make it better. It's also really really slow.
-        '''
-        info_string = "CASE TITLE                 OPINION AUTHOR  OPINION TYPE\n"
-        for opinion in subset:
-            info_string += opinion.doc_metadata.case_title + "\t"
-            info_string += opinion.doc_metadata.opinion_author + "\t"
-            info_string += opinion.doc_metadata.opinion_type +"\n"
-        return info_string
-            
-            
-    
-    
-        
-        

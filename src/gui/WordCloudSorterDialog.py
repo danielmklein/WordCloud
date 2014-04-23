@@ -3,16 +3,14 @@ import wx
 from src.core.python.WordCloudCore import WordCloudCore
 
 class Phase(object):
-    def __init__(self, sort_field, allowed_values, parent):
+    def __init__(self, sort_field, allowed_values, parent, panel):
         self.parent = parent
+        self.panel = panel
         self.sort_field = sort_field
         self.allowed_values = allowed_values
-        self.field_selector = wx.ComboBox(self.parent, 
-                                        choices=self.parent.wc_core.field_names)
-        self.allowed_input = wx.TextCtrl(self.parent, -1, 
-                                         "Enter comma-separated values", 
-                                         size=(400,30))
-        self.should_invert_box = wx.CheckBox(self.parent, label="Invert Subset")
+        self.field_selector = None
+        self.allowed_input = None
+        self.should_invert_box = None
         
 
 class WordCloudSorterDialog(wx.Dialog):
@@ -30,12 +28,13 @@ class WordCloudSorterDialog(wx.Dialog):
     def __init__(self, parent, dialog_id, title="Subset Builder"):
         wx.Dialog.__init__(self, parent, dialog_id, title, size=(500, 1000))
         self.parent = parent
-        self.phases = [Phase("", "", self.parent)]
+        self.panel = wx.Panel(self, -1)
+        self.phases = [Phase("", "", self.parent, self.panel)]
         self.create_panel()
         
 
     def create_panel(self):
-        self.panel = wx.Panel(self, -1)
+        
         self.main_box = wx.BoxSizer(wx.VERTICAL)
         
         #######################################################################
@@ -139,8 +138,9 @@ class WordCloudSorterDialog(wx.Dialog):
         '''
         TODO: make sure values in input boxes remain when adding phase
         '''
-        self.phases.append(Phase("", "", self.parent))
+        self.phases.append(Phase("", "", self.parent, self.panel))
         self.panel.Destroy()
+        self.panel = wx.Panel(self, -1)
         self.create_panel()
         self.Fit()
     

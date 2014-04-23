@@ -23,6 +23,7 @@ class WordCloudCore(object):
     Computer-Based Honors Program
     The University of Alabama
     2.22.2014
+    
     This class contains the core functionality with which the GUI components
     interact when running the app.
     '''
