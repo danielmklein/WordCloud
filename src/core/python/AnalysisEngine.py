@@ -18,6 +18,9 @@ class AnalysisEngine(object):
     frequency-inverse document frequency analysis as its basis for weighting 
     terms (http://en.wikipedia.org/wiki/Tf%E2%80%93idf).
     '''
+    
+    # TODO: we need to assert that there is at least one doc in the corpus
+    # and at least one doc in the subset -- raise exception if not
 
 
     def __init__(self, corpus, subset):

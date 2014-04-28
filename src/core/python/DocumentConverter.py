@@ -28,6 +28,9 @@ class DocumentConverter(object):
         '''
         Returns a Document object created from file.
         '''
+        '''
+        TODO: how can I generalize this so it's not SCOTUS opinion-specific???
+        '''
         # TODO: pylint says this method sucks -- too many branches, too many
         # local variables, too many statements. Refactor it, maybe?
         

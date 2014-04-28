@@ -51,5 +51,12 @@ class Metadata(object):
             output_string += str(vars(self)[field_name]) 
             output_string += '\n'
         return output_string
+    
+    
+    def build_output_string(self):
+        '''
+        Builds string to be used for displaying metadata in GUI.
+        '''
+        pass
         
         

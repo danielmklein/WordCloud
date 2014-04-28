@@ -67,6 +67,11 @@ class WordCloudViewDocDetailsDialog(wx.Dialog):
     This dialog box displays the details about a document in a subset.
     '''
     
+    '''
+    TODO: This should really call the Document's build_display_string method instead 
+    of building the display here piece by piece.
+    '''
+    
     def __init__(self, parent, document, title="View Details"):
         wx.Dialog.__init__(self, parent, -1, title, size=(1000, 1000))
         self.panel = wx.Panel(self, -1)

@@ -15,6 +15,11 @@ class Document(object):
     We will subclass the metadata class for each type of document we will use.
     '''
     
+    '''
+    TODO: This needs to be generalized further, and a new class, SupremeCourtOpinion, 
+    should inherit from it.
+    '''
+    
     def __init__(self, doc_metadata, doc_text, output_filename):
         '''
         doc_metadata should be a Metadata object or descendent.
@@ -72,5 +77,10 @@ class Document(object):
         return document_string
     
     
+    def build_display_string(self):
+        '''
+        Builds display string for use in the GUI.
+        '''
+        pass
     
     

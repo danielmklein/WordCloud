@@ -34,4 +34,10 @@ class SupremeCourtOpinionMetadata(Metadata):
         self.case_disposition = ""
         self.opinion_author = ""
         self.opinion_type = ""
-           
+        
+        
+    def build_output_string(self):
+        '''
+        Builds string to be used for displaying metadata in GUI.
+        '''
+        pass
