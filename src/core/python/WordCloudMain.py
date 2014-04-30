@@ -1,7 +1,7 @@
 import os.path
 import re
 import cPickle as pickle
-from src.core.python.DocumentConverter import DocumentConverter
+from src.core.python.SupremeCourtOpinionFileConverter import SupremeCourtOpinionFileConverter
 from src.core.python.DocumentSorter import DocumentSorter
 from src.core.python.AnalysisEngine import AnalysisEngine
 from src.core.python.WordCloudGenerator import WordCloudGenerator
@@ -88,7 +88,7 @@ class WordCloudMain(object):
                 continue
             pickle_path = os.path.join(PICKLE_PATH, 
                                        opinion_file + ".Document")
-            converter = DocumentConverter(input_path, pickle_path)
+            converter = SupremeCourtOpinionFileConverter(input_path, pickle_path)
             # we attempt to convert, to a Document object and pickle it
             try:
                 print "Converting file {0} ({1} of {2})...".format(opinion_file,

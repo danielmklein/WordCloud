@@ -2,8 +2,6 @@ import os, os.path
 import re
 import cPickle as pickle
 from src.core.python.SupremeCourtOpinionMetadata import SupremeCourtOpinionMetadata
-from src.core.python.Document import Document
-from src.core.python.DocumentConverter import DocumentConverter
 from src.core.python.DocumentSorter import DocumentSorter
 from src.core.python.AnalysisEngine import AnalysisEngine
 from src.core.python.WordCloudGenerator import WordCloudGenerator
@@ -42,6 +40,55 @@ class WordCloudCore(object):
         self.field_names = SupremeCourtOpinionMetadata().field_names
         
         
+    def pack_opinions(self):
+        '''
+        Convert every opinion file residing in OPINION_PATH into a Document
+        object and pickle it to file in PICKLE_PATH.
+        '''
+        '''
+        TODO: this is not currently used here... it might be worth it in the future to
+        add functionality for packing and unpacking through the GUI.
+        '''
+        print "Converting files in {0} to Document objects".format(OPINION_PATH)
+        print "and serializing them to files in {0}...".format(PICKLE_PATH)
+        
+        txtfile_regex = re.compile(r"\.txt$")
+        num_converted = 0
+        num_failed = 0
+        
+        file_list = os.listdir(OPINION_PATH)
+        for opinion_file in file_list:
+            input_path = os.path.join(OPINION_PATH, opinion_file)
+            # if a file doesn't have a .txt extension, we ignore it
+            is_text_file = re.search(txtfile_regex, input_path)
+            if not is_text_file:
+                print ("{0} is not a text file, so we can't convert it!"
+                       .format(input_path))
+                num_failed += 1
+                continue
+            pickle_path = os.path.join(PICKLE_PATH, 
+                                       opinion_file + ".Document")
+            converter = SupremeCourtOpinionFileConverter(input_path, pickle_path)
+            # we attempt to convert, to a Document object and pickle it
+            try:
+                print "Converting file {0} ({1} of {2})...".format(opinion_file,
+                                                            num_converted+1, 
+                                                            len(file_list))
+                converter.convert_file().write_to_file()
+                num_converted += 1
+            except:
+                print "Unable to convert {0} to a Document and "\
+                        "save it to file...".format(opinion_file)
+                num_failed += 1
+                continue
+            del converter
+            
+        print "Opinion conversion and pickling complete."
+        print "{0} opinions converted...".format(num_converted)
+        print "{0} opinions failed to be converted.".format(num_failed)
+        return
+    
+    
     def unpack_opinions(self):
         '''
         Unpickle all of the Document files from PICKLE_PATH into 

@@ -1,6 +1,6 @@
 from src.core.python.Document import Document
 
-class SupremeCourtOpinion(object):
+class SupremeCourtOpinion(Document):
     '''
     Document Class for Word Cloud Project
     
@@ -16,10 +16,11 @@ class SupremeCourtOpinion(object):
     '''
 
 
-    def __init__(self, params):
+    def __init__(self, doc_metadata, doc_text, output_filename):
         '''
         Constructor
         '''
+        super(SupremeCourtOpinion, self).__init__(doc_metadata, doc_text, output_filename)
     
     
     def build_display_string(self):

@@ -16,7 +16,7 @@ class WordCloudFrame(wx.Frame):
     '''
     
     def __init__(self, parent, dialog_id, title="Word Cloud Creator"):
-        wx.Frame.__init__(self, parent, dialog_id, title, size=(750, 675))
+        super(WordCloudFrame, self).__init__(self, parent, dialog_id, title, size=(750, 675))
         
         self.wc_core = WordCloudCore()
 

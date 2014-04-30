@@ -19,10 +19,6 @@ class AnalysisEngine(object):
     terms (http://en.wikipedia.org/wiki/Tf%E2%80%93idf).
     '''
     
-    # TODO: we need to assert that there is at least one doc in the corpus
-    # and at least one doc in the subset -- raise exception if not
-
-
     def __init__(self, corpus, subset):
         self.set_corpus(corpus)
         self.set_subset(subset)
@@ -33,7 +29,9 @@ class AnalysisEngine(object):
         Basic setup for the corpus list of documents.
         '''
         self.corpus = corpus
-        self.num_docs = self.count_docs()
+        self.num_corpus_docs = self.count_docs(self.corpus)
+        if (self.num_corpus_docs < 1):
+            raise Exception("There must be at least 1 document in the corpus!")
         self.corpus = self.convert_docs(self.corpus)
         self.term_list = self.build_full_term_list(self.corpus)
     
@@ -43,14 +41,17 @@ class AnalysisEngine(object):
         Basic setup for the subset list of documents.
         '''
         self.subset = subset
+        self.num_subset_docs = self.count_docs(self.subset)
+        if (self.num_subset_docs < 1):
+            raise Exception("There must be at least 1 document in the comparison subset!")
         self.subset = self.convert_docs(self.subset)
     
 
-    def count_docs(self):
+    def count_docs(self, set):
         '''
         Calculates the total number of docs in corpus.
         '''
-        return len(self.corpus)
+        return len(set)
         
         
     def convert_docs(self, doc_set):
@@ -58,9 +59,6 @@ class AnalysisEngine(object):
         Transforms each doc in a set into a DocumentStorage object,
         which makes them much easier to deal with as we perform our
         calculations.  
-        '''
-        '''
-        TODO: wow, this is slow. Is there any way we can make it faster?
         '''
         print "Converting documents into DocumentStorage objects..."
         doc_num = 1
@@ -129,7 +127,7 @@ class AnalysisEngine(object):
         lower_bound = 0.05
         relevant_terms = []
         # test output
-        print "TOTAL NUM OF DOCS: {0}".format(self.num_docs)
+        print "TOTAL NUM OF DOCS: {0}".format(self.num_corpus_docs)
         # /test output
         for term in term_list:
             doc_freq = 0
@@ -137,14 +135,14 @@ class AnalysisEngine(object):
                 # doc.term_list is filtered and stemmed
                 if term in doc.term_list:
                     doc_freq += 1
-            percentage_of_docs = doc_freq / float(self.num_docs)
+            percentage_of_docs = doc_freq / float(self.num_corpus_docs)
             term_within_range = ((percentage_of_docs > lower_bound)
                                  and (percentage_of_docs < upper_bound))
             
             if term_within_range:
                 relevant_terms.append(term)
             #print "TERM {0} appears in {1} docs; {2}% of all docs".format(term, 
-                                                 # doc_freq, percentage_of_docs)
+                                                # doc_freq, percentage_of_docs)
         return relevant_terms
         
 
@@ -161,11 +159,9 @@ class AnalysisEngine(object):
         print "Analyzing subset against corpus..."
         raw_info = self.collect_term_info(self.subset, relevant_terms)
         weighted_terms = self.build_weighted_pairs(raw_info)
-        #weighted_terms = self.process_subset(subset, relevant_terms)
-        ##
+
         curdir = os.path.abspath(os.curdir)
-        # TODO: if a subset is empty, the next line yields an error
-        # there's gotta be a be a better way to choose a filename.
+        # TODO: is this still needed??
         output_path = os.path.join(curdir, 
                                    self.subset[0].output_filename 
                                    + "_weighted_list.txt")
@@ -227,7 +223,7 @@ class AnalysisEngine(object):
         for doc in self.corpus:
             if term in doc.term_list:
                 doc_frequency += 1
-        rel_frequency = doc_frequency / float(self.num_docs)
+        rel_frequency = doc_frequency / float(self.num_corpus_docs)
         return rel_frequency
     
     
@@ -330,7 +326,7 @@ class AnalysisEngine(object):
                                        key=lambda 
                                        term: candidates[term], 
                                        reverse=True)
-            if num_docs_checked == self.num_docs: 
+            if num_docs_checked == self.num_corpus_docs: 
                 # we've run through every doc, so the most frequent 
                 # ancestor of the stemmed term is the best destemmed 
                 # result.
