@@ -26,7 +26,7 @@ class WordCloudSorterDialog(wx.Dialog):
     '''
     
     def __init__(self, parent, dialog_id, title="Subset Builder"):
-        super(WordCloudSorterDialog, self).__init__(self, parent, dialog_id, title, size=(500, 1000))
+        super(WordCloudSorterDialog, self).__init__(parent, dialog_id, title, size=(500, 1000))
         self.parent = parent
         self.panel = wx.Panel(self, -1)
         self.phases = [Phase("", "", self.parent, self.panel)]

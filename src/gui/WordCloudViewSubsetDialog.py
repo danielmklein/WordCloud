@@ -13,7 +13,7 @@ class WordCloudViewSubsetDialog(wx.Dialog):
     
 
     def __init__(self, parent, wc_core, subset_name, title="View Subset"):
-        super(WordCloudViewSubsetDialog, self).__init__(self, parent, -1, title, size=(500, 1000))
+        super(WordCloudViewSubsetDialog, self).__init__(parent, -1, title, size=(500, 1000))
         self.parent = parent
         self.wc_core = wc_core
         self.subset_name = subset_name

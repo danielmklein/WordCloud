@@ -6,7 +6,8 @@ from PIL import ImageFont
 
 import numpy
 
-FONT_PATH = "C:/Windows/Fonts/FRABK.ttf"
+#FONT_PATH = "C:/Windows/Fonts/FRABK.ttf"
+FONT_PATH = "/usr/share/fonts/truetype/freefont/FreeSansBold.ttf"
 
 class WordCloudGenerator(object):
     '''

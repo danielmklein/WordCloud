@@ -29,7 +29,9 @@ field).
 (III)	Given a collection of one or more subsets of Documents, the AnalysisEngine performs the actual statistical analysis 
 on term frequency and whatnot and creates a list of (term, weight) tuples representing the most important terms in each 
 subset, which it passes to the WordCloudGenerator.
-(IV)	The WordCloudGenerator has the easy part: it takes the list of terms and weights and creates a visualization word cloud. 
+(IV)	The WordCloudGenerator has the easy part: it takes the list of terms and weights and creates a visualization word cloud. , N
+
+NOTE: This project requires the NumPy, PyYAML, NLTK, and wxPython libraries.
 
 
 
