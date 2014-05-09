@@ -9,9 +9,9 @@ The University of Alabama
 
 import unittest
 import os, os.path
-from AnalysisEngine import AnalysisEngine
-from Document import Document
-from SupremeCourtOpinionMetadata import SupremeCourtOpinionMetadata
+from src.core.python.AnalysisEngine import AnalysisEngine
+from src.core.python.SupremeCourtOpinion import SupremeCourtOpinion
+from src.core.python.SupremeCourtOpinionMetadata import SupremeCourtOpinionMetadata
 
 '''
 Yep. Holes. 
@@ -127,19 +127,19 @@ def build_subsets():
     blank_metadata = SupremeCourtOpinionMetadata()
     
     doc1_output = os.path.join(CURRENT_PATH, "doc1_output")
-    doc1 = Document(blank_metadata, TEXT1, doc1_output)
+    doc1 = SupremeCourtOpinion(blank_metadata, TEXT1, doc1_output)
     
     doc2_output = os.path.join(CURRENT_PATH, "doc2_output")
-    doc2 = Document(blank_metadata, TEXT2, doc2_output)
+    doc2 = SupremeCourtOpinion(blank_metadata, TEXT2, doc2_output)
     
     doc3_output = os.path.join(CURRENT_PATH, "doc3_output")
-    doc3 = Document(blank_metadata, TEXT3, doc3_output)
+    doc3 = SupremeCourtOpinion(blank_metadata, TEXT3, doc3_output)
     
     doc4_output = os.path.join(CURRENT_PATH, "doc4_output")
-    doc4 = Document(blank_metadata, TEXT4, doc4_output)
+    doc4 = SupremeCourtOpinion(blank_metadata, TEXT4, doc4_output)
 
     doc5_output = os.path.join(CURRENT_PATH, "doc5_output")
-    doc5 = Document(blank_metadata, TEXT5, doc5_output)
+    doc5 = SupremeCourtOpinion(blank_metadata, TEXT5, doc5_output)
     subsets = [[doc1], [doc2], [doc3, doc4, doc5]]
     return subsets
 
@@ -149,7 +149,7 @@ class AnalysisEngineTest(unittest.TestCase):
 
     def setUp(self):
         self.subsets = build_subsets()
-        self.test_engine = AnalysisEngine([])
+        self.test_engine = AnalysisEngine(self.subsets[0], self.subsets[0])
 
 
     def tearDown(self):
@@ -159,31 +159,20 @@ class AnalysisEngineTest(unittest.TestCase):
 
     def testAnalyzeWithSingleSubset(self):
         print "Testing AnalysisEngine.analyze_docs() with single subset..."
-        self.test_engine.set_subsets([self.subsets[2]])
-        print self.test_engine.subsets
+        self.test_engine.set_subset(self.subsets[2])
+        self.test_engine.set_corpus(self.subsets[2])
+        print self.test_engine.subset
         ##
         self.test_engine.analyze_docs()
         ##
         self.fail("haven't written this test yet")
         print "Finished testing AnalysisEngine.analyze_docs()..."
-        
-    
-    def testAnalyzeWithMultipleSubsets(self):
-        print "Testing AnalysisEngine.analyze_docs() with multiple subsets..."
-        self.test_engine.set_subsets(self.subsets)
-        print self.test_engine.subsets
-        ##
-        self.test_engine.analyze_docs()
-        ##
-        self.fail("haven't written this test yet")
-        print "Finished testing AnalysisEngine.analyze_docs()..."
+
     
     def testAnalyzeWithZeroSubsets(self):
         print "Testing AnalysisEngine.analyze_docs() with zero subsets..."
-        self.test_engine.set_subsets([])
-        print self.test_engine.subsets
-        ##
-        self.test_engine.analyze_docs()
+        self.assertRaises(Exception, self.test_engine.set_subset, [])
+        print self.test_engine.subset
         ##
         self.fail("haven't written this test yet")
         print "Finished testing AnalysisEngine.analyze_docs()..."
@@ -192,8 +181,8 @@ class AnalysisEngineTest(unittest.TestCase):
     def testAnalysisWithInvalidInput(self):
         print "Testing AnalysisEngine.analyze_docs() with invalid input..."
         self.subsets.append(["not a doc", "nor is this"])
-        self.assertRaises(Exception, self.test_engine.set_subsets, self.subsets)
-        print self.test_engine.subsets
+        self.assertRaises(Exception, self.test_engine.set_subset, self.subsets)
+        print self.test_engine.subset
         self.fail("haven't written this test yet")
         print "Finished testing AnalysisEngine.analyze_docs()..."
     

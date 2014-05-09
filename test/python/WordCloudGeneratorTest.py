@@ -8,7 +8,7 @@ The University of Alabama
 '''
 
 import unittest
-from WordCloudGenerator import WordCloudGenerator
+from src.core.python.WordCloudGenerator import WordCloudGenerator
 
 class WordCloudGeneratorTest(unittest.TestCase):
 
@@ -26,8 +26,8 @@ class WordCloudGeneratorTest(unittest.TestCase):
 
 
     def testGenerateWordCloud(self):
-        print "Testing WordCloudGenerator.generate_word_cloud() "\
-        "with normal weighted list of terms."
+        print("Testing WordCloudGenerator.generate_word_cloud() "
+              "with normal weighted list of terms.")
         # reset test_weighted_list before generating
         self.test_generator.weighted_terms = [("test", 0.25),("America",0.24),
                                               ("Roll",0.99), ("Tide",0.98),
@@ -37,8 +37,8 @@ class WordCloudGeneratorTest(unittest.TestCase):
 
 
     def testGenerateWordCloudReducedTermList(self):
-        print "Testing WordCloudGenerator.generate_word_cloud() "\
-        "with normal weighted list of terms."
+        print("Testing WordCloudGenerator.generate_word_cloud() "
+              "with normal weighted list of terms.")
         # reset test_weighted_list before generating
         self.test_generator.weighted_terms = [("test", 0.25),("America",0.24),
                                               ("Roll",0.99), ("Tide",0.98),
@@ -48,33 +48,33 @@ class WordCloudGeneratorTest(unittest.TestCase):
         
     
     def testGenerateWordCloudEmptyList(self):
-        print "Testing WordCloudGenerator.generate_word_cloud() "\
-        "with empty weighted list of terms."
+        print("Testing WordCloudGenerator.generate_word_cloud() "
+              "with empty weighted list of terms.")
         # reset test_weighted_list before generating
         self.test_generator.weighted_terms = [("America",0.5),("test", 1.56)]
         self.test_generator.generate_word_cloud()        
         
         
     def testGenerateWordCloudSingleTerm(self):
-        print "Testing WordCloudGenerator.generate_word_cloud() "\
-        "with weighted list of terms containing a single term."
+        print("Testing WordCloudGenerator.generate_word_cloud() "
+              "with weighted list of terms containing a single term.")
         # reset test_weighted_list before generating
         self.test_generator.weighted_terms = [("test", 0.56)]
         self.test_generator.generate_word_cloud()
         
         
     def testGenerateWordCloudTooBigParameter(self):
-        print "Testing WordCloudGenerator.generate_word_cloud() "\
-        "with the num_terms_to_visualize parameter greater than "\
-        "the length of the input list."
+        print("Testing WordCloudGenerator.generate_word_cloud() "
+              "with the num_terms_to_visualize parameter greater than "
+              "the length of the input list.")
         # reset test_weighted_list before generating
         self.test_generator.weighted_terms = [("America",0.5),("test", 1.56)]
         self.test_generator.generate_word_cloud()
 
 
     def testGenerateWordCloudWrongInputFormat(self):
-        print "Testing WordCloudGenerator.generate_word_cloud() "\
-        "with wrong type of input data."
+        print("Testing WordCloudGenerator.generate_word_cloud() "
+              "with wrong type of input data.")
         # reset test_weighted_list before generating
         self.test_generator.weighted_terms = [("America",0.5),("test", 1.56)]
         self.test_generator.generate_word_cloud()

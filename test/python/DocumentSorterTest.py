@@ -9,9 +9,9 @@ The University of Alabama
 
 import unittest
 import os, os.path
-from Document import Document
-from SupremeCourtOpinionMetadata import SupremeCourtOpinionMetadata
-from DocumentSorter import DocumentSorter
+from src.core.python.SupremeCourtOpinion import SupremeCourtOpinion
+from src.core.python.SupremeCourtOpinionMetadata import SupremeCourtOpinionMetadata
+from src.core.python.DocumentSorter import DocumentSorter
 
 ##### Here are all the global variables used in these tests.
 VALID_OPINION_FILE_LINES = ([
@@ -94,25 +94,25 @@ def create_test_docs():
     test_meta1.case_dates = CASE_DATES
     test_meta1.case_disposition = CASE_DISPOSITION
     test_meta1.opinion_author = OPINION_AUTHOR
-    test_doc1 = Document(test_meta1, OPINION_TEXT, TEST_PICKLE_PATH)
+    test_doc1 = SupremeCourtOpinion(test_meta1, OPINION_TEXT, TEST_PICKLE_PATH)
     
     test_meta2 = SupremeCourtOpinionMetadata()
     test_meta2.case_num = "No. 43"
-    test_doc2 = Document(test_meta2, OPINION_TEXT, TEST_PICKLE_PATH)
+    test_doc2 = SupremeCourtOpinion(test_meta2, OPINION_TEXT, TEST_PICKLE_PATH)
 
     test_meta3 = SupremeCourtOpinionMetadata()
     test_meta3.case_num = "No. 67"
     test_meta3.opinion_author = "JOHNSON"
-    test_doc3 = Document(test_meta3, OPINION_TEXT, TEST_PICKLE_PATH)
+    test_doc3 = SupremeCourtOpinion(test_meta3, OPINION_TEXT, TEST_PICKLE_PATH)
     
     test_meta4 = SupremeCourtOpinionMetadata()
     test_meta4.case_num = "No. 46"
     test_meta4.opinion_author = "MURPHY"
-    test_doc4 = Document(test_meta4, OPINION_TEXT, TEST_PICKLE_PATH)
+    test_doc4 = SupremeCourtOpinion(test_meta4, OPINION_TEXT, TEST_PICKLE_PATH)
     
     test_meta5 = SupremeCourtOpinionMetadata()
     test_meta5.case_num = "No. 43"
-    test_doc5 = Document(test_meta5, OPINION_TEXT, TEST_PICKLE_PATH)
+    test_doc5 = SupremeCourtOpinion(test_meta5, OPINION_TEXT, TEST_PICKLE_PATH)
     
     test_docs = [test_doc1, test_doc2, test_doc3, test_doc4, test_doc5]
     return test_docs
@@ -134,7 +134,7 @@ class DocumentSorterTest(unittest.TestCase):
     def testSortDocsNormalCase(self):
         # If I sort on case num, I should get one subset of 3 for "No. 43",
         # a subset of 1 for "No. 46", and a subset of 1 for "No. 67"
-        print "DocumentSorterTest: testing DocumentSorter.sort_docs normal case."
+        print("DocumentSorterTest: testing DocumentSorter.sort_docs normal case.")
         sorted_subsets = self.test_sorter.sort_docs("case_num")
         expected_subsets = ([[self.test_docs[0],self.test_docs[1],self.test_docs[4]], 
                              [self.test_docs[3]], [self.test_docs[2]]])
@@ -153,7 +153,7 @@ class DocumentSorterTest(unittest.TestCase):
     
     def testSortDocsEmptyInputList(self):
         # should this just return an empty list?
-        print "DocumentSorterTest: testing DocumentSorter.sort_docs with empty input list of docs."
+        print("DocumentSorterTest: testing DocumentSorter.sort_docs with empty input list of docs.")
         self.test_sorter.doc_list = []
         sorted_subsets = self.test_sorter.sort_docs("case_num")
         expected_subsets = []
@@ -162,8 +162,8 @@ class DocumentSorterTest(unittest.TestCase):
     
     
     def testSortDocsNonDocObject(self):
-        print "DocumentSorterTest: testing DocumentSorter.sort_docs with input "\
-        "list of docs containing non-Document object..."
+        print("DocumentSorterTest: testing DocumentSorter.sort_docs with input "
+              "list of docs containing non-Document object...")
         # throw exception
         self.test_docs.append("THIS IS A STRING")
         self.assertRaises(Exception, self.test_sorter.sort_docs, "case_num")
@@ -171,14 +171,14 @@ class DocumentSorterTest(unittest.TestCase):
     
     
     def testSortDocsInvalidSortField(self):
-        print "DocumentSorterTest: testing DocumentSorter.sort_docs with invalid sort field..."
+        print("DocumentSorterTest: testing DocumentSorter.sort_docs with invalid sort field...")
         # throw exception
         self.assertRaises(Exception, self.test_sorter.sort_docs, "this_isnt_a_field")
         #self.fail("DocumentSorterTest: I haven't written a test for testSortDocsInvalidSortField yet!")
     
     
     def testCreateSubsetNormalCase(self):
-        print "DocumentSorterTest: testing DocumentSorter.create_subset normal case..."
+        print("DocumentSorterTest: testing DocumentSorter.create_subset normal case...")
         # If I create a subset where author is in ["JOHNSON", "MURPHY"], I 
         # should get a subset of 2 -- 2 MUPRHY, 1 JOHNSON
         test_allowed_values = ["MURPHY", "JOHNSON"]
@@ -189,8 +189,8 @@ class DocumentSorterTest(unittest.TestCase):
 
 
     def testCreateSubsetNoAllowedValues(self):
-        print "DocumentSorterTest: testing DocumentSorter.create_subset with no "\
-        "list of allowed values..."
+        print ("DocumentSorterTest: testing DocumentSorter.create_subset with no "
+               "list of allowed values...")
         # return empty subset list?
         test_allowed_values = []
         expected_subset = []
@@ -200,8 +200,8 @@ class DocumentSorterTest(unittest.TestCase):
 
 
     def testCreateSubsetNoAllowedValueMatches(self):
-        print "DocumentSorterTest: testing DocumentSorter.create_subset with no "\
-        "matches on the allowed values..."
+        print("DocumentSorterTest: testing DocumentSorter.create_subset with no "
+              "matches on the allowed values...")
         # return empty subset list?
         test_allowed_values = ["JACKSON", "THOMPSON"]
         expected_subset = []
@@ -211,10 +211,10 @@ class DocumentSorterTest(unittest.TestCase):
 
 
     def testAddDocNormalCase(self):
-        print "DocumentSorterTest: testing DocumentSorter.add_doc normal case..."
+        print("DocumentSorterTest: testing DocumentSorter.add_doc normal case...")
         test_meta = SupremeCourtOpinionMetadata()
         test_meta.case_num = "No. 99"
-        test_doc = Document(test_meta, OPINION_TEXT, TEST_PICKLE_PATH)
+        test_doc = SupremeCourtOpinion(test_meta, OPINION_TEXT, TEST_PICKLE_PATH)
         
         self.assertEqual(len(self.test_sorter.doc_list), 5)
         self.test_sorter.add_doc(test_doc)
@@ -223,8 +223,8 @@ class DocumentSorterTest(unittest.TestCase):
         #self.fail("DocumentSorterTest: I haven't written a test for testAddDocNormalCase yet!")
         
         
-    def testAddDocWithNonDocument(self):
-        print "DocumentSorterTest: testing DocumentSorter.add_doc with non-Document..."
+    def testAddDocWithNonSupremeCourtOpinion(self):
+        print("DocumentSorterTest: testing DocumentSorter.add_doc with non-Document...")
         # throw exception, or let it happen??
         # what if I simply assert that it has to have at least doc_metadata?
         self.assertRaises(Exception, self.test_sorter.add_doc, "THIS IS NOT A DOC")

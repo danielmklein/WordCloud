@@ -60,7 +60,7 @@ class AnalysisEngine(object):
         which makes them much easier to deal with as we perform our
         calculations.  
         '''
-        print "Converting documents into DocumentStorage objects..."
+        print("Converting documents into DocumentStorage objects...")
         doc_num = 1
         num_docs = len(doc_set)
         converted_set = []
@@ -83,7 +83,7 @@ class AnalysisEngine(object):
         Constructs a list of all terms used in the entire corpus along
         with each term's doc frequency
         '''
-        print "Building list of all terms in document corpus..."
+        print("Building list of all terms in document corpus...")
         term_list = {}
         for doc in corpus:
             new_terms = ([term for term in doc.term_list 
@@ -127,7 +127,7 @@ class AnalysisEngine(object):
         lower_bound = 0.05
         relevant_terms = []
         # test output
-        print "TOTAL NUM OF DOCS: {0}".format(self.num_corpus_docs)
+        print("TOTAL NUM OF DOCS: {0}".format(self.num_corpus_docs))
         # /test output
         for term in term_list:
             doc_freq = 0
@@ -156,7 +156,7 @@ class AnalysisEngine(object):
         relevant_terms = self.determine_relevant_terms(self.corpus,
                                                        most_freq_terms)
         
-        print "Analyzing subset against corpus..."
+        print("Analyzing subset against corpus...")
         raw_info = self.collect_term_info(self.subset, relevant_terms)
         weighted_terms = self.build_weighted_pairs(raw_info)
 
@@ -188,7 +188,12 @@ class AnalysisEngine(object):
         
         # now scale the weight for each term so max weight == 1.0
         weighted_raw_terms = []
-        scale_factor = raw_term_info[0][1]
+        try:
+            scale_factor = raw_term_info[0][1]
+        except IndexError, e:
+            print(e)
+            raise Exception("There are no terms in the resulting list of important terms.")
+        
         for info_set in raw_term_info[:num_terms]:
             destemmed_term = self.destem(info_set[0], self.corpus)
             #term = info_set[0]
@@ -254,7 +259,7 @@ class AnalysisEngine(object):
         Saves a generated weighted_list to file in a readable format.
         '''
         # test output
-        print "PATH: {0}".format(output_path)
+        print("PATH: {0}".format(output_path))
         # /test output
         
         try:
@@ -263,8 +268,8 @@ class AnalysisEngine(object):
                     output_string = self.build_output(info_set)
                     output_file.write(output_string + '\n')
         except IOError:
-            print "An error occurred while saving the subset "\
-                    "to {0}...".format(output_path)
+            print("An error occurred while saving the subset "
+                    "to {0}...".format(output_path))
             raise IOError
         
         
@@ -346,6 +351,6 @@ class AnalysisEngine(object):
                     destemmed_term = possible_match
                     break
                 
-        print "Destemmed: {0} --> {1}".format(stemmed_term, destemmed_term)
+        print("Destemmed: {0} --> {1}".format(stemmed_term, destemmed_term))
         return destemmed_term
 

@@ -9,7 +9,7 @@ The University of Alabama
 
 import unittest
 import os, os.path
-from DocumentConverter import DocumentConverter
+from src.core.python.SupremeCourtOpinionFileConverter import SupremeCourtOpinionFileConverter
 
 ##### Here are all the global variables used in these tests.
 VALID_OPINION_FILE_LINES = ([
@@ -97,7 +97,7 @@ class DocumentConverterTest(unittest.TestCase):
        - a test file.
         '''
         self.test_path = TEST_FILE_PATH
-        self.test_converter = DocumentConverter(self.test_path, TEST_PICKLE_PATH)
+        self.test_converter = SupremeCourtOpinionFileConverter(self.test_path, TEST_PICKLE_PATH)
         
 
     def tearDown(self):
@@ -110,11 +110,11 @@ class DocumentConverterTest(unittest.TestCase):
         
 
     def testNormalCase(self):
-        print "DocumentConverterTest: testing DocumentConverter.convert_file() normal case..."
+        print("DocumentConverterTest: testing DocumentConverter.convert_file() normal case...")
         # create a normal test file
         create_test_file(VALID_OPINION_FILE_LINES)
         converted_doc = self.test_converter.convert_file()
-        print "word count: {0}".format(converted_doc.word_count)
+        print("Word count: {0}".format(converted_doc.word_count))
         # here assert a bunch of things about the resulting converted_doc
         self.assertTrue(hasattr(converted_doc, 'output_filename'))
         self.assertEqual(converted_doc.output_filename, TEST_PICKLE_PATH)
@@ -158,8 +158,8 @@ class DocumentConverterTest(unittest.TestCase):
 
     
     def testNoMetadataInFile(self):
-        print "DocumentConverterTest: testing DocumentConverter.convert_file() "\
-        "with no Metadata in the input file..."
+        print("DocumentConverterTest: testing DocumentConverter.convert_file() "
+              "with no Metadata in the input file...")
         # create a test file without any metadata fields in it
         create_test_file(VALID_OPINION_FILE_LINES[10:])
         converted_doc = self.test_converter.convert_file()
@@ -199,7 +199,7 @@ class DocumentConverterTest(unittest.TestCase):
         self.assertEqual(converted_doc.doc_metadata.case_full_cite, "")
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_dates'))
-        self.assertEqual(converted_doc.doc_metadata.case_dates, [])
+        self.assertEqual(converted_doc.doc_metadata.case_dates, '')
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_disposition'))
         self.assertEqual(converted_doc.doc_metadata.case_disposition, "")
@@ -207,8 +207,8 @@ class DocumentConverterTest(unittest.TestCase):
     
     
     def testNoBodyTextInFile(self):
-        print "DocumentConverterTest: testing DocumentConverter.convert_file() "\
-        "with no body text in the input file..."
+        print("DocumentConverterTest: testing DocumentConverter.convert_file() "
+              "with no body text in the input file...")
         # create a test file with valid metadata but without any body text in it
         create_test_file(VALID_OPINION_FILE_LINES[:11])
         converted_doc = self.test_converter.convert_file()
@@ -256,8 +256,8 @@ class DocumentConverterTest(unittest.TestCase):
     
     
     def testOutputFileNotWritable(self):
-        print "DocumentConverterTest: testing DocumentConverter.convert_file() "\
-        "and save_converted_doc() with an unwritable output file..."
+        print("DocumentConverterTest: testing DocumentConverter.convert_file() "
+              "and save_converted_doc() with an unwritable output file...")
         create_test_file(VALID_OPINION_FILE_LINES)
         converted_doc = self.test_converter.convert_file()
         # assert stuff about the created converted_doc
@@ -309,16 +309,16 @@ class DocumentConverterTest(unittest.TestCase):
         
     
     def testInputFileNonexistent(self):
-        print "DocumentConverterTest: testing DocumentConverter.convert_file() "\
-        "with nonexistent input file..."
+        print("DocumentConverterTest: testing DocumentConverter.convert_file() "
+              "with nonexistent input file...")
         # skip the create_test_file call and just try to convert.
         self.assertRaises(IOError, self.test_converter.convert_file)
         #self.fail("DocumentConverterTest: I haven't written testInputFileNonexistent yet.")
 
     
     def testEmptyInputFile(self):
-        print "DocumentConverterTest: testing DocumentConverter.convert_file() "\
-        "with completely empty input file..."
+        print("DocumentConverterTest: testing DocumentConverter.convert_file() "
+              "with completely empty input file...")
         # create a test file with nothing in it
         create_test_file([])
 
@@ -359,7 +359,7 @@ class DocumentConverterTest(unittest.TestCase):
         self.assertEqual(converted_doc.doc_metadata.case_full_cite, "")
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_dates'))
-        self.assertEqual(converted_doc.doc_metadata.case_dates, [])
+        self.assertEqual(converted_doc.doc_metadata.case_dates, '')
         
         self.assertTrue(hasattr(converted_doc.doc_metadata, 'case_disposition'))
         self.assertEqual(converted_doc.doc_metadata.case_disposition, "")

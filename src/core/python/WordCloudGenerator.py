@@ -1,13 +1,11 @@
 import random
-
+import numpy
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 
-import numpy
+from src.core.python.WordCloudConstants import *
 
-#FONT_PATH = "C:/Windows/Fonts/FRABK.ttf"
-FONT_PATH = "/usr/share/fonts/truetype/freefont/FreeSansBold.ttf"
 
 class WordCloudGenerator(object):
     '''

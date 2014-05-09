@@ -8,7 +8,7 @@ The University of Alabama
 '''
 
 import unittest
-from Metadata import Metadata
+from src.core.python.Metadata import Metadata
 
 class MetadataTest(unittest.TestCase):
 
@@ -22,7 +22,7 @@ class MetadataTest(unittest.TestCase):
 
 
     def test_convert_to_string(self):
-        print "MetadataTest: testing Metadata.convert_to_string()..."
+        print("MetadataTest: testing Metadata.convert_to_string()...")
         metadata_string = self.test_metadata.__str__()
         expected_string = "field1: test1\n" \
                         + "field2: test2\n" \
@@ -31,12 +31,12 @@ class MetadataTest(unittest.TestCase):
         self.assertEqual(metadata_string, expected_string)
         
     def test_print_fields(self):
-        print "MetadataTest: testing Metadata.print_fields()..."
+        print("MetadataTest: testing Metadata.print_fields()...")
         self.test_metadata.print_fields()
         
         
     def test_print_metadata(self):
-        print "MetadataTest: testing Metadata.print_metadata()..."
+        print("MetadataTest: testing Metadata.print_metadata()...")
         self.test_metadata.print_metadata()
 
 

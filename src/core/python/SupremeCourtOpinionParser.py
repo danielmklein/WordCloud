@@ -18,9 +18,8 @@ I merely translated them into a more modularized, object-oriented form.
 '''
 import re
 import os, os.path
+from src.core.python.WordCloudConstants import *
 
-SOURCE_DIR_PATH = r"C:\Users\Daniel\Dropbox\Class_files\CBH_301\Word_Cloud\supreme_court_opinions\test"
-OUTPUT_DIR_PATH = r"C:\Users\Daniel\Dropbox\Class_files\CBH_301\Word_Cloud\supreme_court_opinions\test_output\opinions"
 
 class SupremeCourtOpinionParser(object):
 
@@ -424,8 +423,8 @@ class SupremeCourtOpinionParser(object):
 
 
 def main():
-    source_dir = SOURCE_DIR_PATH
-    output_dir = OUTPUT_DIR_PATH
+    source_dir = LEXIS_FILE_PATH
+    output_dir = OPINION_OUTPUT_PATH
 
     parser = SupremeCourtOpinionParser(output_dir)
     print "Beginning to parse files in {0}".format(source_dir)

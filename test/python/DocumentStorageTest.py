@@ -144,7 +144,7 @@ class DocumentStorageTest(unittest.TestCase):
         '''
         passing
         '''
-        print "Testing DocumentStorage.write_to_file()..."
+        print("Testing DocumentStorage.write_to_file()...")
         test_output_path = self.test_document.output_filename
         if not self.test_document.write_to_file():
             self.fail("DocumentStorage class: You need to write a serialization test.")
@@ -162,7 +162,7 @@ class DocumentStorageTest(unittest.TestCase):
         '''
         passing
         '''
-        print "Testing DocumentStorage.write_to_file() with read-only output file..."
+        print("Testing DocumentStorage.write_to_file() with read-only output file...")
         test_output_path = self.test_document.output_filename
         with open(test_output_path, 'w') as touch:
             pass
@@ -177,11 +177,11 @@ class DocumentStorageTest(unittest.TestCase):
         '''
         passing
         '''
-        print "Testing DocumentStorage.__str__()..."
+        print("Testing DocumentStorage.__str__()...")
         expected = str(self.test_metadata) + FILTERED_TEXT
         actual = str(self.test_document)
-        print "expected: {0}".format(expected)
-        print "actual  : {0}".format(actual)
+        print("expected: {0}".format(expected))
+        print("actual  : {0}".format(actual))
         self.assertEqual(expected, actual)
         
     
@@ -189,7 +189,7 @@ class DocumentStorageTest(unittest.TestCase):
         '''
         passing
         '''
-        print "Testing DocumentStorage.count_words()..."
+        print("Testing DocumentStorage.count_words()...")
         expected_word_count = 95
         self.assertEqual(self.test_document.word_count, expected_word_count)
         
@@ -198,183 +198,183 @@ class DocumentStorageTest(unittest.TestCase):
         '''
         passing
         '''
-        print "Testing DocumentStorage.print_doc()..."
+        print("Testing DocumentStorage.print_doc()...")
         self.test_document.print_doc()
-        print "DocumentStorage.print_doc() testing finished.***"
+        print("DocumentStorage.print_doc() testing finished.***")
         
     
     def test_print_metadata(self):
         '''
         passing
         '''
-        print "Testing DocumentStorage.print_metadata()..."
+        print("Testing DocumentStorage.print_metadata()...")
         self.test_document.print_metadata()
-        print "DocumentStorage.print_metadata() testing finished.***"
+        print("DocumentStorage.print_metadata() testing finished.***")
 
     
     def test_create_split_text(self):
         '''
         passing
         '''
-        print "Testing DocumentStorage.create_split_text()..."
+        print("Testing DocumentStorage.create_split_text()...")
         expected = SPLIT_TEXT
         actual = self.test_document.create_split_text(FILTERED_TEXT)
-        print "expected: {0}".format(expected)
-        print "actual  : {0}".format(actual)
+        print("expected: {0}".format(expected))
+        print("actual  : {0}".format(actual))
         self.assertEqual(expected, actual)
-        print "DocumentStorage.create_split_text() testing finished.***"
+        print("DocumentStorage.create_split_text() testing finished.***")
 
 
     def test_build_term_list(self):
         '''
         passing
         '''
-        print "Testing DocumentStorage.build_term_list()..."
+        print("Testing DocumentStorage.build_term_list()...")
         expected = TERM_LIST
         actual = self.test_document.build_term_list(STEMMED_TEXT)
-        print "expected: {0}".format(expected)
-        print "actual  : {0}".format(actual)
+        print("expected: {0}".format(expected))
+        print("actual  : {0}".format(actual))
         self.assertEqual(expected, actual)
-        print "DocumentStorage.build_term_list() testing finished.***"        
+        print("DocumentStorage.build_term_list() testing finished.***")        
 
 
     def test_populate_term_freqs(self):
         '''
         passing
         '''
-        print "Testing DocumentStorage.populate_term_freqs()..."
+        print("Testing DocumentStorage.populate_term_freqs()...")
         expected = POPULATED_TERM_LIST
         actual = self.test_document.populate_term_freqs(TERM_LIST)
-        print "expected: {0}".format(expected)
-        print "actual  : {0}".format(actual)
+        print("expected: {0}".format(expected))
+        print("actual  : {0}".format(actual))
         self.assertEqual(expected, actual)
         #self.fail("haven't written this test yet")
-        print "DocumentStorage.populate_term_freqs() testing finished.***"
+        print("DocumentStorage.populate_term_freqs() testing finished.***")
 
 
     def test_filter_text(self):
         '''
         passing
         '''
-        print "Testing DocumentStorage.filter_text()..."
+        print("Testing DocumentStorage.filter_text()...")
         expected = FILTERED_TEXT
         actual = self.test_document.filter_text(TEST_TEXT)
-        print "expected: {0}".format(expected)
-        print "actual  : {0}".format(actual)
+        print("expected: {0}".format(expected))
+        print("actual  : {0}".format(actual))
         self.assertEqual(expected, actual)
-        print "DocumentStorage.filter_text() testing finished.***"
+        print("DocumentStorage.filter_text() testing finished.***")
 
 
     def test_remove_proper_nouns(self):
         '''
         passing
         '''
-        print "Testing DocumentStorage.remove_proper_nouns()..."
+        print("Testing DocumentStorage.remove_proper_nouns()...")
         expected = NO_PROPER_NOUNS
         actual = self.test_document.remove_proper_nouns(TEST_TEXT)
-        print "Expected: {0}".format(expected)
-        print "Actual  : {0}".format(actual)
+        print("Expected: {0}".format(expected))
+        print("Actual  : {0}".format(actual))
         self.assertEqual(expected, actual)
         #self.fail("haven't written this test yet")
-        print "DocumentStorage.remove_proper_nouns() testing finished.***"
+        print("DocumentStorage.remove_proper_nouns() testing finished.***")
 
 
     def test_remove_punctuation(self):
         '''
         passing
         '''
-        print "Testing DocumentStorage.remove_punctuation()..."
+        print("Testing DocumentStorage.remove_punctuation()...")
         expected = NO_PUNCTUATION
         actual = self.test_document.remove_punctuation(TEST_TEXT)
-        print "expected: {0}".format(expected)
-        print "actual  : {0}".format(actual)
+        print("expected: {0}".format(expected))
+        print("actual  : {0}".format(actual))
         self.assertEqual(expected, actual)
         #self.fail("haven't written this test yet")
-        print "DocumentStorage.remove_punctuation() testing finished.***"
+        print("DocumentStorage.remove_punctuation() testing finished.***")
         
         
     def test_remove_nums(self):
         '''
         passing
         '''
-        print "Testing DocumentStorage.remove_nums()..."
+        print("Testing DocumentStorage.remove_nums()...")
         text = "Here is some test text. Blah blah blah blah "\
                 "1234567890987654321 Yea Alabama Drown 'em Tide!"
         expected = "Here is some test text. Blah blah blah blah "\
                 " Yea Alabama Drown 'em Tide!"
         actual = self.test_document.remove_nums(text)
-        print "expected: {0}".format(expected)
-        print "actual  : {0}".format(actual)
+        print("expected: {0}".format(expected))
+        print("actual  : {0}".format(actual))
         self.assertEqual(expected, actual)
         #self.fail("haven't written this test yet")
-        print "DocumentStorage.remove_nums() testing finished.***"
+        print("DocumentStorage.remove_nums() testing finished.***")
         
         
     def test_remove_short_words(self):
         '''
         passing
         '''
-        print "Testing DocumentStorage.remove_single_chars()..."
+        print("Testing DocumentStorage.remove_single_chars()...")
         expected = NO_SHORT_WORDS
         actual = self.test_document.remove_short_words(NO_PUNCTUATION)
-        print "expected: {0}".format(expected)
-        print "actual  : {0}".format(actual)
+        print("expected: {0}".format(expected))
+        print("actual  : {0}".format(actual))
         self.assertEqual(expected, actual)
         #self.fail("haven't written this test yet")
-        print "DocumentStorage.remove_single_chars() testing finished.***"
+        print("DocumentStorage.remove_single_chars() testing finished.***")
         
         
     def test_remove_stop_words(self):
         '''
         passing
         '''
-        print "Testing DocumentStorage.remove_stop_words()..."
+        print("Testing DocumentStorage.remove_stop_words()...")
         text = [word.lower() for word in FILTERED_TEXT.split()]
         expected = SPLIT_TEXT
         actual = self.test_document.remove_stop_words(text)
-        print "expected: {0}".format(expected)
-        print "actual  : {0}".format(actual)
+        print("expected: {0}".format(expected))
+        print("actual  : {0}".format(actual))
         self.assertEqual(expected, actual)
         #self.fail("haven't written this test yet")
-        print "DocumentStorage.remove_stop_words() testing finished.***"
+        print("DocumentStorage.remove_stop_words() testing finished.***")
         
         
     def test_stem_text(self):
         '''
         passing
         '''
-        print "Testing DocumentStorage.stem_text()..."
+        print("Testing DocumentStorage.stem_text()...")
         expected = STEMMED_TEXT
         actual = self.test_document.stem_text(SPLIT_TEXT)
-        print "expected: {0}".format(expected)
-        print "actual  : {0}".format(actual)
+        print("expected: {0}".format(expected))
+        print("actual  : {0}".format(actual))
         self.assertEqual(expected, actual)
         #self.fail("haven't written this test yet")
-        print "DocumentStorage.stem_text() testing finished.***"
+        print("DocumentStorage.stem_text() testing finished.***")
         
 
     def test_calculate_term_frequency(self):
         '''
         passing
         '''
-        print "Testing DocumentStorage.remove_stop_words()..."
+        print("Testing DocumentStorage.remove_stop_words()...")
         for term in self.test_document.term_list:
-            print "Checking term frequency of term: {0}".format(term)
+            print("Checking term frequency of term: {0}".format(term))
             expected = self.test_document.stemmed_text.count(term) \
                         / float(len(self.test_document.stemmed_text))
             actual = self.test_document.calculate_term_frequency(term)
             self.assertEqual(expected, actual)
         #self.fail("haven't written this test yet")
-        print "DocumentStorage.remove_stop_words() testing finished.***"
+        print("DocumentStorage.remove_stop_words() testing finished.***")
     
     
     def test_calc_tfidf(self):
-        print "Testing DocumentStorage.remove_stop_words()..."
+        print("Testing DocumentStorage.remove_stop_words()...")
         test_doc_freq = 0.1
-        print "Relative doc frequency for testing "\
-            "purposes is: {0}".format(test_doc_freq)
+        print("Relative doc frequency for testing "
+            "purposes is: {0}".format(test_doc_freq))
         for term in self.test_document.term_list:
-            print "Checking tfidf for term: {0}".format(term)
+            print("Checking tfidf for term: {0}".format(term))
             expected = POPULATED_TERM_LIST[term]['tf'] / test_doc_freq
             actual = self.test_document.calc_tfidf(term, test_doc_freq)
             self.assertEqual(expected, actual)
@@ -383,7 +383,7 @@ class DocumentStorageTest(unittest.TestCase):
         actual = self.test_document.calc_tfidf("kalamazoo", test_doc_freq)
         self.assertEqual(expected, actual)
         #self.fail("haven't written this test yet")
-        print "DocumentStorage.remove_stop_words() testing finished.***"
+        print("DocumentStorage.remove_stop_words() testing finished.***")
 
 
 

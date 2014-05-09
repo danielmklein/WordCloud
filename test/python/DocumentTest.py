@@ -9,8 +9,8 @@ The University of Alabama
 
 import unittest
 import pickle
-from Metadata import Metadata
-from Document import Document
+from src.core.python.Metadata import Metadata
+from src.core.python.Document import Document
 import os, os.path
 
 class DocumentTest(unittest.TestCase):
@@ -32,7 +32,7 @@ class DocumentTest(unittest.TestCase):
                                                                       
 
     def test_serialization(self):
-        print "Testing Document.write_to_file()..."
+        print("Testing Document.write_to_file()...")
         test_output_path = self.test_document.output_filename
         if not self.test_document.write_to_file():
             self.fail("Document class: You need to write a serialization test.")
@@ -47,7 +47,7 @@ class DocumentTest(unittest.TestCase):
         
     
     def test_serialization_output_nonwritable(self):
-        print "Testing Document.write_to_file() with read-only output file..."
+        print("Testing Document.write_to_file() with read-only output file...")
         test_output_path = self.test_document.output_filename
         with open(test_output_path, 'w') as touch:
             pass
@@ -59,7 +59,7 @@ class DocumentTest(unittest.TestCase):
     
     
     def test_convert_to_string(self):
-        print "Testing Document.__str__()..."
+        print("Testing Document.__str__()...")
         expected_string = ""
         expected_string += str(self.test_metadata)
         expected_string += self.test_text
@@ -67,21 +67,21 @@ class DocumentTest(unittest.TestCase):
         
     
     def test_count_words(self):
-        print "Testing Document.count_words()..."
+        print("Testing Document.count_words()...")
         expected_word_count = 15
         self.assertEqual(self.test_document.word_count, expected_word_count)
         
         
     def test_print_doc(self):
-        print "Testing Document.print_doc()..."
+        print("Testing Document.print_doc()...")
         self.test_document.print_doc()
-        print "Document.print_doc() testing finished.***"
+        print("Document.print_doc() testing finished.***")
         
     
     def test_print_metadata(self):
-        print "Testing Document.print_metadata()..."
+        print("Testing Document.print_metadata()...")
         self.test_document.print_metadata()
-        print "Document.print_metadata() testing finished.***"
+        print("Document.print_metadata() testing finished.***")
 
 
 if __name__ == "__main__":

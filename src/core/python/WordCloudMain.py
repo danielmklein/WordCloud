@@ -5,17 +5,8 @@ from src.core.python.SupremeCourtOpinionFileConverter import SupremeCourtOpinion
 from src.core.python.DocumentSorter import DocumentSorter
 from src.core.python.AnalysisEngine import AnalysisEngine
 from src.core.python.WordCloudGenerator import WordCloudGenerator
+from src.core.python.WordCloudConstants import *
 
-# directory containing parsed opinions
-
-#OPINION_PATH = r"C:\Users\Daniel\Dropbox\Class_Files\CBH_301\Word_Cloud\supreme_court_opinions\test_output\test_opinions"
-#PICKLE_PATH = r"C:\Users\Daniel\Dropbox\Class_Files\CBH_301\Word_Cloud\supreme_court_opinions\test_output\test_pickled"
-OPINION_PATH = r"/home/dmklein/Code/test_opinions"
-PICKLE_PATH = r"/home/dmklein/Code/test_pickled"
-'''
-OPINION_PATH = r"C:\Users\Daniel\Dropbox\Class_Files\CBH_301\Word_Cloud\supreme_court_opinions\test_output\opinions"
-PICKLE_PATH = r"C:\Users\Daniel\Dropbox\Class_Files\CBH_301\Word_Cloud\supreme_court_opinions\test_output\pickled"
-'''
 # these are the cases dealing with the War on Terror
 ACCEPTED_CITES = (["542 U.S. 466","542 U.S. 507","542 U.S. 426","548 U.S. 557","553 U.S. 723","553 U.S. 674"])
 
