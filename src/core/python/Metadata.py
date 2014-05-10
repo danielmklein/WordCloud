@@ -8,7 +8,7 @@ class Metadata(object):
     9.12.2013
         
     A metadata object will be a collection of fields (pieces of metadata) that 
-    accompany of piece of data (in our case, the text of a document). We will 
+    accompany a piece of data (in our case, the text of a document). We will 
     subclass this class for each type of document we use.
     '''
 
