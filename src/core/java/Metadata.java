@@ -12,54 +12,49 @@
  */
 package core.java;
 
-import java.util.ArrayList;
 import java.util.List;
-import static java.util.Arrays.asList;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * The Metadata Class
  * @author dmklein
- *
+ * This is really an example for how the classes that inherit from this class
+ * should act. 
  */
-public class Metadata {
+public abstract class Metadata {
 
-	private List<String> fieldNames;
-	private String field1;
-	private String field2;
-	private String field3;
-	private String field4;
+	protected Map<String, String> fields;
+	protected List<String> fieldNames;
 	
 	public Metadata() 
 	{
-		this.fieldNames = new ArrayList<String>(asList("field1", "field2", "field3", "field4"));
-        this.field1 = "test1";
-        this.field2 = "test2";
-        this.field3 = "test3";
-        this.field4 = "test4";
+		this.fields = new HashMap<String, String>();
+	}
+	
+	/**
+	 * 
+	 * @param the name of the field to return
+	 * @return field for key, if present; null otherwise
+	 */
+	public String getField(String key) 
+	{
+		return this.fields.get(key);
 	}
 	
 	/**
 	 * Generates a pretty string representing the metadata.
 	 * @return metadata as a string
 	 */
-	public String toString()
-	{
-		return "";
-	}
+	public abstract String toString();
 	
 	/**
 	 * Prints out list of metadata fields
 	 */
-	public void printFields() 
-	{
-		System.out.println("test");
-	}
+	public abstract void printFields();
 	
 	/**
 	 * Prints out formatted metadata
 	 */
-	public void print()
-	{
-		System.out.println("test");
-	}
+	public abstract void print();
 }
