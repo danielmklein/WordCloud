@@ -1,7 +1,7 @@
 /**
  * 
  */
-package core.java;
+package core.javacore;
 
 import static java.util.Arrays.asList;
 

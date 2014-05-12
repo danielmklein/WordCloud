@@ -10,7 +10,7 @@
  *   accompany a piece of data (in our case, the text of a document). We will 
  *   subclass this class for each type of document we use.
  */
-package core.java;
+package core.javacore;
 
 import java.util.List;
 import java.util.Map;
@@ -40,6 +40,16 @@ public abstract class Metadata {
 	public String getField(String key) 
 	{
 		return this.fields.get(key);
+	}
+	
+	/**
+	 * 
+	 * @param the name of the field to set
+	 * @param the value to place in that fields
+	 */
+	public void setField(String key, String value) 
+	{
+		this.fields.put(key, value);
 	}
 	
 	/**
