@@ -12,6 +12,7 @@
  */
 package core.javacore;
 
+import java.lang.UnsupportedOperationException;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -49,6 +50,11 @@ public abstract class Metadata {
 	 */
 	public void setField(String key, String value) 
 	{
+		if (!this.fields.containsKey(key))
+		{
+			// No one should use this method to a new key/field 
+			throw new UnsupportedOperationException("Adding a field to the metadata is not allowed.");
+		}
 		this.fields.put(key, value);
 	}
 	

@@ -75,32 +75,20 @@ public class SupremeCourtOpinionMetadataTest {
 						expected, actual);
 	}
 
-	
-	/**
-	 * Test method for {@link core.javacore.SupremeCourtOpinionMetadata#printFields()}.
-	 */
-	@Test
-	public void testPrintFields() {
 		
-		fail("Not yet implemented");
-	}
-
-	
-	/**
-	 * Test method for {@link core.javacore.SupremeCourtOpinionMetadata#print()}.
-	 */
-	@Test
-	public void testPrint() {
-		fail("Not yet implemented");
-	}
-
-	
 	/**
 	 * Test method for {@link core.javacore.Metadata#getField(java.lang.String)}.
 	 */
 	@Test
 	public void testGetField() {
-		fail("Not yet implemented");
+		assertEquals(this.testMetadata.getField("US Citation"), "");
+		assertEquals(this.testMetadata.getField("Case Dates"), "");
+		assertEquals(this.testMetadata.getField("Bogus Field"), null);
+		
+		this.testMetadata.setField("US Citation", "12345678");
+		assertEquals(this.testMetadata.getField("US Citation"), "12345678");
+		this.testMetadata.setField("Case Disposition", "Here's a disposition for ya!");
+		assertEquals(this.testMetadata.getField("Case Disposition"), "Here's a disposition for ya!");
 	}
 	
 	
@@ -108,7 +96,19 @@ public class SupremeCourtOpinionMetadataTest {
 	 * Test method for {@link core.javacore.Metadata#setField(java.lang.String, java.lang.String)}.
 	 */
 	@Test
-	public void testSetField() {
-		fail("Not yet implemented");
+	public void testSetField()
+	{
+		this.testMetadata.setField("US Citation", "hollaaaaa");
+		assertEquals(this.testMetadata.getField("US Citation"), "hollaaaaa");
+		this.testMetadata.setField("US Citation", "here's another citation");
+		assertEquals(this.testMetadata.getField("US Citation"), "here's another citation");
+		try
+		{
+			this.testMetadata.setField("Bogus Field", "Foobar");
+			fail("SupremeCourtOpinionMetadataTest::testSetField: Expected an UnsupportedOperationException to be thrown.");
+		} catch (UnsupportedOperationException e)
+		{
+			assertEquals(e.getMessage(), "Adding a field to the metadata is not allowed.");
+		}
 	}
 }
