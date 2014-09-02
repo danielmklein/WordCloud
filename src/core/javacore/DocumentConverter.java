@@ -1,6 +1,8 @@
 package core.javacore;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 /**
  *   DocumentConverter Class for Word Cloud Project (Java)
@@ -42,11 +44,16 @@ public class DocumentConverter
 		this.convertedDoc.serialize();
 	}
 	
-	public String getTitledItem(final String line, final String itemRegex)
+	public String getTitledItem(final String line, final String itemRegex/* TODO: should this be a Pattern instead? */)
 	{
 		String item = "";
+		Pattern regex = Pattern.compile(itemRegex);
+		Matcher match = regex.matcher(line);
 		
-		// TODO: find out how regexes work in java
+		if (match.find()) 
+		{
+			item = match.group();
+		}
 		
 		return item;
 	}

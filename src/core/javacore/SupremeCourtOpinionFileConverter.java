@@ -1,7 +1,11 @@
 package core.javacore;
 
 import java.io.IOException;
+import java.io.File;
+
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 /**
  *   SupremeCourtOpinionFileConverter Class for Word Cloud Project (Java)
@@ -18,6 +22,7 @@ import java.util.List;
 public class SupremeCourtOpinionFileConverter extends DocumentConverter 
 {
 
+	private String inputPath;
 	/**
 	 * @param fileToParse
 	 * @param serializePath
@@ -33,6 +38,22 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
 	public SupremeCourtOpinion convertFile() throws IOException
 	{
 		SupremeCourtOpinion converted = null;
+		
+		// Check to see if the input file exists.
+		File inputFile = new File(this.inputPath);
+		if (!inputFile.isFile())
+		{
+			throw new IOException("The path " + this.inputPath + " does not exist!");
+		}
+		
+		Pattern txtFileRegex = Pattern.compile("\\.txt$");
+		Matcher match = txtFileRegex.matcher(this.inputPath);
+		if (!match.find())
+		{
+			throw new IOException("The file " + this.inputPath + " is not a text file and "
+					+ "thus cannot be converted.");
+		}
+		
 		
 		// TODO: write me!
 		if (true) 
