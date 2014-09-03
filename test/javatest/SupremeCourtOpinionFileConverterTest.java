@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import core.javacore.SupremeCourtOpinion;
 import core.javacore.SupremeCourtOpinionFileConverter;
 
 public class SupremeCourtOpinionFileConverterTest {
@@ -139,9 +141,77 @@ public class SupremeCourtOpinionFileConverterTest {
 	}
 
 	@Test
-	public void test() {
+	public void testNormalCase() throws IOException {
+        System.out.println("DocumentConverterTest: testing DocumentConverter.convert_file() normal case...");
+
+		this.createTestFile(VALID_OPINION_LINES);
+		SupremeCourtOpinion convertedOpinion = this.testConverter.convertFile();
+		
+		fail("Not yet implemented");
+	}
+	
+	@Test
+	public void testNoNoMetadataInFile() throws IOException {
+        System.out.println("DocumentConverterTest: testing DocumentConverter.convert_file() "
+                + "with no Metadata in the input file...");
+        
+        this.createTestFile(VALID_OPINION_LINES.subList(10, VALID_OPINION_LINES.size()));
+        SupremeCourtOpinion convertedOpinion = this.testConverter.convertFile();
+        
+		fail("Not yet implemented");
+	}
+	@Test
+	public void testNoBodyTextInFile() throws IOException {
+        System.out.println("DocumentConverterTest: testing DocumentConverter.convert_file() "
+	              + "with no body text in the input file...");
+        
+        this.createTestFile(VALID_OPINION_LINES.subList(0, 11));
+        SupremeCourtOpinion convertedOpinion = this.testConverter.convertFile();
+        
 		System.out.println(TEST_FILE_PATH);
 		fail("Not yet implemented");
 	}
+	
+	@Test
+	public void testOutputFileNotWritable() throws IOException {
+        System.out.println("DocumentConverterTest: testing DocumentConverter.convert_file() "
+                + "and save_converted_doc() with an unwritable output file...");
+		System.out.println(TEST_FILE_PATH);
+		
+        this.createTestFile(VALID_OPINION_LINES);
+        SupremeCourtOpinion convertedOpinion = this.testConverter.convertFile();
+        
+		fail("Not yet implemented");
+	}
+	
+	@Test
+	public void testInputFileNonexistent() throws IOException {
+		System.out.println("DocumentConverterTest: testing DocumentConverter.convert_file() "
+              + "with nonexistent input file...");
+		
+		try 
+		{
+			this.testConverter.convertFile();
+		} catch (IOException e) 
+		{
+			// this exception is expected behavior.
+			return;
+		}
+        
+		fail("convertFile should have thrown an exception because of the nonexistent file.");
+	}
+	
+	@Test
+	public void testEmptyInputFile() throws IOException {
+        System.out.println("DocumentConverterTest: testing DocumentConverter.convert_file() "
+                + "with completely empty input file...");
+
+        this.createTestFile(new ArrayList<String>());
+
+        SupremeCourtOpinion convertedOpinion = this.testConverter.convertFile();
+        
+        fail("Not yet implemented");
+	}
+	
 
 }

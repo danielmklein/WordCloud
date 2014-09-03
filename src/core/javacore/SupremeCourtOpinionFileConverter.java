@@ -31,6 +31,7 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
 			String serializePath) 
 	{
 		super(fileToParse, serializePath);
+		this.inputPath = fileToParse;
 		// TODO Auto-generated constructor stub
 	}
 	
