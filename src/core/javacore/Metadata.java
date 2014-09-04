@@ -19,58 +19,67 @@ import java.util.HashMap;
 
 /**
  * The Metadata Class
- * @author dmklein
- * This is really an example for how the classes that inherit from this class
- * should act. 
+ * 
+ * @author dmklein This is really an example for how the classes that inherit
+ *         from this class should act.
  */
-public abstract class Metadata {
+public abstract class Metadata
+{
 
-	protected Map<String, String> fields;
-	protected List<String> fieldNames;
-	
-	public Metadata() 
-	{
-		this.fields = new HashMap<String, String>();
-	}
-	
-	/**
-	 * 
-	 * @param the name of the field to return
-	 * @return field for key, if present; null otherwise
-	 */
-	public String getField(String key) 
-	{
-		return this.fields.get(key);
-	}
-	
-	/**
-	 * 
-	 * @param the name of the field to set
-	 * @param the value to place in that fields
-	 */
-	public void setField(String key, String value) 
-	{
-		if (!this.fields.containsKey(key))
-		{
-			// No one should use this method to a new key/field 
-			throw new UnsupportedOperationException("Adding a field to the metadata is not allowed.");
-		}
-		this.fields.put(key, value);
-	}
-	
-	/**
-	 * Generates a pretty string representing the metadata.
-	 * @return metadata as a string
-	 */
-	public abstract String toString();
-	
-	/**
-	 * Prints out list of metadata fields
-	 */
-	public abstract void printFields();
-	
-	/**
-	 * Prints out formatted metadata
-	 */
-	public abstract void print();
+    protected Map<String, String> fields;
+    protected List<String> fieldNames;
+
+    public Metadata()
+    {
+
+        this.fields = new HashMap<String, String>();
+    }
+
+    /**
+     * 
+     * @param the
+     *            name of the field to return
+     * @return field for key, if present; null otherwise
+     */
+    public String getField(String key)
+    {
+
+        return this.fields.get(key);
+    }
+
+    /**
+     * 
+     * @param the
+     *            name of the field to set
+     * @param the
+     *            value to place in that fields
+     */
+    public void setField(String key, String value)
+    {
+
+        if (!this.fields.containsKey(key))
+        {
+            // No one should use this method to a new key/field
+            throw new UnsupportedOperationException(
+                            "Adding a field to the metadata is not allowed.");
+        }
+        this.fields.put(key, value);
+    }
+
+    /**
+     * Generates a pretty string representing the metadata.
+     * 
+     * @return metadata as a string
+     */
+    public abstract String toString();
+
+    /**
+     * Prints out list of metadata fields
+     */
+    public abstract void printFields();
+
+    /**
+     * Prints out formatted metadata
+     */
+    public abstract void print();
 }

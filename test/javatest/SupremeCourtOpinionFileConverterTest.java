@@ -135,7 +135,6 @@ public class SupremeCourtOpinionFileConverterTest
 
         this.testConverter = new SupremeCourtOpinionFileConverter(
                         TEST_FILE_PATH, TEST_SERIALIZED_PATH);
-        this.createTestFile(VALID_OPINION_LINES);
     }
 
     @After
@@ -339,7 +338,7 @@ public class SupremeCourtOpinionFileConverterTest
         SupremeCourtOpinion convertedOpinion = this.testConverter.convertFile();
         assertEquals(convertedOpinion.getOutputFilename(), TEST_SERIALIZED_PATH);
 
-        assertEquals(convertedOpinion.getText(), OPINION_TEXT);
+        assertEquals(convertedOpinion.getText(), "");
 
         assertEquals(convertedOpinion.getMetadata().getField(
                         WordCloudConstants.META_CASE_TITLE), "");
@@ -375,20 +374,23 @@ public class SupremeCourtOpinionFileConverterTest
                         WordCloudConstants.META_DISPOSITION), "");
 
     }
-    
+
     @Test
     public void testGetAuthor()
     {
-        String author = this.testConverter.getAuthor("MURPHY_1944 U.S. LEXIS 1230.txt");
-        
+
+        String author = this.testConverter
+                        .getAuthor("MURPHY_1944 U.S. LEXIS 1230.txt");
+
         assertEquals(author, OPINION_AUTHOR);
     }
-    
+
     @Test
     public void testSplitDates()
     {
+
         String raw = "November 8, 1944, Argued;December 18, 1944, Decided;";
-        
+
         String expected = "November 8, 1944 (Argued) December 18, 1944 (Decided) ";
         String actual = this.testConverter.splitDates(raw);
 
