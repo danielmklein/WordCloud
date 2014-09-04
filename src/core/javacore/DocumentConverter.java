@@ -20,9 +20,9 @@ import java.util.regex.Matcher;
 public class DocumentConverter 
 {
 
-	private Document convertedDoc;
-	private String inputPath;
-	private String outputPath;
+	protected Document convertedDoc;
+	protected String inputPath;
+	protected String outputPath;
 	
 	/**
 	 * 
@@ -52,7 +52,7 @@ public class DocumentConverter
 		
 		if (match.find()) 
 		{
-			item = match.group();
+			item = match.group(1);
 		}
 		
 		return item;

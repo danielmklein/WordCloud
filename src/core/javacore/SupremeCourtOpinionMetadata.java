@@ -24,11 +24,13 @@ public class SupremeCourtOpinionMetadata extends Metadata {
 	 */
 	public SupremeCourtOpinionMetadata()
 	{
-		this.fieldNames = asList("Case Title", "Case Number", "US Citation",
-		                         "Supreme Court Citation", "Case Lawyers Ed Citation",
-		                         "Lexis Citation", "Full Citation", "Case Dates", 
-		                         "Case Disposition", "Opinion Author", 
-		                         "Opinion Type");
+		this.fieldNames = asList(WordCloudConstants.META_CASE_TITLE, WordCloudConstants.META_CASE_NUM, 
+								WordCloudConstants.META_US_CITE, WordCloudConstants.META_SC_CITE, 
+								WordCloudConstants.META_LAWYERS_ED, WordCloudConstants.META_LEXIS_CITE, 
+								WordCloudConstants.META_FULL_CITE, WordCloudConstants.META_CASE_DATES, 
+								WordCloudConstants.META_DISPOSITION, WordCloudConstants.META_OPIN_AUTHOR, 
+								WordCloudConstants.META_OPIN_TYPE);
+
 		for (String fieldName: this.fieldNames)
 		{
 			this.fields.put(fieldName, "");

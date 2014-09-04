@@ -2,7 +2,7 @@ package core.javacore;
 
 import java.io.IOException;
 import java.io.File;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -22,7 +22,6 @@ import java.util.regex.Matcher;
 public class SupremeCourtOpinionFileConverter extends DocumentConverter 
 {
 
-	private String inputPath;
 	/**
 	 * @param fileToParse
 	 * @param serializePath
@@ -31,8 +30,6 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
 			String serializePath) 
 	{
 		super(fileToParse, serializePath);
-		this.inputPath = fileToParse;
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override
@@ -64,16 +61,53 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
 		return converted;
 	}
 	
-	private String getAuthor(String filePath)
+	public String getAuthor(String filePath)
 	{
-		// TODO: write me!
-		return "";
+	    
+	    String author = "";
+	    Pattern authorRegex = Pattern.compile("([\\w'\\- ]+)_\\d{4} U\\.S\\. LEXIS");
+	    Matcher authorMatch = authorRegex.matcher(filePath);
+	    if (authorMatch.find())
+	    {
+	        author = authorMatch.group(1);
+	    }
+	    
+	    return author;
 	}
 	
-	private List<String> splitDates(String dateString)
+	public String splitDates(String dateString)
 	{
-		// TODO: write me!
-		return null;
+	    
+	    String dates = "";
+	    Pattern dateStringRegex = Pattern.compile("\\w+\\s\\d{1,2}-?\\d?\\d?,\\s\\d{4},\\s\\w+;");
+	    Matcher rawDatesMatch = dateStringRegex.matcher(dateString);
+	    List<String> rawDates = new ArrayList<String>();
+	    
+	    while (rawDatesMatch.find())
+	    {
+	        rawDates.add(rawDatesMatch.group());
+	    }
+	    
+	    Pattern groupedDateRegex = Pattern.compile("(\\w+\\s\\d{1,2}-?\\d?\\d?,\\s\\d{4}),\\s(\\w+);");
+	    Matcher groupedDateMatch;
+	    String date;
+	    String action;
+	    
+	    for (String rawDate : rawDates)
+	    {
+	        groupedDateMatch = groupedDateRegex.matcher(rawDate);
+	        
+	        if (groupedDateMatch.find())
+	        {
+	            date = groupedDateMatch.group(1);
+	            action = groupedDateMatch.group(2);
+	            dateString = date + " (" + action + ") ";
+	            dates += dateString;
+	        }
+	    }
+	    
+	    return dates;
+	    
 	}
 
 }

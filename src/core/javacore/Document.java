@@ -32,6 +32,21 @@ public class Document
 		return text.split(" ").length;
 	}
 	
+	public String getOutputFilename()
+	{
+		return this.outputFilename;
+	}
+	
+	public String getText()
+	{
+		return this.docText;
+	}
+	
+	public Metadata getMetadata()
+	{
+		return this.docMetadata;
+	}
+	
 	public void serialize() throws IOException
 	{
 		ObjectOutputStream oos = null;
