@@ -23,5 +23,12 @@ public class SupremeCourtOpinion extends Document
         super(docMetadata, docText, outputFilename);
         // TODO Auto-generated constructor stub
     }
+    
+    @Override
+    public String toString()
+    {
+        // TODO: fix me... it's just a temporary thing.
+        return this.getMetadata().getField(WordCloudConstants.META_OPIN_AUTHOR);
+    }
 
 }

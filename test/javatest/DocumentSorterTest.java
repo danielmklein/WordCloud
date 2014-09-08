@@ -113,7 +113,6 @@ public class DocumentSorterTest
 
         Metadata testMeta2 = new SupremeCourtOpinionMetadata();
         testMeta2.setField(WordCloudConstants.META_CASE_NUM, "No. 43");
-        testMeta2.setField(WordCloudConstants.META_OPIN_AUTHOR, "JOHNSON");
         Document testDoc2 = new SupremeCourtOpinion(testMeta2, OPINION_TEXT,
                         TEST_SERIALIZED_PATH);
 
@@ -151,7 +150,7 @@ public class DocumentSorterTest
 
     }
 
-    @Test
+    /*@Test
     public void testSortDocsNormalCase() throws IOException
     {
 
@@ -211,7 +210,7 @@ public class DocumentSorterTest
             // the exception is expected behavior
         }
         fail("sortDocs should have thrown an exception when it encountered an invalid sort field.");
-    }
+    }*/
 
     @Test
     public void testCreateSubsetNormalCase() throws IOException
@@ -222,6 +221,23 @@ public class DocumentSorterTest
         List<String> testAllowedVals = Arrays.asList("MURPHY", "JOHNSON");
         List<Document> expectedSubset = Arrays.asList(this.testDocs.get(0), this.testDocs.get(2), this.testDocs.get(3));
         List<Document> createdSubset = this.testSorter.createSubset(WordCloudConstants.META_OPIN_AUTHOR, testAllowedVals, false);
+        System.out.println(expectedSubset);
+        System.out.println(createdSubset);
+        
+        assertEquals(expectedSubset, createdSubset);
+    }
+    
+    @Test
+    public void testCreateSubsetNormalCaseInverted() throws IOException
+    {
+
+        System.out.println("DocumentSorterTest: testing DocumentSorter.createSubset normal case, inverting the subset...");
+
+        List<String> testAllowedVals = Arrays.asList("MURPHY", "JOHNSON");
+        List<Document> expectedSubset = Arrays.asList(this.testDocs.get(1), this.testDocs.get(4));
+        List<Document> createdSubset = this.testSorter.createSubset(WordCloudConstants.META_OPIN_AUTHOR, testAllowedVals, true);
+        System.out.println(expectedSubset);
+        System.out.println(createdSubset);
         
         assertEquals(expectedSubset, createdSubset);
     }

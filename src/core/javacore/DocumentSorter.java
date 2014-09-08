@@ -1,6 +1,7 @@
 package core.javacore;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,6 +36,8 @@ public class DocumentSorter
     public List<List<Document>> sortDocs(String sortField) throws IOException
     {
 
+        // TODO: write this... maybe. And uncomment the tests for this
+        // when you do.
         throw new IOException("sortDocs hasn't been written yet!");
     }
 
@@ -53,8 +56,62 @@ public class DocumentSorter
                     List<String> allowedVals, boolean shouldInvert)
                     throws IOException
     {
+        
+        List<Document> subset = new ArrayList<Document>();
+        
+        for (Document doc : this.docList)
+        {
+            // Pick the items in list whose value for the sortField
+            // matches something in allowedVals (exact match not necessary).
+            if (!sortField.toLowerCase().contains("dates"))
+            {
+                for (String val : allowedVals)
+                {
+                    String metaVal = doc.getMetadata().getField(sortField);
+                    if (metaVal.toLowerCase().contains(val.toLowerCase()))
+                    {
+                        subset.add(doc);
+                        // If we hit a match, we break to avoid adding one
+                        // doc to subset multiple times.
+                        break;
+                    }
+                }
+            } else
+            {
+                // This code is redundant, but I want to keep it separate
+                // to remember if we change the way we handle dates in the future.
+                for (String val : allowedVals)
+                {
+                    String metaVal = doc.getMetadata().getField(sortField);
+                    if (metaVal.toLowerCase().contains(val.toLowerCase()))
+                    {
+                        subset.add(doc);
+                        // If we hit a match, we break to avoid adding one
+                        // doc to subset multiple times.
+                        break;
+                    }
+                }
+            }
+        }
+        
+        if (shouldInvert)
+        {
+            List<Document> inverted = new ArrayList<Document>();
+            
+            for (Document doc : this.docList)
+            {
+                if (!subset.contains(doc))
+                {
+                    inverted.add(doc);
+                }
+            }
+            
+            return inverted;
+        } else 
+        {
+            return subset;
+        }
 
-        throw new IOException("createSubset hasn't been written yet!");
     }
 
     /**
