@@ -1,8 +1,15 @@
 package core.javacore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
+// an implementation of the Porter stemmer from http://tartarus.org/~martin/PorterStemmer/
+import core.javacore.Stemmer;
 
 /**
 *   Daniel Klein
@@ -16,14 +23,35 @@ import java.util.Map;
 */
 public class DocumentStorage extends Document
 {
-
-    /**
-     * 
-     */
+    private static final Pattern CAP_REGEX = Pattern.compile("[A-Z]+");
+    private static final Pattern PUNC_REGEX = Pattern.compile("[\\.\\?!]");
+    
+    private String identifier;
+    private List<String> splitText;
+    private List<String> stemmedText;
+    private Map<String, Map<String, Double>> termList;
+    
     public DocumentStorage(Metadata docMetadata, String docText, String outputFilename)
     {
+        // TODO: create identifier?
+        
         super(docMetadata, docText, outputFilename);
-        // TODO Auto-generated constructor stub
+        // this.docText holds the actual string containing the raw, unmodified text from the doc
+        
+        // this.splitText contains the full filtered text of the document
+        this.splitText = this.filterText(this.docText, false);
+        
+        // this.stemmedText contains full filtered text with all words stemmed
+        this.stemmedText = this.stemText(this.splitText);
+        
+        /*
+        * this.termList is a list of unique terms in the document along with
+        * each term's term frequency and tfidf metric -- only term freq
+        * is calculated for each term at this point.
+        */
+        this.termList = this.buildTermList(this.stemmedText);
+        this.populateTermFreqs();
+        
     }
     
     private Map<String, Map<String, Double>> buildTermList(List<String> splitText)
@@ -48,41 +76,86 @@ public class DocumentStorage extends Document
         return termList;
     }
     
-    private Map<String, Map<String, Double>> populateTermFreqs(Map<String, Map<String, Double>> termList)
+    private void populateTermFreqs()
     {
         
-        for (String term : termList.keySet())
+        for (String term : this.termList.keySet())
         {
             Double tf = this.calcTermFreq(term);
-            termList.get(term).put("tf", tf);
+            this.termList.get(term).put("tf", tf);
         }
         
-        return termList;
     }
     
     private List<String> filterText(String text, boolean shouldDropPropNouns)
     {
-        
+    
+        return new ArrayList<String>();
     }
     
     private boolean isProperNoun(String curTerm, String prevTerm)
     {
         
-    }
-    
-    private List<String> stemText(List<String> wordList)
-    {
-        // TODO: use opennlp.tools.stemmer.Stemmer.
+        Matcher prevPunc = PUNC_REGEX.matcher(prevTerm);
+        Matcher curCaps = CAP_REGEX.matcher(curTerm);
         
+        return (curCaps.find() && !prevPunc.find());
     }
     
+    public List<String> stemText(List<String> wordList)
+    {
+
+        List<String> stemmed = new ArrayList<String>();
+        Stemmer stemmer;
+        
+        for (String word : wordList)
+        {
+            stemmer = new Stemmer();
+            stemmer.add(word.toCharArray(), word.length());
+            stemmer.stem();
+            stemmed.add(stemmer.toString());
+        }
+        
+        return stemmed;
+    }
+    
+    /**
+     * Given a term and a doc, calculates term's relative frequency
+     * in that doc, ie
+     * (# times term appears in doc) / (# total terms in doc)
+     * 
+     * @param term
+     * @return
+     */
     private Double calcTermFreq(String term)
     {
         
+        return this.termList.get(term).get("count") 
+                        / new Double(this.stemmedText.size());
     }
     
+    /**
+     *  Given a term and its relative doc frequency, calculates the tf-idf 
+     *  for the term in the document.
+     *  
+     * @param term
+     * @param docFreq
+     * @return
+     */
     private Double calcTfidf(String term, int docFreq)
     {
+        
+        Double termFreq;
+        
+        try
+        {
+            termFreq = this.termList.get(term).get("tf");
+        } catch (Exception e) // term is not in the term list.
+        {
+            termFreq = new Double(0);
+        }
+        
+        return termFreq / new Double(docFreq);
         
     }
 }

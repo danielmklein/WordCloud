@@ -46,16 +46,7 @@ public class DocumentConverter
         this.convertedDoc.serialize();
     }
 
-    public String getTitledItem(final String line, final Pattern itemRegex/*
-                                                                           * TODO:
-                                                                           * should
-                                                                           * this
-                                                                           * be
-                                                                           * a
-                                                                           * Pattern
-                                                                           * instead
-                                                                           * ?
-                                                                           */)
+    public String getTitledItem(final String line, final Pattern itemRegex)
     {
 
         String item = "";

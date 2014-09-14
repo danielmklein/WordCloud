@@ -15,7 +15,7 @@ import java.io.ObjectOutputStream;
 public class Document
 {
     private Metadata docMetadata;
-    private String docText;
+    protected String docText;
     private String outputFilename;
     private int wordCount;
 
