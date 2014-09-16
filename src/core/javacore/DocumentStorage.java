@@ -234,4 +234,9 @@ public class DocumentStorage extends Document
         return termFreq / new Double(docFreq);
         
     }
+    
+    public Map<String, Map<String, Double>> getTermList()
+    {
+        return this.termList;
+    }
 }
