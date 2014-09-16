@@ -29,10 +29,35 @@ public class DocumentStorageTest
                     + "Stanley Yelnats was given a choice. The judge said, 'You may go to jail, or "
                     + "you may go to Camp Green Lake.' "
                     + "Stanley was from a poor family. He had never been to camp before.";
+
+    private static String NO_PROPER_NOUNS =
+                    "The reader is probably asking: would anyone go to "
+                    + "Most campers weren't given a choice. Camp is a camp for bad boys. "
+                    + "If you take a bad boy and make him dig a hole every day in the hot sun, it "
+                    + "will turn him into a good boy. That was what some people thought. "
+                    + "Stanley was given a choice. The judge said, 'You may go to jail, or "
+                    + "you may go to "
+                    + "Stanley was from a poor family. He had never been to camp before.";
                     
-    
-    private static List<String> SPLIT_TEXT = Arrays.asList("reader", "probably", "asking", "would", "anyone", 
-                   "camp", "green", "lake", "campers", "weren", "given", 
+
+    private static String NO_PUNCTUATION =
+                    "The reader is probably asking  Why would anyone go to Camp Green Lake  Most "
+                    + "campers werent given a choice  Camp Green Lake is a camp for bad boys  If "
+                    + "you take a bad boy and make him dig a hole every day in the hot sun  it will "
+                    + "turn him into a good boy  That was what some people thought  Stanley Yelnats "
+                    + "was given a choice  The judge said   You may go to jail  or you may go to Camp "
+                    + "Green Lake   Stanley was from a poor family  He had never been to camp before ";
+                   
+
+    private static String NO_SHORT_WORDS =
+                    "The reader probably asking Why would anyone Camp Green Lake Most campers weren "
+                    + "given choice Camp Green Lake camp for bad boys you take bad boy and make him "
+                    + "dig hole every day the hot sun will turn him into good boy That was what some "
+                    + "people thought Stanley Yelnats was given choice The judge said You may jail "
+                    + "you may Camp Green Lake Stanley was from poor family had never been camp before";
+            
+    private static List<String> SPLIT_TEXT = Arrays.asList("reader", "probably", "asking", "anyone", 
+                   "camp", "green", "lake", "campers", "werent", "given", 
                    "choice", "camp", "green", "lake", "camp", "bad", 
                    "boys", "take", "bad", "boy", "make", "dig", "hole", 
                    "every", "day", "hot", "sun", "turn", "good", "boy", 
@@ -41,8 +66,8 @@ public class DocumentStorageTest
                    "camp", "green", "lake", "stanley", "poor", "family", 
                    "never", "camp");
 
-    private static List<String> STEMMED_TEXT = Arrays.asList("reader", "probabl", "ask", "would", "anyon", 
-                     "camp", "green", "lake", "camper", "weren", 
+    private static List<String> STEMMED_TEXT = Arrays.asList("reader", "probabl", "ask", "anyon", 
+                     "camp", "green", "lake", "camper", "werent", 
                      "given", "choic", "camp", "green", "lake", "camp", 
                      "bad", "boi", "take", "bad", "boi", "make", "dig", 
                      "hole", "everi", "dai", "hot", "sun", "turn", 
@@ -76,13 +101,6 @@ public class DocumentStorageTest
     {
 
     }
-
-    @Test
-    public void test()
-    {
-
-        fail("Not yet implemented");
-    }
     
     @Test
     public void testStemText()
@@ -98,5 +116,18 @@ public class DocumentStorageTest
         
         System.out.println("DocumentStorage.stemText() testing finished.***");
     }
+    
+    @Test
+    public void testFilterText()
+    {
+        System.out.println("Testing DocumentStorage.filterText()...");
+        List<String> expected = SPLIT_TEXT;//FILTERED_TEXT;
+        List<String> actual = this.testDoc.filterText(TEST_TEXT, false);
+                        System.out.println("expected: " + expected);
+        System.out.println("actual  : " + actual);
+        assertEquals(expected, actual);
+        System.out.println("DocumentStorage.filter_text() testing finished.***");
+    }
+        
 
 }

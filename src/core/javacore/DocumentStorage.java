@@ -37,10 +37,10 @@ public class DocumentStorage extends Document
         
         super(docMetadata, docText, outputFilename);
         // this.docText holds the actual string containing the raw, unmodified text from the doc
-        
+                
         // this.splitText contains the full filtered text of the document
         this.splitText = this.filterText(this.docText, false);
-        
+                
         // this.stemmedText contains full filtered text with all words stemmed
         this.stemmedText = this.stemText(this.splitText);
         
@@ -51,9 +51,15 @@ public class DocumentStorage extends Document
         */
         this.termList = this.buildTermList(this.stemmedText);
         this.populateTermFreqs();
-        
     }
     
+    /**
+    *  Build term list of form 
+    *  {term1: {'tf':0, 'count':0}, term2:{'tf':0, 'count':0}, ... , 
+    *  termn:{'tf':0, 'count':0}}
+    *  This method counts the instances of each term in the text
+    *  as we go along building the list.
+    */
     private Map<String, Map<String, Double>> buildTermList(List<String> splitText)
     {
         
@@ -76,6 +82,9 @@ public class DocumentStorage extends Document
         return termList;
     }
     
+    /**
+     * Calculates relative term frequency for each term in term_list.
+     */
     private void populateTermFreqs()
     {
         
@@ -87,10 +96,72 @@ public class DocumentStorage extends Document
         
     }
     
-    private List<String> filterText(String text, boolean shouldDropPropNouns)
+    /**
+     *  Remove certain items from text. Currently we're removing
+     *  punctuation, digits, short words, and stop words. Optionally 
+     *  we can dumbly remove proper nouns. 
+     *  There is a possibility we might want to remove opinion footnotes
+     *  in the future, but we currently leave them in.
+     *  
+     * @param text
+     * @param shouldDropPropNouns
+     * @return
+     */
+    public List<String> filterText(String text, boolean shouldDropPropNouns)
     {
-    
-        return new ArrayList<String>();
+        // first remove numbers
+        String unfilteredText = text.replaceAll("\\d", " ");
+        String [] rawTerms = unfilteredText.split("\\s+"); 
+        
+        List<String> filteredText = new ArrayList<String>();
+        
+        for (int i = 0; i < rawTerms.length; ++i)
+        {
+            String curTerm = rawTerms[i];
+            String prevTerm;
+            
+            // we MUST do the proper noun filter before we take out punctuation
+            if (shouldDropPropNouns)
+            {
+                if (i > 0)
+                {
+                    prevTerm = rawTerms[i - 1];
+                } else
+                {
+                    prevTerm = "null";
+                }
+                
+                if (this.isProperNoun(curTerm, prevTerm))
+                {
+                    // don't add the term to the filteredText list.
+                    continue;
+                }
+            }
+            
+            // now remove punctuation
+            curTerm = curTerm.replaceAll("[^a-zA-Z]+", "");
+            // convert term to lowercase and remove any whitespace  
+            curTerm = curTerm.toLowerCase().replaceAll("\\s*", "");
+            
+            // remove words less than 3 letters long
+            if (curTerm.length() < 3)
+            {
+                //System.out.println("term '" + curTerm + "'is too short!");
+                continue;
+            }
+            
+            // remove stop words
+            if (StopWords.isStopWord(curTerm))
+            {
+                //System.out.println("term '" + curTerm + "'is a stop word!");
+                continue;
+            }
+            
+            // congratulations, you passed the test!
+            filteredText.add(curTerm);
+        }
+                
+        return filteredText;
     }
     
     private boolean isProperNoun(String curTerm, String prevTerm)
@@ -102,6 +173,11 @@ public class DocumentStorage extends Document
         return (curCaps.find() && !prevPunc.find());
     }
     
+    /**
+     * Stems the appropriate words in the given wordList.
+     * @param wordList
+     * @return
+     */
     public List<String> stemText(List<String> wordList)
     {
 
