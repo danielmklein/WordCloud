@@ -1,6 +1,8 @@
 package core.javacore;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -191,10 +193,8 @@ public class AnalysisEngine
         }
         
         List<String> termList = new ArrayList<String>(termsWithFreqs.keySet());
-        // TODO: write comparator to sort terms by their frequencies, in reverse order
-        // or find another way to do this sort???
-        
-        
+        Collections.sort(termList, new TermFreqComparator(termsWithFreqs));
+                
         return termList.subList(0, numTerms);
     }
     
@@ -222,6 +222,28 @@ public class AnalysisEngine
         
         return relFrequency;
     }
-
     
+    /**
+     * Class for comparing terms by looking at their term frequencies;
+     * this sorts in reverse order (most frequent terms first);
+     * 
+     */
+    private class TermFreqComparator implements Comparator<String>
+    {
+        private Map<String, Integer> termsWithFreqs;
+        
+        public TermFreqComparator(Map<String, Integer> freqs)
+        {
+            this.termsWithFreqs = freqs;
+        }
+        
+        public int compare(String term1, String term2)
+        {
+            Integer freq1 = this.termsWithFreqs.get(term1);
+            Integer freq2 = this.termsWithFreqs.get(term2);
+            
+            return freq2.compareTo(freq1); // reverse sorted order
+        }
+    }
+          
 }
