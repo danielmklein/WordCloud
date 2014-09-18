@@ -163,10 +163,64 @@ public class AnalysisEngine
         return terms;
     }
     
+    /**
+     * Given num_terms, compile list of all terms in corpus and return
+     * the num_terms most frequent terms (num_terms = 1000/5000/15000/etc)
+     *  
+     * @param corpus
+     * @param numTerms
+     * @return
+     */
+    private List<String> getMostFreqTerms(List<DocumentStorage> corpus, int numTerms)
+    {
+        Map<String, Integer> termsWithFreqs = new HashMap<String, Integer>();
+        
+        for (DocumentStorage doc : corpus)
+        {
+            for (String term : doc.getStemmedText())
+            {
+                if (termsWithFreqs.keySet().contains(term))
+                {
+                    int freq = termsWithFreqs.get(term);
+                    termsWithFreqs.put(term, freq + 1);
+                } else
+                {
+                    termsWithFreqs.put(term, 1);
+                }
+            }
+        }
+        
+        List<String> termList = new ArrayList<String>(termsWithFreqs.keySet());
+        // TODO: write comparator to sort terms by their frequencies, in reverse order
+        // or find another way to do this sort???
+        
+        
+        return termList.subList(0, numTerms);
+    }
+    
+    /**
+     *  Given a term, calculates its relative doc frequency, ie
+     *  (# docs term in which term appears) / (# docs total in corpus)
+     *  
+     * @param term
+     * @return
+     */
     private Double calcDocFrequency(String term)
     {
-        // TODO: write me!
-        return new Double(0);
+        int docFrequency = 0;
+        
+        for (DocumentStorage doc : this.corpus)
+        {
+            if (doc.getTermList().keySet().contains(term))
+            {
+                docFrequency++;
+            }
+        }
+        
+        Double relFrequency = (new Double(docFrequency) 
+                            / (new Double(this.numCorpusDocs)));
+        
+        return relFrequency;
     }
 
     

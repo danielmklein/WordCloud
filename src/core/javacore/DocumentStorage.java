@@ -235,6 +235,11 @@ public class DocumentStorage extends Document
         
     }
     
+    public List<String> getStemmedText()
+    {
+        return this.stemmedText;
+    }
+    
     public Map<String, Map<String, Double>> getTermList()
     {
         return this.termList;
