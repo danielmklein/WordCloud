@@ -199,6 +199,50 @@ public class AnalysisEngine
     }
     
     /**
+     *  Given corpus and list of terms, we get rid of the terms
+     *  that appear in more than x% or less than y% of the opinions.
+     *  
+     * @param corpus
+     * @param termList
+     * @return
+     */
+    private List<String> determineRelevantTerms(List<DocumentStorage> corpus, List<String> termList)
+    {
+        // TODO: write me
+        
+        return null;
+    }
+    
+    /**
+     * The method this class is all about -- kicks off the analysis process.
+     * 
+     * @param numRelevantTerms
+     * @return
+     */
+    private Map<String, Double> analyzeDocs(int numRelevantTerms)
+    {
+        // TODO: write me
+        
+        return null;
+    }
+    
+    /**
+     * Builds collection of info (weight, tf-idf, tf, df) for each term
+     * we care about. 
+     * 
+     * @param subset
+     * @param relevantTerms
+     * @param numTerms
+     * @return
+     */
+    private List<TermMetrics> collectTermInfo(List<DocumentStorage> subset, List<String> relevantTerms, int numTerms)
+    {
+        // TODO: write me
+        
+        return null;
+    }
+    
+    /**
      *  Given a term, calculates its relative doc frequency, ie
      *  (# docs term in which term appears) / (# docs total in corpus)
      *  
@@ -244,6 +288,17 @@ public class AnalysisEngine
             
             return freq2.compareTo(freq1); // reverse sorted order
         }
+    }
+    
+    private class TermMetrics 
+    {
+        private String term;
+        private Double tfidf;
+        private Double weight;
+        private int docFrequency;
+        private Double termFrequency;
+        
+        // TODO: write constructor, getters and setters
     }
           
 }
