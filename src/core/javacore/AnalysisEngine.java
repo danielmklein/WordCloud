@@ -243,6 +243,20 @@ public class AnalysisEngine
     }
     
     /**
+     *  Extracts the term weight pairs (that the WordCloudGenerator needs)
+     *  from our collection of term info.
+     *  
+     * @param rawTermInfo
+     * @return
+     */
+    private Map<String, Double> buildWeightedPairs(List<TermMetrics> rawTermInfo)
+    {
+        // TODO: write me
+        
+        return null;     
+    }
+    
+    /**
      *  Given a term, calculates its relative doc frequency, ie
      *  (# docs term in which term appears) / (# docs total in corpus)
      *  
@@ -266,6 +280,61 @@ public class AnalysisEngine
         
         return relFrequency;
     }
+    
+    /**
+     *  Given a term and a subset, calculates the characteristic tf-idf for
+     *  the term in that subset -- ie the median of the tf-idf's for
+     *  the term for each document in the subset.
+     *  
+     * @param term
+     * @param subset
+     * @return
+     */
+    private Double calcTfidfForSubset(String term, List<DocumentStorage> subset)
+    {
+        // TODO: write me
+        
+        return null;
+    }
+    
+    /**
+     * Saves a generated weighted_list to file in a readable format.
+     * TODO: is this necessary?
+     * 
+     * @param rawInfo
+     * @param outputPath
+     */
+    private void saveTermInfo(List<TermMetrics> rawInfo, String outputPath)
+    {
+        //  TODO: write me??
+    }
+    
+    /**
+     * Constructs a line of term info to save to file.
+     * 
+     * @param termMetrics
+     */
+    private void buildOutputLine(TermMetrics termMetrics)
+    {
+        // TODO: write me??
+    }
+    
+    /**
+     *  Given a stemmed term, we look through the text of every document
+     *  in corpus, determine the most common "parent" version of the 
+     *  given stemmed term, and return it. 
+     *    
+     * @param stemmedTerm
+     * @param corpus
+     * @return
+     */
+    private String destem(String stemmedTerm, List<DocumentStorage> corpus)
+    {
+        // TODO: write me
+        
+        return null;
+    }
+    
     
     /**
      * Class for comparing terms by looking at their term frequencies;

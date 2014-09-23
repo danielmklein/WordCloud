@@ -128,6 +128,5 @@ public class DocumentStorageTest
         assertEquals(expected, actual);
         System.out.println("DocumentStorage.filter_text() testing finished.***");
     }
-        
-
+    
 }
