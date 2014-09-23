@@ -24,4 +24,10 @@ public class WordCloudConstants
     public static final String META_DISPOSITION = "Case Disposition";
     public static final String META_OPIN_AUTHOR = "Opinion Author";
     public static final String META_OPIN_TYPE = "Opinion Type";
+    
+    public static final Double RELEVANT_TERM_PERCENTAGE_UPPER = 0.95;
+    public static final Double RELEVANT_TERM_PERCENTAGE_LOWER = 0.05;
+    
+    public static final int DESTEMMER_MIN_NUM_TERMS = 5000;
+    public static final Double DESTEMMER_MIN_PERCENTAGE = 0.20;
 }

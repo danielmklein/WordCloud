@@ -208,9 +208,38 @@ public class AnalysisEngine
      */
     private List<String> determineRelevantTerms(List<DocumentStorage> corpus, List<String> termList)
     {
-        // TODO: write me
+
+        List<String> relevantTerms = new ArrayList<String>();
+        Double upperBound = WordCloudConstants.RELEVANT_TERM_PERCENTAGE_UPPER;
+        Double lowerBound = WordCloudConstants.RELEVANT_TERM_PERCENTAGE_LOWER;
         
-        return null;
+        // test output
+        System.out.println("TOTAL NUM OF DOCS: " + this.numCorpusDocs);
+        // end test output
+        
+        for (String term : termList)
+        {
+            int docFreq = 0;
+            for (DocumentStorage doc : corpus)
+            {
+                // doc.termList is filtered and stemmed
+                if (doc.getTermList().keySet().contains(term))
+                {
+                    docFreq++;
+                }
+            }
+            
+            Double percentageOfDocs = (new Double(docFreq)) 
+                                    / (new Double(this.numCorpusDocs));
+            boolean withinRange = ((percentageOfDocs > lowerBound)
+                                && (percentageOfDocs < upperBound));
+            if (withinRange)
+            {
+                relevantTerms.add(term);
+            }
+        }
+        
+        return relevantTerms;
     }
     
     /**
@@ -330,9 +359,92 @@ public class AnalysisEngine
      */
     private String destem(String stemmedTerm, List<DocumentStorage> corpus)
     {
-        // TODO: write me
         
-        return null;
+        String destemmedTerm = "";
+        
+        int minNumTerms = WordCloudConstants.DESTEMMER_MIN_NUM_TERMS;
+        Double minPercentage = WordCloudConstants.DESTEMMER_MIN_PERCENTAGE;
+        
+        Map<String, Integer> candidates = new HashMap<String, Integer>();
+        Stemmer stemmer;
+        
+        long numTermsChecked = 0;
+        long numDocsChecked = 0;
+        long totalMatches = 0;
+        
+        for (DocumentStorage doc : corpus)
+        {
+            // matches is the list of all term in the current text that are
+            // "ancestor" versions of the stemmed term.
+            List<String> matches = new ArrayList<String>();
+            for (String term : doc.getSplitText())
+            {
+                stemmer = new Stemmer();
+                stemmer.add(term.toCharArray(), term.length());
+                
+                if (stemmer.toString().equals(stemmedTerm))
+                {
+                    matches.add(term);
+                }
+            }
+            numTermsChecked += doc.getSplitText().size();
+            numDocsChecked++;
+            totalMatches += matches.size();
+            if (matches.size() == 0)
+            {
+                continue;
+            }
+            
+            // we keep a tally of the number of times each "ancestor"
+            // appears in our text
+            for (String match : matches)
+            {
+                if (candidates.keySet().contains(match))
+                {
+                    Integer curValue = candidates.get(match);
+                    candidates.put(match, curValue + 1);
+                } else 
+                {
+                    candidates.put(match, 1);
+                }
+            }
+            
+            // sort potential destemmed versions in descending order
+            // by frequency
+            List<String> sortedCandidates = new ArrayList<String>(candidates.keySet());
+            Collections.sort(sortedCandidates, new DestemCandidateComparator(candidates));
+            
+            if (numDocsChecked == this.numCorpusDocs)
+            {
+                // we've run through every doc, so the most frequent 
+                // ancestor of the stemmed term is the best destemmed 
+                // result.
+                destemmedTerm = sortedCandidates.get(0);
+                break;
+            }
+            
+            // if we've reviewed enough total words, we can start trying
+            // to find a suitable destemmed term from what we have so far
+            if (minNumTerms <= numTermsChecked)
+            {
+                // this is the most frequent ancestor of the stemmed term
+                String possibleMatch = sortedCandidates.get(0);
+                Double testPercentage = (new Double(candidates.get(possibleMatch)))
+                                        / (new Double(totalMatches));
+                // if the potential destemmed version accounts for a 
+                // sufficient percentage of the total matches, we can
+                // decide that it's a suitable destemmed result.
+                if (minPercentage <= testPercentage)
+                {
+                    destemmedTerm = possibleMatch;
+                    break;
+                }
+            }
+        }
+        
+        System.out.println("Destemmed: " + stemmedTerm + " --> " + destemmedTerm);
+        
+        return destemmedTerm;
     }
     
     
@@ -354,6 +466,29 @@ public class AnalysisEngine
         {
             Integer freq1 = this.termsWithFreqs.get(term1);
             Integer freq2 = this.termsWithFreqs.get(term2);
+            
+            return freq2.compareTo(freq1); // reverse sorted order
+        }
+    }
+    
+    /**
+     * Class for comparing terms by looking at their term frequencies;
+     * this sorts in reverse order (most frequent terms first);
+     * 
+     */
+    private class DestemCandidateComparator implements Comparator<String>
+    {
+        private Map<String, Integer> candidates;
+        
+        public DestemCandidateComparator(Map<String, Integer> candidates)
+        {
+            this.candidates = candidates;
+        }
+        
+        public int compare(String term1, String term2)
+        {
+            Integer freq1 = this.candidates.get(term1);
+            Integer freq2 = this.candidates.get(term2);
             
             return freq2.compareTo(freq1); // reverse sorted order
         }

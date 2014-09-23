@@ -240,6 +240,11 @@ public class DocumentStorage extends Document
         return this.stemmedText;
     }
     
+    public List<String> getSplitText()
+    {
+        return this.splitText;
+    }
+    
     public Map<String, Map<String, Double>> getTermList()
     {
         return this.termList;
