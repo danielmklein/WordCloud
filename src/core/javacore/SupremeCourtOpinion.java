@@ -1,5 +1,7 @@
 package core.javacore;
 
+import java.io.Serializable;
+
 /**
  * SupremeCourtOpinion Class for Word Cloud Project (Java)
  * 
@@ -8,7 +10,7 @@ package core.javacore;
  * This specializes the generic Document class to apply to Supreme Court
  * opinions.
  */
-public class SupremeCourtOpinion extends Document
+public class SupremeCourtOpinion extends Document implements Serializable
 {
 
     /**

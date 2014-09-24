@@ -5,6 +5,8 @@ package core.javacore;
 
 import static java.util.Arrays.asList;
 
+import java.io.Serializable;
+
 /**
  * SupremeCourtOpinionMetadata Class for Word Cloud Project (Java)
  * 
@@ -14,7 +16,7 @@ import static java.util.Arrays.asList;
  * This specializes the generic Metadata class to apply to Supreme Court
  * opinions.
  */
-public class SupremeCourtOpinionMetadata extends Metadata
+public class SupremeCourtOpinionMetadata extends Metadata implements Serializable
 {
 
     /**

@@ -107,6 +107,7 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
             // Parse out necessary fields
             while ((line = reader.readLine()) != null)
             {
+                System.out.println("next line is: " + line);
                 // regex stuff goes here
 
                 if (foundBreak) // we have reached the opinion body

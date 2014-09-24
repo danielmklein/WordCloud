@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 /**
  * @author Daniel Klein This class represents a document object (such as a
@@ -12,7 +13,7 @@ import java.io.ObjectOutputStream;
  *         relevant to the document. We will subclass the metadata class for
  *         each type of document we will use.
  */
-public class Document
+public class Document implements Serializable
 {
     private Metadata docMetadata;
     protected String docText;

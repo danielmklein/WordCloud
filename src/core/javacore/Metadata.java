@@ -12,6 +12,7 @@
  */
 package core.javacore;
 
+import java.io.Serializable;
 import java.lang.UnsupportedOperationException;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,7 @@ import java.util.HashMap;
  * @author dmklein This is really an example for how the classes that inherit
  *         from this class should act.
  */
-public abstract class Metadata
+public abstract class Metadata implements Serializable
 {
 
     protected Map<String, String> fields;
