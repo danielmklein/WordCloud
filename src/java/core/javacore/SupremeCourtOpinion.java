@@ -23,13 +23,11 @@ public class SupremeCourtOpinion extends Document implements Serializable
     {
 
         super(docMetadata, docText, outputFilename);
-        // TODO Auto-generated constructor stub
     }
     
     @Override
     public String toString()
     {
-        // TODO: fix me... it's just a temporary thing.
         String caseTitle = this.getMetadata().getField(WordCloudConstants.META_CASE_TITLE);
         String caseNum = this.getMetadata().getField(WordCloudConstants.META_CASE_NUM);
         String usCite = this.getMetadata().getField(WordCloudConstants.META_US_CITE);

@@ -31,4 +31,6 @@ public class WordCloudConstants
     
     public static final int DESTEMMER_MIN_NUM_TERMS = 5000;
     public static final Double DESTEMMER_MIN_PERCENTAGE = 0.20;
+    
+    public static final int NUM_TERMS_IN_CLOUD = 50;
 }

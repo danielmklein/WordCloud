@@ -244,15 +244,31 @@ public class AnalysisEngine
     
     /**
      * The method this class is all about -- kicks off the analysis process.
+     * TODO: maybe change this method to just return list of TermMetrics, 
+     * pull out terms and weights on front end?
      * 
      * @param numRelevantTerms
      * @return
      */
     private Map<String, Double> analyzeDocs(int numRelevantTerms)
     {
-        // TODO: write me
         
-        return null;
+        List<String> mostFreqTerms = this.getMostFreqTerms(this.corpus, numRelevantTerms);
+        List<String> relevantTerms = this.determineRelevantTerms(this.corpus, mostFreqTerms);
+        
+        System.out.println("Analyzing subset against corpus...");
+        
+        List<TermMetrics> rawInfo = this.collectTermInfo(this.subset, relevantTerms,
+                                                        WordCloudConstants.NUM_TERMS_IN_CLOUD);
+        
+        // TODO: maybe just return rawInfo (list of termmetrics) to client side??
+        Map<String, Double> weightedTerms = new HashMap<String, Double>();
+        for (TermMetrics tm : rawInfo)
+        {
+            weightedTerms.put(tm.term, tm.weight);
+        }
+        
+        return weightedTerms;
     }
     
     /**
@@ -266,9 +282,61 @@ public class AnalysisEngine
      */
     private List<TermMetrics> collectTermInfo(List<DocumentStorage> subset, List<String> relevantTerms, int numTerms)
     {
-        // TODO: write me
         
-        return null;
+        List<TermMetrics> rawTermInfo = new ArrayList<TermMetrics>();
+        
+        Double tfidf;
+        Double weight;
+        Double docFreq;
+        Double termFreq;
+        
+        for (String term : relevantTerms)
+        {
+            tfidf = this.calcTfidfForSubset(term, subset);
+            weight = tfidf;
+            docFreq = this.termList.get(term);
+            termFreq = tfidf * docFreq;
+            
+            TermMetrics newTerm = new TermMetrics();
+            newTerm.tfidf = tfidf;
+            newTerm.weight = weight;
+            newTerm.docFrequency = docFreq;
+            newTerm.termFrequency = termFreq;
+            rawTermInfo.add(newTerm);
+        }
+        
+        // get the index of the term having the highest unscaled weight
+        // we're going to scale all weights so they are <= 1.0
+        int maxWeightIdx = this.getHighestWeight(rawTermInfo);
+        Double scaleFactor = rawTermInfo.get(maxWeightIdx).weight;
+        
+        for (TermMetrics curTerm : rawTermInfo)
+        {
+            // destem each term and scale each weight
+            curTerm.term = this.destem(curTerm.term, this.corpus);
+            curTerm.weight = curTerm.weight / scaleFactor;
+        }
+        
+        return rawTermInfo;
+    }
+    
+    /**
+     * Returns index of the TermMetrics having the highest weight.
+     * 
+     * @return
+     */
+    private int getHighestWeight(List<TermMetrics> terms)
+    {
+        int highIdx = 0;
+        for (int i = 1; i < terms.size(); ++i)
+        {
+            if (terms.get(i).weight > terms.get(highIdx).weight)
+            {
+                highIdx = i;
+            }
+        }
+        
+        return highIdx;
     }
     
     /**
@@ -280,7 +348,7 @@ public class AnalysisEngine
      */
     private Map<String, Double> buildWeightedPairs(List<TermMetrics> rawTermInfo)
     {
-        // TODO: write me
+        // TODO: write me -- this is currently done in analyzeDocs.
         
         return null;     
     }
@@ -321,14 +389,36 @@ public class AnalysisEngine
      */
     private Double calcTfidfForSubset(String term, List<DocumentStorage> subset)
     {
-        // TODO: write me
         
-        return null;
+        Double docFreq = this.termList.get(term);
+        List<Double> tfidfList = new ArrayList<Double>();
+        
+        Double newTfidf;
+        for (DocumentStorage doc : subset)
+        {
+            newTfidf = doc.calcTfidf(term, docFreq);
+            tfidfList.add(newTfidf);
+        }
+        
+        return this.mean(tfidfList);
+    }
+    
+    private Double mean(List<Double> nums)
+    {
+        Double sum = new Double(0);
+        for (Double num : nums)
+        {
+            sum += num;
+        }
+        
+        return sum / nums.size();
     }
     
     /**
      * Saves a generated weighted_list to file in a readable format.
-     * TODO: is this necessary?
+     * TODO: I can do this after we have a working web app. Maybe.
+     * TODO: This probably won't be very useful for the web app until
+     * we add functionality to allow user to download file containg term metrics.
      * 
      * @param rawInfo
      * @param outputPath
@@ -345,7 +435,7 @@ public class AnalysisEngine
      */
     private void buildOutputLine(TermMetrics termMetrics)
     {
-        // TODO: write me??
+        // TODO: write me once we need me
     }
     
     /**
@@ -499,10 +589,8 @@ public class AnalysisEngine
         private String term;
         private Double tfidf;
         private Double weight;
-        private int docFrequency;
+        private Double docFrequency;
         private Double termFrequency;
-        
-        // TODO: write constructor, getters and setters
     }
           
 }

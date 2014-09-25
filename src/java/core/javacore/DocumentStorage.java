@@ -218,7 +218,7 @@ public class DocumentStorage extends Document
      * @param docFreq
      * @return
      */
-    private Double calcTfidf(String term, int docFreq)
+    public Double calcTfidf(String term, Double docFreq)
     {
         
         Double termFreq;
@@ -231,7 +231,7 @@ public class DocumentStorage extends Document
             termFreq = new Double(0);
         }
         
-        return termFreq / new Double(docFreq);
+        return termFreq / docFreq;
         
     }
     
