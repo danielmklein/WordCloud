@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -19,9 +18,6 @@ import java.util.regex.Pattern;
  */
 public class OpinionSerializer
 {
-
-    private static final String OPINION_PATH = "C:\\Users\\Daniel\\Dropbox\\Class_Files\\CBH_301\\Word_Cloud\\supreme_court_opinions\\test_output\\opinions";
-    private static final String SERIALIZE_PATH = "C:\\Users\\Daniel\\Dropbox\\Class_Files\\CBH_301\\Word_Cloud\\supreme_court_opinions\\test_output\\serialized";
     
     public static void main(String[] args) throws IOException
     {
@@ -35,11 +31,13 @@ public class OpinionSerializer
      */
     private static void packOpinions() throws IOException
     {
+        String opinionDirPath = WordCloudConstants.OPINION_DIR_PATH;
+        String serializeDirPath = WordCloudConstants.SERIALIZE_DIR_PATH;
         
-        System.out.println("Converting files in " + OPINION_PATH + " to Document objects");
-        System.out.println("and serializing them to files in " + SERIALIZE_PATH + "...");
+        System.out.println("Converting files in " + opinionDirPath + " to Document objects");
+        System.out.println("and serializing them to files in " + serializeDirPath + "...");
         
-        File opinionDir = new File(OPINION_PATH);
+        File opinionDir = new File(opinionDirPath);
         List<File> opinionFiles = Arrays.asList(opinionDir.listFiles());
         
         long numOpinions = opinionFiles.size();
@@ -49,29 +47,45 @@ public class OpinionSerializer
         
         System.out.println(numOpinions + " opinion files found.");
         
-        String inputPath;
-        String serializePath;
+        String inputFullPath;
+        String serializeFullPath;
         boolean isTextFile;
         SupremeCourtOpinionFileConverter converter;
         
         for (File opinionFile : opinionFiles)
         {
-            inputPath = opinionFile.getCanonicalPath();
+            inputFullPath = opinionFile.getCanonicalPath();
             // if a file doesn't have a .txt extension, we ignore it 
-            isTextFile = txtFileRegex.matcher(inputPath).find();
+            isTextFile = txtFileRegex.matcher(inputFullPath).find();
             if (!isTextFile)
             {
-                System.out.println(inputPath + " is not a text file, so we can't convert it!");
+                System.out.println(inputFullPath + " is not a text file, so we can't convert it!");
                 numFailed++;
                 continue;
             }
             
             // serializePath = SERIALIZE_PATH + filename + ".Document"
-            serializePath = (new File(SERIALIZE_PATH, opinionFile.getName() + ".Document")).getCanonicalPath();
+            serializeFullPath = (new File(serializeDirPath, opinionFile.getName() + ".Document")).getCanonicalPath();
             
-            converter = new SupremeCourtOpinionFileConverter(inputPath, serializePath);
-            converter.convertFile().serialize();
+            converter = new SupremeCourtOpinionFileConverter(inputFullPath, serializeFullPath);
+            
+            try
+            {
+                converter.convertFile().serialize();
+                numConverted++;
+            } catch (Exception e)
+            {
+                System.out.println("Unable to convert " + opinionFile.getName()
+                                + " to Document object and save it to file...");
+                numFailed++;
+                continue;
+            }
+            
         }
+        
+        System.out.println("Opinion conversion and serialization complete.");
+        System.out.println(numConverted + " opinions converted.");
+        System.out.println(numFailed + " opinions failed conversion.");
     }
 
 }

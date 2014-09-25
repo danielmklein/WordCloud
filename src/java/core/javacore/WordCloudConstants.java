@@ -10,6 +10,9 @@ package core.javacore;
  */
 public class WordCloudConstants
 {
+    public static final String SERIALIZE_DIR_PATH = "C:\\Users\\Daniel\\Dropbox\\Class_Files\\CBH_301\\Word_Cloud\\supreme_court_opinions\\test_output\\serialized";
+    public static final String OPINION_DIR_PATH = "C:\\Users\\Daniel\\Dropbox\\Class_Files\\CBH_301\\Word_Cloud\\supreme_court_opinions\\test_output\\opinions";
+
 
     public static final String META_CASE_TITLE = "Case Title";
     public static final String META_CASE_NUM = "Case Number";
