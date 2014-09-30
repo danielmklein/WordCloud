@@ -81,6 +81,11 @@ public class OpinionSerializer
                 continue;
             }
             
+            if (numConverted % 1000 == 0)
+            {
+                System.out.println(numConverted + " opinions converted.");
+            }
+            
         }
         
         System.out.println("Opinion conversion and serialization complete.");

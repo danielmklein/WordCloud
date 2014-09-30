@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Daniel Klein
@@ -28,8 +29,10 @@ public class Demo
         File docsDir = new File(serializeDirPath);
         List<File> docsFiles = Arrays.asList(docsDir.listFiles());
         
+        Random rand = new Random();
+        
         // pick a serialized doc
-        File chosenFile = docsFiles.get(1000);
+        File chosenFile = docsFiles.get(rand.nextInt(20000));
         
         
         // Read from disk using FileInputStream
