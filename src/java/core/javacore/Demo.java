@@ -22,17 +22,18 @@ import java.util.Random;
 public class Demo
 {
     
-    public String runDemo() throws FileNotFoundException, ClassNotFoundException, IOException
+    public /*static*/ Document runDemo() throws FileNotFoundException, ClassNotFoundException, IOException
     {
         String serializeDirPath = WordCloudConstants.SERIALIZE_DIR_PATH;
         
         File docsDir = new File(serializeDirPath);
         List<File> docsFiles = Arrays.asList(docsDir.listFiles());
+        System.out.println(docsFiles.size());
         
         Random rand = new Random();
         
         // pick a serialized doc
-        File chosenFile = docsFiles.get(rand.nextInt(20000));
+        File chosenFile = docsFiles.get(rand.nextInt(14500));
         
         
         // Read from disk using FileInputStream
@@ -54,11 +55,21 @@ public class Demo
 
         } else
         {
-            return "loading object didn't work";
+            //return "loading object didn't work";
+            return null;
         }
         
         System.out.println(opinion.toString());
-        return opinion.toString();
+        //return opinion.toString();
+        return opinion;
     }
+    
+    /*
+    public static void main(String[] args) throws FileNotFoundException, ClassNotFoundException, IOException
+    {
+        runDemo();
+
+    }
+    */
 
 }
