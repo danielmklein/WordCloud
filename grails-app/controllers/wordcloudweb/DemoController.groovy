@@ -10,7 +10,7 @@ class DemoController
         Demo demo = new Demo();
         
         //render demo.runDemo();
-        SupremeCourtOpinion opinion = demo.runDemo();
-        [opinion:opinion]
+        Map<String, Double> terms = demo.runDemo();
+        [terms:terms]
     }
 }

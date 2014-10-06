@@ -25,9 +25,10 @@
         <!-- Add your site or application content here -->
         <p>Hello world! This is HTML5 Boilerplate.</p>
 
-        <p>Here's a Supreme Court Opinion!</p>
-        <p>Title: ${opinion.getMetadata().getField("Case Title")}</p>
-        <p>Opinion Author: ${opinion.getMetadata().getField("Opinion Author")}</p>
+        <!-- this might not be valid syntax...-->
+        <g:each in="${terms.keySet()}" var="term">
+            <p>Term: ${term}    Weight: ${terms.get(${term})}
+        </g:each>
 
         <script src="js/jquery/jquery-1.11.1.min.js"></script>
         <!--<script src="js/plugins.js"></script>-->

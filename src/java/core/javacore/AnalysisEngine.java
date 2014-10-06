@@ -250,7 +250,7 @@ public class AnalysisEngine
      * @param numRelevantTerms
      * @return
      */
-    private Map<String, Double> analyzeDocs(int numRelevantTerms)
+    public Map<String, Double> analyzeDocs(int numRelevantTerms)
     {
         
         List<String> mostFreqTerms = this.getMostFreqTerms(this.corpus, numRelevantTerms);
