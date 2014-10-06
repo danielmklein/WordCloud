@@ -72,6 +72,7 @@ public class DocumentStorage extends Document
                 Map<String, Double> metrics = new HashMap<String, Double>();
                 metrics.put("tf", null);
                 metrics.put("count", new Double(0));
+                termList.put(term, metrics);
             } else
             {
                 Double oldCount = termList.get(term).get("count");

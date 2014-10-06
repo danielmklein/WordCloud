@@ -298,6 +298,7 @@ public class AnalysisEngine
             termFreq = tfidf * docFreq;
             
             TermMetrics newTerm = new TermMetrics();
+            newTerm.term = term;
             newTerm.tfidf = tfidf;
             newTerm.weight = weight;
             newTerm.docFrequency = docFreq;
@@ -471,8 +472,9 @@ public class AnalysisEngine
             {
                 stemmer = new Stemmer();
                 stemmer.add(term.toCharArray(), term.length());
-                
-                if (stemmer.toString().equals(stemmedTerm))
+                stemmer.stem();
+                String curStemmed = stemmer.toString();
+                if (curStemmed.equals(stemmedTerm))
                 {
                     matches.add(term);
                 }
