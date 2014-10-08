@@ -250,7 +250,7 @@ public class AnalysisEngine
      * @param numRelevantTerms
      * @return
      */
-    public Map<String, Double> analyzeDocs(int numRelevantTerms)
+    public List<TermMetrics> /*Map<String, Double>*/ analyzeDocs(int numRelevantTerms)
     {
         
         List<String> mostFreqTerms = this.getMostFreqTerms(this.corpus, numRelevantTerms);
@@ -268,7 +268,8 @@ public class AnalysisEngine
             weightedTerms.put(tm.term, tm.weight);
         }
         
-        return weightedTerms;
+        return rawInfo;
+        //return weightedTerms;
     }
     
     /**
@@ -586,13 +587,13 @@ public class AnalysisEngine
         }
     }
     
-    private class TermMetrics 
+    protected /*private*/ class TermMetrics 
     {
-        private String term;
-        private Double tfidf;
-        private Double weight;
-        private Double docFrequency;
-        private Double termFrequency;
+        protected String term;
+        protected Double tfidf;
+        protected Double weight;
+        protected Double docFrequency;
+        protected Double termFrequency;
     }
           
 }

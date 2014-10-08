@@ -26,9 +26,11 @@
         <p>Hello world! This is HTML5 Boilerplate.</p>
 
         <!-- this might not be valid syntax...-->
-        <g:each in="${terms.keySet()}" var="term">
-            <p>Term: ${term}    Weight: ${terms.get(${term})}
+        <tr>
+        <g:each in="${terms}" var="term">
+            <td>${term.term} (${term.weight})</td></br>
         </g:each>
+        </tr>
 
         <script src="js/jquery/jquery-1.11.1.min.js"></script>
         <!--<script src="js/plugins.js"></script>-->

@@ -24,7 +24,7 @@ public class Demo
 {
     
     // TODO: change this return type (maybe list of TermMetrics?)
-    public static Map<String, Double> runDemo() throws FileNotFoundException, ClassNotFoundException, IOException, Exception
+    public static List<AnalysisEngine.TermMetrics> /*Map<String, Double>*/ runDemo() throws FileNotFoundException, ClassNotFoundException, IOException, Exception
     {
         
         List<Document> allOpinions = loadOpinions();
@@ -43,11 +43,13 @@ public class Demo
         
         AnalysisEngine engine = new AnalysisEngine(allOpinions, warrenOpinions);
         int numRelevantTerms = WordCloudConstants.NUM_TERMS_IN_CLOUD;
-        Map<String, Double> terms = engine.analyzeDocs(numRelevantTerms);
+        //Map<String, Double> terms = engine.analyzeDocs(numRelevantTerms);
+        List<AnalysisEngine.TermMetrics> terms = engine.analyzeDocs(numRelevantTerms);
         
-        for (String term : terms.keySet())
+        //for (String term : terms.keySet())
+        for (AnalysisEngine.TermMetrics term : terms)
         {
-            System.out.println("Term '" + term + "' has weight " + terms.get(term));
+            System.out.println("Term '" + term.term + "' has weight " + term.weight);
         }
         
         return terms;
