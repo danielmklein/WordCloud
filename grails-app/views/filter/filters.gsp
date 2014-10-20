@@ -21,7 +21,7 @@
         <![endif]-->
 
         <p>This is the page for creating subsets and adding them to the corpus.</p>
-        <g:form action="createSubset">
+        <g:form action="createSubset" >
             <label for="name">Subset Name</label>
             <g:textField name="name" value="${filter.name}"/>
             <br/>
@@ -31,6 +31,7 @@
             <label for="allowedValues">Allowed Values</label>
             <g:textField name="allowedValues" value="${filter.allowedValues}"/>
             <br/>
+            <g:hiddenField name="subsets" value="${subsets}"/>
             <g:submitButton name="createSubset" value="Create Subset"/>
         </g:form>
 

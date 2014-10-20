@@ -11,19 +11,31 @@ class FilterController {
     	def corpusSubsets = [];
 
     	// all filter fields will be blank in form
-    	Filter filter = new Filter(name:'', allowedValues:'', 
+    	def filter = new Filter(name:'', allowedValues:'', 
     								sortField:'' );
-    	[filter:filter];
-    	[subsets:subsets];
+
+        render(view:"filters", action:"filters", model: [filter:filter, subsets:subsets]);
+    }
+
+    def filters()
+    {
+        def subsets = params.subsets;
+        def curFilter = params.filter;
+
+        [filter:curFilter, subsets:subsets];
     }
 
     def createSubset()
     {
-    	subsets << params.filter;
+        def subsets = params.subsets;
+        def newFilter = new Filter(params);
+    	subsets = subsets + newFilter.name;
+        System.out.println(newFilter.name);
+        System.out.println(newFilter.sortField);
+        System.out.println(subsets);
 
-    	filter = new Filter(name:'', allowedValues:'', 
+    	def emptyFilter = new Filter(name:'', allowedValues:'', 
     								sortField:'' );
-    	[filter:filter];
-    	[subsets:subsets];
+    	render(view: "filters", action:"filters", model: [filter:emptyFilter, subsets:subsets]);
     }
 }
