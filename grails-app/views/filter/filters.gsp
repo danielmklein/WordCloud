@@ -7,7 +7,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
+        <title>Supreme Court Word Cloud Creator</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -21,20 +21,39 @@
         <![endif]-->
 
         <p>This is the page for creating subsets and adding them to the corpus.</p>
-        <g:form action="createSubset" >
+        <g:form action="createSubset">
+
             <label for="name">Subset Name</label>
             <g:textField name="name" value="${filter.name}"/>
             <br/>
+            
             <label for="sortField">Sort Field</label><!--this should actually a dropdown box-->
             <g:textField name="sortField" value="${filter.sortField}"/>
             <br/>
+            
             <label for="allowedValues">Allowed Values</label>
             <g:textField name="allowedValues" value="${filter.allowedValues}"/>
             <br/>
-            <g:hiddenField name="subsets" value="${subsets}"/>
+            
             <g:submitButton name="createSubset" value="Create Subset"/>
+
         </g:form>
+        
+        <br/>
+
+        <p>Here's a list of the subsets we've already defined!</p>
+        <g:each var="subset" in="${subsets}">
+            <ul>
+                <li>Subset Name: ${subset.name}</li>
+                <li>Sort Field: ${subset.sortField}</li>
+                <li>Allowed Values: ${subset.allowedValues}</li>
+            </ul>
+            <br/>
+        </g:each>
+
 
         <script src="js/jquery/jquery-1.11.1.min.js"></script>
+
+
     </body>
 </html>
