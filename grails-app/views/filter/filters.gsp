@@ -42,21 +42,34 @@
         <br/>
 
         <p>Here's a list of the subsets we've already defined!</p>
-        <!--<g:each var="subset" in="${subsets}">
+        <g:each var="subset" in="${subsets}">
             <ul>
                 <li>Subset Name: ${subset.name}</li>
                 <li>Sort Field: ${subset.sortField}</li>
                 <li>Allowed Values: ${subset.allowedValues}</li>
             </ul>
             <br/>
-        </g:each>-->
+        </g:each>
 
+        <p>Subsets:</p>
+        <g:form action="addSubsetToCorpus">
+            <g:select name="subset" 
+                        size="${subsets.size()}"
+                        from="${subsets}" 
+                        value="${subset?.name}"
+                        optionKey="name"
+                        optionValue="name"/>
+            <g:submitButton name="addSubsetToCorpus" value="Add Subset To Corpus"/>
+        </g:form>
+
+
+        <p>Corpus Subsets:</p>
         <g:select name="subset" 
-                    size="${subsets.size()}"
-                    from="${subsets}" 
-                    value="${subset?.name}"
-                    optionKey="name"
-                    optionValue="name"/>
+                        size="${corpusSubsets.size()}"
+                        from="${corpusSubsets}" 
+                        value="${subset?.name}"
+                        optionKey="name"
+                        optionValue="name"/>
 
         <script src="js/jquery/jquery-1.11.1.min.js"></script>
 

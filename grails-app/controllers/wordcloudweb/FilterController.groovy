@@ -14,14 +14,15 @@ class FilterController {
     	def filter = new Filter(name:'', allowedValues:'', 
     								sortField:'' );
 
-        render(view:"filters", action:"filters", model: [filter:filter, subsets:session.subsets]);
+        render(view:"filters", action:"filters", model: [filter:filter, subsets:session.subsets, 
+                                                        corpusSubsets:session.corpusSubsets]);
     }
 
     def filters()
     {
         def curFilter = params.filter;
 
-        [filter:curFilter, subsets:session.subsets];
+        [filter:curFilter, subsets:session.subsets, corpusSubsets:session.corpusSubsets];
     }
 
     def createSubset()
@@ -38,10 +39,23 @@ class FilterController {
         {
             System.out.println(filter.name);
         }
-        System.out.println(session.subsets.size());
+        System.out.println("size of subsets:" + session.subsets.size());
+        System.out.println("size of corpus subsets:" + session.corpusSubsets.size());
 
     	def emptyFilter = new Filter(name:'', allowedValues:'', 
     								sortField:'' );
-    	render(view: "filters", action:"filters", model: [filter:emptyFilter, subsets:session.subsets]);
+    	render(view: "filters", action:"filters", model: [filter:emptyFilter, subsets:session.subsets, 
+                                                            corpusSubsets:session.corpusSubsets]);
+    }
+
+    def addSubsetToCorpus()
+    {
+        def nameOfSubset = params.subset;
+        System.out.println("Name of subset: " + nameOfSubset);
+        //session.corpusSubsets.add(subsetToAdd);
+        def emptyFilter = new Filter(name:'', allowedValues:'', 
+                                    sortField:'' );
+        render(view: "filters", action:"filters", model: [filter:emptyFilter, subsets:session.subsets, 
+                                                            corpusSubsets:session.corpusSubsets]);
     }
 }
