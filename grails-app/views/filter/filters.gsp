@@ -42,15 +42,21 @@
         <br/>
 
         <p>Here's a list of the subsets we've already defined!</p>
-        <g:each var="subset" in="${subsets}">
+        <!--<g:each var="subset" in="${subsets}">
             <ul>
                 <li>Subset Name: ${subset.name}</li>
                 <li>Sort Field: ${subset.sortField}</li>
                 <li>Allowed Values: ${subset.allowedValues}</li>
             </ul>
             <br/>
-        </g:each>
+        </g:each>-->
 
+        <g:select name="subset" 
+                    size="${subsets.size()}"
+                    from="${subsets}" 
+                    value="${subset?.name}"
+                    optionKey="name"
+                    optionValue="name"/>
 
         <script src="js/jquery/jquery-1.11.1.min.js"></script>
 
