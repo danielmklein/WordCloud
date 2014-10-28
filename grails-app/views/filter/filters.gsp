@@ -61,16 +61,27 @@
                         optionValue="name"/>
             <g:submitButton name="addSubsetToCorpus" value="Add Subset To Corpus"/>
         </g:form>
+        
+        <g:form action="addAllSubsetsToCorpus">
+            <g:submitButton name="addAllSubsetsToCorpus" value="Add All Subsets To Corpus"/>
+        </g:form>
 
 
         <p>Corpus Subsets:</p>
-        <g:select name="subset" 
-                        size="${corpusSubsets.size()}"
-                        from="${corpusSubsets}" 
-                        value="${subset?.name}"
-                        optionKey="name"
-                        optionValue="name"/>
+        <g:form action="removeSubsetFromCorpus">
+            <g:select name="subset" 
+                            size="${corpusSubsets.size()}"
+                            from="${corpusSubsets}" 
+                            value="${subset?.name}"
+                            optionKey="name"
+                            optionValue="name"/>
+            <g:submitButton name="removeSubsetFromCorpus" value="Remove Subset From Corpus"/>
+        </g:form>
 
+        <g:form action="removeAllSubsetsFromCorpus">
+            <g:submitButton name="removeAllSubsetsFromCorpus" value="Remove All Subsets From Corpus"/>
+        </g:form>
+        
         <script src="js/jquery/jquery-1.11.1.min.js"></script>
 
 
