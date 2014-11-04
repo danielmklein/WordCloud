@@ -27,11 +27,23 @@ class FilterController {
 
     def createSubset()
     {
-        def newFilter = new Filter(params);
+        def newFilter = new Filter();
+        newFilter.setName(params.name);
+        newFilter.setSortField(params.sortField);
+        newFilter.setAllowedValues(params.allowedValues);
+        // TODO: perform error checking on allowedValues list?
+        newFilter.setAllowedValuesList(this.parseAllowedVals(params.allowedValues));
+        // TODO: ALL OF THE ERROR CHECKING
+
         session.subsets.add(newFilter);
 
         System.out.println(newFilter.name);
         System.out.println(newFilter.sortField);
+        System.out.println("allowed vals in new filter are: ");
+        for (val in newFilter.getAllowedValuesList())
+        {
+            System.out.println(val);
+        }
         System.out.println(session.subsets);
 
         // test print statements
@@ -46,6 +58,11 @@ class FilterController {
     								sortField:'' );
     	render(view: "filters", action:"filters", model: [filter:emptyFilter, subsets:session.subsets, 
                                                             corpusSubsets:session.corpusSubsets]);
+    }
+
+    private def parseAllowedVals(String allowedVals)
+    {
+        return Arrays.asList(allowedVals.split("\\s*,\\s*"));
     }
 
     def addSubsetToCorpus()
