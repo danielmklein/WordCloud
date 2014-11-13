@@ -34,6 +34,11 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
         super(fileToParse, serializePath);
     }
 
+    public void setFileToParse(String inputPath)
+    {
+        this.inputPath = inputPath;
+    }
+
     @Override
     public SupremeCourtOpinion convertFile() throws IOException
     {

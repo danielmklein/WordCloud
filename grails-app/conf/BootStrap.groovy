@@ -25,10 +25,10 @@ class BootStrap
     {
     }
 
-    public static /*List<Document>*/ void loadOpinions() throws FileNotFoundException, ClassNotFoundException, IOException
+    public static /*List<Document>*/ void loadOpinions() throws Exception, FileNotFoundException, ClassNotFoundException, IOException
     {
         String opinionDirPath = WordCloudConstants.OPINION_DIR_PATH;
-        String serializeDirPath = WordCloudConstants.SERIALIZE_DIR_PATH;
+        //String serializeDirPath = WordCloudConstants.SERIALIZE_DIR_PATH;
         
         System.out.println("Converting files in " + opinionDirPath + " to Document objects");
         System.out.println("And saving them to the database.");
@@ -46,9 +46,9 @@ class BootStrap
         String inputFullPath;
         String serializeFullPath;
         boolean isTextFile;
-        SupremeCourtOpinionFileConverter converter;
+        SupremeCourtOpinionFileConverter converter = new SupremeCourtOpinionFileConverter(null, null);
         SupremeCourtOpinion newOpin;
-        SCOpinionDomain domainOpin;
+        SCOpinionDomain domainOpin = new SCOpinionDomain(null, null, null);
         
         for (File opinionFile : opinionFiles)
         {
@@ -63,17 +63,25 @@ class BootStrap
             }
             
             // serializePath = SERIALIZE_PATH + filename + ".Document"
-            serializeFullPath = (new File(serializeDirPath, opinionFile.getName() + ".Document")).getCanonicalPath();
+            //serializeFullPath = (new File(serializeDirPath, opinionFile.getName() + ".Document")).getCanonicalPath();
             
-            converter = new SupremeCourtOpinionFileConverter(inputFullPath, serializeFullPath);
-            
+            //converter = new SupremeCourtOpinionFileConverter(inputFullPath, serializeFullPath);
+            converter.setFileToParse(inputFullPath);
+
             try
             {
                 newOpin = converter.convertFile();
-                domainOpin = new SCOpinionDomain(newOpin.getMetadata(),
-                                                      newOpin.getText(),
-                                                      newOpin.getOutputFilename());
+                //domainOpin = new SCOpinionDomain(newOpin.getMetadata(),
+                //                                      newOpin.getText(),
+                //                                      newOpin.getOutputFilename());
+                // TODO: possible performance improvement -- use domain opin setters 
+                // instead of creating new object
+                domainOpin.setMetadata(newOpin.getMetadata());
+                domainOpin.setText(newOpin.getText());
+                domainOpin.setOutputFilename(newOpin.getOutputFilename());
+
                 domainOpin.save(failOnError:true);
+                newOpin = null;
 
                 numConverted++;
             } catch (Exception e)
@@ -81,6 +89,7 @@ class BootStrap
                 System.out.println("Unable to convert " + opinionFile.getName()
                                 + " to Document object and save it to file...");
                 numFailed++;
+                raise new Exception(e);
                 continue;
             }
             

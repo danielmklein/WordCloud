@@ -20,7 +20,7 @@ class SCOpinionDomain
         this.docMetadata = docMetadata;
         this.docText = docText;
         this.outputFilename = outputFilename;
-        this.wordCount = countWords(docText);
+        //this.wordCount = countWords(docText);
     }
 
     /*public SCOpinionDomain(Metadata docMetadata, String docText,
@@ -52,5 +52,23 @@ class SCOpinionDomain
     {
 
         return this.docMetadata;
+    }
+
+    public void setOutputFilename(String filename)
+    {
+
+        this.outputFilename = filename;
+    }
+
+    public void setText(String text)
+    {
+
+        this.docText = text;
+    }
+
+    public void setMetadata(Metadata meta)
+    {
+
+        this.docMetadata = meta;
     }
 }
