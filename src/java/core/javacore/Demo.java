@@ -24,10 +24,11 @@ public class Demo
 {
     
     // TODO: change this return type (maybe list of TermMetrics?)
-    public static List<AnalysisEngine.TermMetrics> /*Map<String, Double>*/ runDemo() throws FileNotFoundException, ClassNotFoundException, IOException, Exception
+    //public static List<AnalysisEngine.TermMetrics> /*Map<String, Double>*/ runDemo() throws FileNotFoundException, ClassNotFoundException, IOException, Exception
+    public static List<AnalysisEngine.TermMetrics> /*Map<String, Double>*/ runDemo(List<Document> allOpinions) throws FileNotFoundException, ClassNotFoundException, IOException, Exception
     {
         
-        List<Document> allOpinions = loadOpinions();
+        //List<Document> allOpinions = loadOpinions();
         
         DocumentSorter sorter = new DocumentSorter(allOpinions);
         
@@ -107,11 +108,11 @@ public class Demo
     }
     
     
-    public static void main(String[] args) throws FileNotFoundException, ClassNotFoundException, IOException, Exception
+    /*public static void main(String[] args) throws FileNotFoundException, ClassNotFoundException, IOException, Exception
     {
         runDemo();
 
-    }
+    }*/
     
 
 }
