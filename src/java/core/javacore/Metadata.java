@@ -48,6 +48,11 @@ public abstract class Metadata implements Serializable
         return this.fields.get(key);
     }
 
+    public Map<String, String> getAllFields()
+    {
+        return this.fields;
+    }
+
     /**
      * 
      * @param the

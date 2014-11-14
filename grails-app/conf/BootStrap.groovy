@@ -46,7 +46,7 @@ class BootStrap
         String inputFullPath;
         String serializeFullPath;
         boolean isTextFile;
-        SupremeCourtOpinionFileConverter converter = new SupremeCourtOpinionFileConverter(null, null);
+        SupremeCourtOpinionFileConverter converter = new SupremeCourtOpinionFileConverter(null, "BOGUS_SERIALIZE_PATH.txt");
         SupremeCourtOpinion newOpin;
         SCOpinionDomain domainOpin = new SCOpinionDomain(null, null, null);
         
@@ -76,7 +76,7 @@ class BootStrap
                 //                                      newOpin.getOutputFilename());
                 // TODO: possible performance improvement -- use domain opin setters 
                 // instead of creating new object
-                domainOpin.setMetadata(newOpin.getMetadata());
+                domainOpin.setMetadata(newOpin.getMetadata().getAllFields());
                 domainOpin.setText(newOpin.getText());
                 domainOpin.setOutputFilename(newOpin.getOutputFilename());
 
@@ -89,7 +89,7 @@ class BootStrap
                 System.out.println("Unable to convert " + opinionFile.getName()
                                 + " to Document object and save it to file...");
                 numFailed++;
-                raise new Exception(e);
+                throw new Exception(e);
                 continue;
             }
             

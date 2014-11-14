@@ -1,20 +1,27 @@
 package wordcloudweb
 
-import core.javacore.Metadata;
+//import core.javacore.Metadata;
 //import core.javacore.Document;
 
 class SCOpinionDomain
 {
 
+    private Map docMetadata;
+    protected String docText;
+    private String outputFilename;
+    //private int wordCount;
+
+
+    static mapping = {
+        docText column: "docText", sqlType: "text"
+        docMetadata column: "docMetadata"
+        outputFilename column: "outputFilename", sqlType: "varchar(255)"
+    }
+
     static constraints = {
     }
 
-    private Metadata docMetadata;
-    protected String docText;
-    private String outputFilename;
-    private int wordCount;
-
-    public SCOpinionDomain(Metadata docMetadata, String docText, String outputFilename)
+    public SCOpinionDomain(Map docMetadata, String docText, String outputFilename)
     {
 
         this.docMetadata = docMetadata;
@@ -48,7 +55,7 @@ class SCOpinionDomain
         return this.docText;
     }
 
-    public Metadata getMetadata()
+    public Map getMetadata()
     {
 
         return this.docMetadata;
@@ -66,7 +73,7 @@ class SCOpinionDomain
         this.docText = text;
     }
 
-    public void setMetadata(Metadata meta)
+    public void setMetadata(Map meta)
     {
 
         this.docMetadata = meta;
