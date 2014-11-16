@@ -48,7 +48,7 @@ class BootStrap
         boolean isTextFile;
         SupremeCourtOpinionFileConverter converter = new SupremeCourtOpinionFileConverter(null, "BOGUS_SERIALIZE_PATH.txt");
         SupremeCourtOpinion newOpin;
-        SCOpinionDomain domainOpin = new SCOpinionDomain(null, null, null);
+        
         
         for (File opinionFile : opinionFiles)
         {
@@ -76,9 +76,23 @@ class BootStrap
                 //                                      newOpin.getOutputFilename());
                 // TODO: possible performance improvement -- use domain opin setters 
                 // instead of creating new object
-                domainOpin.setMetadata(newOpin.getMetadata().getAllFields());
-                domainOpin.setText(newOpin.getText());
-                domainOpin.setOutputFilename(newOpin.getOutputFilename());
+                //domainOpin.setMetadata(newOpin.getMetadata().getAllFields());
+
+                SCOpinionDomain domainOpin = new SCOpinionDomain(newOpin.getText(), newOpin.getOutputFilename());
+                //domainOpin.docText = newOpin.getText();
+                //domainOpin.outputFilename = newOpin.getOutputFilename();
+                
+                domainOpin.caseTitle = newOpin.getMetadata().getField(WordCloudConstants.META_CASE_TITLE);
+                domainOpin.caseNumber = newOpin.getMetadata().getField(WordCloudConstants.META_CASE_NUM);
+                domainOpin.usCitation = newOpin.getMetadata().getField(WordCloudConstants.META_US_CITE);
+                domainOpin.scCitation = newOpin.getMetadata().getField(WordCloudConstants.META_SC_CITE);
+                domainOpin.lawyersEd = newOpin.getMetadata().getField(WordCloudConstants.META_LAWYERS_ED);
+                domainOpin.lexisCitation = newOpin.getMetadata().getField(WordCloudConstants.META_LEXIS_CITE);
+                domainOpin.fullCitation = newOpin.getMetadata().getField(WordCloudConstants.META_FULL_CITE);
+                domainOpin.caseDates =  newOpin.getMetadata().getField(WordCloudConstants.META_CASE_DATES);
+                domainOpin.disposition = newOpin.getMetadata().getField(WordCloudConstants.META_DISPOSITION);
+                domainOpin.opinionAuthor = newOpin.getMetadata().getField(WordCloudConstants.META_OPIN_AUTHOR);
+                domainOpin.opinionType = newOpin.getMetadata().getField(WordCloudConstants.META_OPIN_TYPE);
 
                 domainOpin.save(failOnError:true);
                 newOpin = null;
@@ -96,6 +110,7 @@ class BootStrap
             if (numConverted % 1000 == 0)
             {
                 System.out.println(numConverted + " opinions converted.");
+                System.out.println("Database currently contains " + SCOpinionDomain.count() + " opinions.");
             }
             
         }
