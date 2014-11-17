@@ -9,12 +9,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.hibernate.SessionFactory;
+import org.hibernate.StatelessSession;
+import org.hibernate.Transaction;
+
 import wordcloudweb.SCOpinionDomain;
 
 import core.javacore.*;
 
 class BootStrap 
 {
+
+    def sessionFactory;
 
     def init = 
     { servletContext ->
@@ -25,7 +31,7 @@ class BootStrap
     {
     }
 
-    public static /*List<Document>*/ void loadOpinions() throws Exception, FileNotFoundException, ClassNotFoundException, IOException
+    private /*List<Document>*/ void loadOpinions() throws Exception, FileNotFoundException, ClassNotFoundException, IOException
     {
         String opinionDirPath = WordCloudConstants.OPINION_DIR_PATH;
         //String serializeDirPath = WordCloudConstants.SERIALIZE_DIR_PATH;
@@ -50,6 +56,9 @@ class BootStrap
         SupremeCourtOpinion newOpin;
         SCOpinionDomain domainOpin;// = new SCOpinionDomain(null, null);
         
+        StatelessSession session = sessionFactory.openStatelessSession();
+        Transaction tx = session.beginTransaction();
+
         for (File opinionFile : opinionFiles)
         {
             inputFullPath = opinionFile.getCanonicalPath();
@@ -95,7 +104,9 @@ class BootStrap
                 domainOpin.opinionAuthor = newOpin.getMetadata().getField(WordCloudConstants.META_OPIN_AUTHOR);
                 domainOpin.opinionType = newOpin.getMetadata().getField(WordCloudConstants.META_OPIN_TYPE);
 
-                domainOpin.save(failOnError:true, flush:true);
+                //domainOpin.save(failOnError:true, flush:true);
+                session.insert(domainOpin);
+
                 newOpin = null;
 
                 numConverted++;
@@ -104,17 +115,25 @@ class BootStrap
                 System.out.println("Unable to convert " + opinionFile.getName()
                                 + " to Document object and save it to file...");
                 numFailed++;
+                tx.commit();
+                session.close();
+
                 throw new Exception(e);
                 continue;
             }
             
             if (numConverted % 1000 == 0)
             {
+                tx.commit();
                 System.out.println(numConverted + " opinions converted.");
                 System.out.println("Database currently contains " + SCOpinionDomain.count() + " opinions.");
+                tx = session.beginTransaction();
             }
             
         }
+
+        tx.commit();
+        session.close();
         
         System.out.println("Opinion conversion and serialization complete.");
         System.out.println(numConverted + " opinions converted.");

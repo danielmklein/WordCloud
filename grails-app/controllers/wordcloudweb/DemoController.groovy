@@ -11,30 +11,40 @@ class DemoController
     def index() 
     { 
         Demo demo = new Demo();
-        List<SCOpinionDomain> allDomainOpinions = SCOpinionDomain.getAll();
-        System.out.println("we found " + allDomainOpinions.size() + " domain opinions.");
+        //List<SCOpinionDomain> allDomainOpinions = SCOpinionDomain.getAll();
+        System.out.println("we found " + SCOpinionDomain.count() + " domain opinions.");
         
         List<Document> allOpinions = new ArrayList<Document>();
         SupremeCourtOpinionMetadata meta;
+        SCOpinionDomain curDomOpin;
 
-        for (SCOpinionDomain opin : allDomainOpinions)
+        // TODO: construct database query to get the subset/corpus we want, instead of 
+        // loading all opinions and then using DocumentSorter -- this takes too much memory
+        // 
+        // then call analyzeDocs directly with subset and corpus
+        // maybe write version of analyzeDocs that takes lists of SCOPinionDomain objects??
+
+        //for (SCOpinionDomain opin : allDomainOpinions)
+        for (int i = 1; i <= SCOpinionDomain.count(); i++)
         {
+            curDomOpin = SCOpinionDomain.get(i);
+
             meta = new SupremeCourtOpinionMetadata();
-            meta.setField(WordCloudConstants.META_CASE_TITLE, opin.caseTitle);
-            meta.setField(WordCloudConstants.META_CASE_NUM, opin.caseNumber);
-            meta.setField(WordCloudConstants.META_US_CITE, opin.usCitation);
-            meta.setField(WordCloudConstants.META_SC_CITE, opin.scCitation);
-            meta.setField(WordCloudConstants.META_LAWYERS_ED, opin.lawyersEd);
-            meta.setField(WordCloudConstants.META_LEXIS_CITE, opin.lexisCitation);
-            meta.setField(WordCloudConstants.META_FULL_CITE, opin.fullCitation);
-            meta.setField(WordCloudConstants.META_CASE_DATES, opin.caseDates);
-            meta.setField(WordCloudConstants.META_DISPOSITION, opin.disposition);
-            meta.setField(WordCloudConstants.META_OPIN_AUTHOR, opin.opinionAuthor);
-            meta.setField(WordCloudConstants.META_OPIN_TYPE, opin.opinionType);
+            meta.setField(WordCloudConstants.META_CASE_TITLE, curDomOpin.caseTitle);
+            meta.setField(WordCloudConstants.META_CASE_NUM, curDomOpin.caseNumber);
+            meta.setField(WordCloudConstants.META_US_CITE, curDomOpin.usCitation);
+            meta.setField(WordCloudConstants.META_SC_CITE, curDomOpin.scCitation);
+            meta.setField(WordCloudConstants.META_LAWYERS_ED, curDomOpin.lawyersEd);
+            meta.setField(WordCloudConstants.META_LEXIS_CITE, curDomOpin.lexisCitation);
+            meta.setField(WordCloudConstants.META_FULL_CITE, curDomOpin.fullCitation);
+            meta.setField(WordCloudConstants.META_CASE_DATES, curDomOpin.caseDates);
+            meta.setField(WordCloudConstants.META_DISPOSITION, curDomOpin.disposition);
+            meta.setField(WordCloudConstants.META_OPIN_AUTHOR, curDomOpin.opinionAuthor);
+            meta.setField(WordCloudConstants.META_OPIN_TYPE, curDomOpin.opinionType);
 
             SupremeCourtOpinion newOpin = new SupremeCourtOpinion(meta, 
-                                                                opin.docText,
-                                                                opin.outputFilename);
+                                                                curDomOpin.docText,
+                                                                curDomOpin.outputFilename);
         	allOpinions.add(newOpin);
         }
         

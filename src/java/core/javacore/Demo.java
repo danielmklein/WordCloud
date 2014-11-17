@@ -56,7 +56,7 @@ public class Demo
         return terms;
     }
     
-    public static List<Document> loadOpinions() throws FileNotFoundException, ClassNotFoundException, IOException
+    /*public static List<Document> loadOpinions() throws FileNotFoundException, ClassNotFoundException, IOException
     {
         String serializeDirPath = WordCloudConstants.SERIALIZE_DIR_PATH;
         
@@ -105,7 +105,7 @@ public class Demo
         }
         
         return opinions;
-    }
+    }*/
     
     
     /*public static void main(String[] args) throws FileNotFoundException, ClassNotFoundException, IOException, Exception
