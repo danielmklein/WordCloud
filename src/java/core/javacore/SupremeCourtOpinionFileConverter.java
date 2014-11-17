@@ -22,6 +22,7 @@ import java.util.regex.Matcher;
  */
 public class SupremeCourtOpinionFileConverter extends DocumentConverter
 {
+    private SupremeCourtOpinion converted;
 
     /**
      * @param fileToParse
@@ -32,6 +33,7 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
     {
 
         super(fileToParse, serializePath);
+        this.converted = new SupremeCourtOpinion(null, null, null);
     }
 
     public void setFileToParse(String inputPath)
@@ -43,7 +45,7 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
     public SupremeCourtOpinion convertFile() throws IOException
     {
 
-        SupremeCourtOpinion converted = null;
+        //SupremeCourtOpinion converted = null;
 
         // Check to see if the input file exists.
         File inputFile = new File(this.inputPath);
@@ -224,7 +226,10 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
         newMeta.setField(WordCloudConstants.META_OPIN_AUTHOR, author);
         newMeta.setField(WordCloudConstants.META_OPIN_TYPE, opinType);
 
-        converted = new SupremeCourtOpinion(newMeta, bodyText, this.outputPath);
+        //converted = new SupremeCourtOpinion(newMeta, bodyText, this.outputPath);
+        this.converted.setText(bodyText);
+        this.converted.setMetadata(newMeta);
+        this.converted.setOutputFilename(this.outputPath);
 
         return converted;
     }

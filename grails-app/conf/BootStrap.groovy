@@ -48,7 +48,7 @@ class BootStrap
         boolean isTextFile;
         SupremeCourtOpinionFileConverter converter = new SupremeCourtOpinionFileConverter(null, "BOGUS_SERIALIZE_PATH.txt");
         SupremeCourtOpinion newOpin;
-        
+        SCOpinionDomain domainOpin;// = new SCOpinionDomain(null, null);
         
         for (File opinionFile : opinionFiles)
         {
@@ -78,9 +78,10 @@ class BootStrap
                 // instead of creating new object
                 //domainOpin.setMetadata(newOpin.getMetadata().getAllFields());
 
-                SCOpinionDomain domainOpin = new SCOpinionDomain(newOpin.getText(), newOpin.getOutputFilename());
-                //domainOpin.docText = newOpin.getText();
-                //domainOpin.outputFilename = newOpin.getOutputFilename();
+                /*SCOpinionDomain*/ domainOpin = new SCOpinionDomain(newOpin.getText(), newOpin.getOutputFilename());
+                
+                domainOpin.docText = newOpin.getText();
+                domainOpin.outputFilename = newOpin.getOutputFilename();
                 
                 domainOpin.caseTitle = newOpin.getMetadata().getField(WordCloudConstants.META_CASE_TITLE);
                 domainOpin.caseNumber = newOpin.getMetadata().getField(WordCloudConstants.META_CASE_NUM);
@@ -94,7 +95,7 @@ class BootStrap
                 domainOpin.opinionAuthor = newOpin.getMetadata().getField(WordCloudConstants.META_OPIN_AUTHOR);
                 domainOpin.opinionType = newOpin.getMetadata().getField(WordCloudConstants.META_OPIN_TYPE);
 
-                domainOpin.save(failOnError:true);
+                domainOpin.save(failOnError:true, flush:true);
                 newOpin = null;
 
                 numConverted++;

@@ -26,7 +26,7 @@ public class Document implements Serializable
         this.docMetadata = docMetadata;
         this.docText = docText;
         this.outputFilename = outputFilename;
-        this.wordCount = countWords(docText);
+        //this.wordCount = countWords(docText);
     }
 
     public int countWords(String text)
@@ -51,6 +51,21 @@ public class Document implements Serializable
     {
 
         return this.docMetadata;
+    }
+
+    public void setText(String text)
+    {
+        this.docText = text;
+    }
+
+    public void setOutputFilename(String filename)
+    {
+        this.outputFilename = filename;
+    }
+
+    public void setMetadata(Metadata meta)
+    {
+        this.docMetadata = meta;
     }
 
     public void serialize() throws IOException
