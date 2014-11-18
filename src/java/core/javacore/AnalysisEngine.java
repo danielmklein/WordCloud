@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import wordcloudweb.SCOpinionDomain;
+
 /**
 *   Daniel Klein
 *   Computer-Based Honors Program
@@ -39,6 +41,11 @@ public class AnalysisEngine
         this.setCorpus(corpus);
         this.setSubset(subset);
     }
+
+    public AnalysisEngine()
+    {
+
+    }
     
     /**
      * Basic setup for the corpus list of documents.
@@ -48,7 +55,7 @@ public class AnalysisEngine
      */
     public void setCorpus(List<Document> corpus) throws Exception
     {
-        this.numCorpusDocs = this.countDocs(corpus);
+        this.numCorpusDocs = corpus.size();
         if (this.numCorpusDocs < 1)
         {
             throw new Exception("Corpus must contain at least 1 Document.");
@@ -58,6 +65,19 @@ public class AnalysisEngine
         this.termList = this.buildFullTermList(this.corpus);
         
     }
+
+    // this one takes opinion domain objects
+    public void setDomainCorpus(List<SCOpinionDomain> corpus) throws Exception
+    {
+        this.numCorpusDocs = corpus.size();
+        if (this.numCorpusDocs < 1)
+        {
+            throw new Exception("Corpus must contain at least 1 Document.");
+        }
+        
+        this.corpus = this.convertDomainDocs(corpus);
+        this.termList = this.buildFullTermList(this.corpus);   
+    }
     
     /**
      * Basic setup for the subset list of documents.
@@ -66,12 +86,23 @@ public class AnalysisEngine
      */
     public void setSubset(List<Document> subset) throws Exception
     {
-        this.numSubsetDocs = this.countDocs(subset);
+        this.numSubsetDocs = subset.size();
         if (this.numSubsetDocs < 1)
         {
             throw new Exception("Subset must contain at least 1 Document");
         }
         this.subset = this.convertDocs(subset);
+    }
+
+    // this one takes opinion domain objects
+    public void setDomainSubset(List<SCOpinionDomain> subset) throws Exception
+    {
+        this.numSubsetDocs = subset.size();
+        if (this.numSubsetDocs < 1)
+        {
+            throw new Exception("Subset must contain at least 1 Document");
+        }
+        this.subset = this.convertDomainDocs(subset);
     }
     
     /**
@@ -81,6 +112,11 @@ public class AnalysisEngine
      * @return
      */
     public int countDocs(List<Document> set)
+    {
+        return set.size();
+    }
+
+    public int countDomainDocs(List<SCOpinionDomain> set)
     {
         return set.size();
     }
@@ -114,6 +150,38 @@ public class AnalysisEngine
                                     + " to Storage object...");
                 curDoc = docSet.get(i);
                 convertedDoc = new DocumentStorage(curDoc.getMetadata(), curDoc.getText(),
+                                                    curDoc.getOutputFilename());
+                converted.add(convertedDoc);
+                
+            } catch (Exception e)
+            {
+                throw new Exception("AnalysisEngine: failed to instantiate new DocumentStorage object.");
+            }
+        }
+        
+        return converted;
+    }
+
+    public List<DocumentStorage> convertDomainDocs(List<SCOpinionDomain> docSet) throws Exception
+    {
+        
+        System.out.println("Converting documents into DocumentStorage objects...");
+        
+        int numDocs = docSet.size();
+        
+        List<DocumentStorage> converted = new ArrayList<DocumentStorage>();
+        SCOpinionDomain curDoc;
+        DocumentStorage convertedDoc;
+        
+        for (int i = 0; i < numDocs; ++i)
+        {
+            try
+            {
+                System.out.println("Converting document " 
+                                    + (i+1) + " of " + numDocs 
+                                    + " to Storage object...");
+                curDoc = docSet.get(i);
+                convertedDoc = new DocumentStorage(null, curDoc.getText(),
                                                     curDoc.getOutputFilename());
                 converted.add(convertedDoc);
                 

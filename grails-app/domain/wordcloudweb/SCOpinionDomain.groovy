@@ -49,4 +49,19 @@ class SCOpinionDomain
         this.outputFilename = outputFilename;
     }
 
+    public String getText()
+    {
+        return this.docText;
+    }
+
+    public String getOutputFilename()
+    {
+        return this.outputFilename;
+    }
+
+    public Map getMetadata()
+    {
+        return null; // TODO : maybe fix me later?
+    }
+
 }

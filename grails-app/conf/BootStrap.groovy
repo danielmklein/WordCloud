@@ -92,17 +92,18 @@ class BootStrap
                 domainOpin.docText = newOpin.getText();
                 domainOpin.outputFilename = newOpin.getOutputFilename();
                 
-                domainOpin.caseTitle = newOpin.getMetadata().getField(WordCloudConstants.META_CASE_TITLE);
-                domainOpin.caseNumber = newOpin.getMetadata().getField(WordCloudConstants.META_CASE_NUM);
-                domainOpin.usCitation = newOpin.getMetadata().getField(WordCloudConstants.META_US_CITE);
-                domainOpin.scCitation = newOpin.getMetadata().getField(WordCloudConstants.META_SC_CITE);
-                domainOpin.lawyersEd = newOpin.getMetadata().getField(WordCloudConstants.META_LAWYERS_ED);
-                domainOpin.lexisCitation = newOpin.getMetadata().getField(WordCloudConstants.META_LEXIS_CITE);
-                domainOpin.fullCitation = newOpin.getMetadata().getField(WordCloudConstants.META_FULL_CITE);
-                domainOpin.caseDates =  newOpin.getMetadata().getField(WordCloudConstants.META_CASE_DATES);
-                domainOpin.disposition = newOpin.getMetadata().getField(WordCloudConstants.META_DISPOSITION);
-                domainOpin.opinionAuthor = newOpin.getMetadata().getField(WordCloudConstants.META_OPIN_AUTHOR);
-                domainOpin.opinionType = newOpin.getMetadata().getField(WordCloudConstants.META_OPIN_TYPE);
+                // using toUpperCase to ensure all these fields are all caps in db
+                domainOpin.caseTitle = newOpin.getMetadata().getField(WordCloudConstants.META_CASE_TITLE).toUpperCase();
+                domainOpin.caseNumber = newOpin.getMetadata().getField(WordCloudConstants.META_CASE_NUM).toUpperCase();
+                domainOpin.usCitation = newOpin.getMetadata().getField(WordCloudConstants.META_US_CITE).toUpperCase();
+                domainOpin.scCitation = newOpin.getMetadata().getField(WordCloudConstants.META_SC_CITE).toUpperCase();
+                domainOpin.lawyersEd = newOpin.getMetadata().getField(WordCloudConstants.META_LAWYERS_ED).toUpperCase();
+                domainOpin.lexisCitation = newOpin.getMetadata().getField(WordCloudConstants.META_LEXIS_CITE).toUpperCase();
+                domainOpin.fullCitation = newOpin.getMetadata().getField(WordCloudConstants.META_FULL_CITE).toUpperCase();
+                domainOpin.caseDates =  newOpin.getMetadata().getField(WordCloudConstants.META_CASE_DATES).toUpperCase();
+                domainOpin.disposition = newOpin.getMetadata().getField(WordCloudConstants.META_DISPOSITION).toUpperCase();
+                domainOpin.opinionAuthor = newOpin.getMetadata().getField(WordCloudConstants.META_OPIN_AUTHOR).toUpperCase();
+                domainOpin.opinionType = newOpin.getMetadata().getField(WordCloudConstants.META_OPIN_TYPE).toUpperCase();
 
                 //domainOpin.save(failOnError:true, flush:true);
                 session.insert(domainOpin);
