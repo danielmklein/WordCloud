@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.groovy.runtime.InvokerHelper;
+
 import wordcloudweb.SCOpinionDomain;
 
 /**
@@ -172,6 +174,8 @@ public class AnalysisEngine
         List<DocumentStorage> converted = new ArrayList<DocumentStorage>();
         SCOpinionDomain curDoc;
         DocumentStorage convertedDoc;
+        String docText;
+        String outputFilename;
         
         for (int i = 0; i < numDocs; ++i)
         {
@@ -181,8 +185,9 @@ public class AnalysisEngine
                                     + (i+1) + " of " + numDocs 
                                     + " to Storage object...");
                 curDoc = docSet.get(i);
-                convertedDoc = new DocumentStorage(null, curDoc.getText(),
-                                                    curDoc.getOutputFilename());
+                docText = (String)InvokerHelper.getProperty(curDoc, "docText");
+                outputFilename = (String)InvokerHelper.getProperty(curDoc, "outputFilename");
+                convertedDoc = new DocumentStorage(null, docText, outputFilename);
                 converted.add(convertedDoc);
                 
             } catch (Exception e)

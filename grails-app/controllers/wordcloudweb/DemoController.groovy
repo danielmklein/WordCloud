@@ -20,16 +20,17 @@ class DemoController
 
         // TODO: construct database query to get the subset/corpus we want, instead of 
         // loading all opinions and then using DocumentSorter -- this takes too much memory
-        def subsetOpins = SCOPinionDomain.findAllByOpinionAuthorLike("%FRANKFURTER%");
+        def subsetOpins = SCOpinionDomain.findAllByFullCitationLike("%1111%");
         System.out.println("Found " + subsetOpins.size() + " opinions by Frankfurter");
 
-        def allOpinions = SCOpinionDomain.list();
-        System.out.println("Found " + allOpinions.size() + " opinions in entire corpus.");
+        //def allOpinions = SCOpinionDomain.list();
+        System.out.println("Found " + SCOpinionDomain.count() + " opinions in entire corpus.");
 
         // then call analyzeDocs directly with subset and corpus
         // maybe write version of analyzeDocs that takes lists of SCOPinionDomain objects??
         AnalysisEngine engine = new AnalysisEngine();
-        engine.setDomainCorpus(allOpinions);
+        //engine.setDomainCorpus(SCOpinionDomain.list());
+        engine.setDomainCorpus(subsetOpins);
         engine.setDomainSubset(subsetOpins);
     
         int numRelevantTerms = WordCloudConstants.NUM_TERMS_IN_CLOUD;
