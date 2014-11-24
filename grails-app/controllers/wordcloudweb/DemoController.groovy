@@ -20,7 +20,7 @@ class DemoController
 
         // TODO: construct database query to get the subset/corpus we want, instead of 
         // loading all opinions and then using DocumentSorter -- this takes too much memory
-        def subsetOpins = SCOpinionDomain.findAllByFullCitationLike("%1111%");
+        def subsetOpins = SCOpinionDomain.findAllByFullCitationLike("%111%");
         System.out.println("Found " + subsetOpins.size() + " opinions by Frankfurter");
 
         //def allOpinions = SCOpinionDomain.list();

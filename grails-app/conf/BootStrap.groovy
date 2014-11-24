@@ -130,6 +130,12 @@ class BootStrap
                 System.out.println("Database currently contains " + SCOpinionDomain.count() + " opinions.");
                 tx = session.beginTransaction();
             }
+
+            // TODO: REMOVE ME WHEN WE WANT TO DO ALL OPINIONS
+            if (numConverted > 2000)
+            {
+                break;
+            }
             
         }
 
