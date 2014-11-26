@@ -13,7 +13,7 @@
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <link rel="stylesheet" href="css/normalize/normalize.css">
+        <!--<link rel="stylesheet" href="../../web-app/css/normalize/normalize.css">-->
         <!--<link rel="stylesheet" href="css/main.css">-->
         <!--<script src="js/vendor/modernizr-2.6.2.min.js"></script>-->
     </head>
@@ -32,7 +32,60 @@
         </g:each>
         </tr>
 
-        <script src="js/jquery/jquery-1.11.1.min.js"></script>
+        <script src="../js/jquery/jquery-1.11.1.min.js"></script>
+
+        <script src="../js/d3/d3.js"></script>
+        <script src="../js/d3-cloud/d3.layout.cloud.js"></script>
+        <script>
+          var termList = [];
+          var termDict = new Object();
+
+          <g:each in="${terms}" var="term">
+            termList[termList.length] = "${term.term}";
+            termDict["${term.term}"] = ${term.weight};
+          </g:each>
+
+          var fill = d3.scale.category20();
+
+          var fontSize = d3.scale.log().range([10,100]);
+          for (idx = 0; idx < termList.length; idx++)
+          {
+            var curTerm = termList[idx];
+            var curWeight = termDict[curTerm];
+            console.log(curTerm + " " + curWeight)
+          }
+
+          d3.layout.cloud()
+              .size([1000, 1000])
+              .words(termList.map(function(d) {
+                return {text: d, size: termDict[d] * 150};
+              }))
+              .padding(1)
+              .rotate(function() { return ~~(Math.random() * 2) * 90; })
+              .font("Impact")
+              .fontSize(function(d) { return d.size; })
+              .on("end", draw)
+              .start();
+
+          function draw(words) {
+            d3.select("body").append("svg")
+                .attr("width", 1000)
+                .attr("height", 1000)
+              .append("g")
+                .attr("transform", "translate(150,150)")
+              .selectAll("text")
+                .data(words)
+              .enter().append("text")
+                .style("font-size", function(d) { return d.size + "px"; })
+                .style("font-family", "Impact")
+                .style("fill", function(d, i) { return fill(i); })
+                .attr("text-anchor", "right")
+                .attr("transform", function(d) {
+                  return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                })
+                .text(function(d) { return d.text; });
+          }
+        </script>
         <!--<script src="js/plugins.js"></script>-->
         <!--<script src="js/main.js"></script>-->
 

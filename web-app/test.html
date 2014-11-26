@@ -8,12 +8,25 @@
 
   var fontSize = d3.scale.log().range([10,100]);
 
+  var wordDict = new Object();
+
+  var wordList = [
+        "Hello", "world", "normally", "you", "want", "more", "words",
+        "than", "this"];
+  var weight = 50;
+
+  for (idx = 0; idx < wordList.length; idx++)
+  {
+    var word = wordList[idx];
+    wordDict[word] = weight;
+    weight = weight + 7;
+    console.log(word + wordDict[word]);
+  }
+
   d3.layout.cloud()
       .size([960, 600])
-      .words([
-        "Hello", "world", "normally", "you", "want", "more", "words",
-        "than", "this"].map(function(d) {
-        return {text: d, size: 10 + Math.random() * 90};
+      .words(wordList.map(function(d) {
+        return {text: d, size: wordDict[d]};
       }))
       .padding(1)
       .rotate(function() { return ~~(Math.random() * 2) * 90; })
