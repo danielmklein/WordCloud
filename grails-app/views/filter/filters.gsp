@@ -69,17 +69,28 @@
                             optionKey="name"
                             optionValue="name"/>
 
-            <g:actionSubmit name="addSubsetToCorpus" value="Add Subset To Corpus" action="addSubsetToCorpus"/>
-            <g:actionSubmit name="removeSubsetFromCorpus" value="Remove Subset From Corpus" action="removeSubsetFromCorpus"/>
-            <g:actionSubmit value="Create WordCloud" action="createWordCloud"/>
+            <g:actionSubmit name="addSubsetToCorpus" 
+                            value="Add Subset To Corpus" 
+                            action="addSubsetToCorpus"/>
+
+            <g:actionSubmit name="removeSubsetFromCorpus" 
+                            value="Remove Subset From Corpus" 
+                            action="removeSubsetFromCorpus"/>
+
+            <g:actionSubmit name="createWordCloud"
+                            value="Create WordCloud" 
+                            action="createWordCloud"/>
+
         </g:form>
 
         <g:form action="addAllSubsetsToCorpus">
-            <g:submitButton name="addAllSubsetsToCorpus" value="Add All Subsets To Corpus"/>
+            <g:submitButton name="addAllSubsetsToCorpus" 
+                            value="Add All Subsets To Corpus"/>
         </g:form>
 
         <g:form action="removeAllSubsetsFromCorpus">
-            <g:submitButton name="removeAllSubsetsFromCorpus" value="Remove All Subsets From Corpus"/>
+            <g:submitButton name="removeAllSubsetsFromCorpus" 
+                            value="Remove All Subsets From Corpus"/>
         </g:form>
         
         <!--<script src="js/jquery/jquery-1.11.1.min.js"></script>-->

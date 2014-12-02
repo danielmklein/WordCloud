@@ -66,4 +66,23 @@ class DemoController
         //List<AnalysisEngine.TermMetrics> terms = demo.runDemo(allOpinions);
         [terms:terms]
     }
+
+    def createCloud()
+    {
+        // turn subset filter into db query, create subset
+        def subsetFilter = params.subsetFilter;
+
+        // turn corpus filter into db query, create corpus
+        def corpusFilter = params.corpusFilter;
+
+        // pass subset and corpus to analysis engine to get terms
+
+        // pass terms to view
+    }
+
+    private def buildDatabaseQuery(Filter filter)
+    {
+        // TODO: check sort field, build query like
+        // select opinions from table where [sortField] like "%blah%" or [sortField] like "%foo%" or ....   
+    }
 }

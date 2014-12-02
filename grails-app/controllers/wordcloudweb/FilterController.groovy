@@ -169,5 +169,30 @@ class FilterController {
 
         System.out.println("name of subset to use for word cloud: " + nameOfSubset);
         System.out.println("name of corpus subset to use for word cloud: " + nameOfCorpusSubset);
+
+        // get subset filter and corpus filter objects to pass
+        def subsetFilter;
+        for (filter in session.subsets)
+        {
+            if (filter.name.equals(nameOfSubset))
+            {
+                subsetFilter = filter;
+                break;
+            }
+        }
+
+        def corpusFilter;
+        for (filter in session.corpusSubsets)
+        {
+            if (filter.name.equals(nameOfCorpusSubset))
+            {
+                corpusFilter = filter;
+                break;
+            }
+        }
+
+        chain(controller: "Demo", 
+                action: "createCloud", 
+                model: [subsetFilter: subsetFilter, corpusFilter: corpusFilter]);
     }
 }
