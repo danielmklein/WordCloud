@@ -103,7 +103,7 @@ class FilterController {
 
     def removeSubsetFromCorpus()
     {
-        def nameOfSubset = params.subset; // TODO this var name sucks
+        def nameOfSubset = params.corpusSubset; // TODO this var name sucks
         System.out.println("We're gonna remove subset "  + nameOfSubset
                             + " from the corpus!");
 
@@ -160,5 +160,14 @@ class FilterController {
                                     sortField:'' );
         render(view: "filters", action:"filters", model: [filter:emptyFilter, subsets:session.subsets, 
                                                             corpusSubsets:session.corpusSubsets]);
+    }
+
+    def createWordCloud()
+    {
+        def nameOfSubset = params.subset;
+        def nameOfCorpusSubset = params.corpusSubset;
+
+        System.out.println("name of subset to use for word cloud: " + nameOfSubset);
+        System.out.println("name of corpus subset to use for word cloud: " + nameOfCorpusSubset);
     }
 }
