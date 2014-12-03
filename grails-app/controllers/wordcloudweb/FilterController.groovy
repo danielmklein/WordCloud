@@ -181,6 +181,10 @@ class FilterController {
             }
         }
 
+        System.out.println("subset filter has: ");
+        System.out.println("name: " + subsetFilter.getName());
+        System.out.println("sort field: " + subsetFilter.getSortField());
+
         def corpusFilter;
         for (filter in session.corpusSubsets)
         {
@@ -191,8 +195,14 @@ class FilterController {
             }
         }
 
-        chain(controller: "Demo", 
+
+        /*chain(controller: "Demo", 
                 action: "createCloud", 
                 model: [subsetFilter: subsetFilter, corpusFilter: corpusFilter]);
+        */
+        flash.subsetFilter = subsetFilter;
+        flash.corpusFilter = corpusFilter;
+        redirect(controller: "Demo",
+                action: "createCloud");
     }
 }

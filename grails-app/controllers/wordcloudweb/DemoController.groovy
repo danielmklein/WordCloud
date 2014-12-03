@@ -3,6 +3,9 @@ package wordcloudweb
 import java.util.List;
 import java.util.ArrayList;
 
+import grails.gorm.*;
+import org.hibernate.criterion.Restrictions;
+
 import core.javacore.*;
 
 class DemoController 
@@ -70,19 +73,63 @@ class DemoController
     def createCloud()
     {
         // turn subset filter into db query, create subset
-        def subsetFilter = params.subsetFilter;
+        //def subsetFilter = params.subsetFilter;
+        def subsetFilter = flash.subsetFilter;
+
+        System.out.println("in demo controller");
+        System.out.println("subset filter has: ");
+        System.out.println("name: " + subsetFilter.getName());
+        System.out.println("sort field: " + subsetFilter.getSortField());
+
+        def subset = this.buildDatabaseQuery(subsetFilter);
+        System.out.println("subset size is: " + subset.size());
+
 
         // turn corpus filter into db query, create corpus
-        def corpusFilter = params.corpusFilter;
+        //def corpusFilter = params.corpusFilter;
+        def corpusFilter = flash.corpusFilter;
+
+        def corpus = this.buildDatabaseQuery(corpusFilter);
+        System.out.println("corpus size is: " + corpus.size());
 
         // pass subset and corpus to analysis engine to get terms
+        AnalysisEngine engine = new AnalysisEngine();
+        engine.setDomainCorpus(corpus);
+        engine.setDomainSubset(subset);
+
+        List<AnalysisEngine.TermMetrics> terms = engine.analyzeDocs(WordCloudConstants.NUM_TERMS_IN_CLOUD);
 
         // pass terms to view
+        [terms:terms]
     }
 
     private def buildDatabaseQuery(Filter filter)
     {
         // TODO: check sort field, build query like
-        // select opinions from table where [sortField] like "%blah%" or [sortField] like "%foo%" or ....   
+        // select opinions from table where [sortField] like "%blah%" or [sortField] like "%foo%" or ....
+
+        // TODO: figure out how to do this without building string??
+
+        def query = "from SCOpinionDomain as o where ";
+        def firstTerm = true;
+
+        for (value in filter.getAllowedValuesList())
+        {
+            if (firstTerm)
+            {
+                query += "o." + filter.getSortField() + " like '%" + value + "%' ";
+                firstTerm = false;
+            } else
+            {
+                query += "or o." + filter.getSortField() + " like '%" + value + "%' ";
+            }
+        }
+
+        System.out.println("Executing query: ");
+        System.out.println(query);
+
+        return SCOpinionDomain.findAll(query);
+
+
     }
 }
