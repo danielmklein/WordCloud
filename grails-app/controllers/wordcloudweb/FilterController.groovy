@@ -179,10 +179,14 @@ class FilterController {
     def createWordCloud()
     {
         def nameOfSubset = params.subset;
-        def nameOfCorpusSubset = params.corpusSubset;
+        def namesOfCorpusSubsets = params.corpusFilters; // WHY AREN'T WE GETTING THIS PROPERLY FROM FRONT END??
 
         System.out.println("name of subset to use for word cloud: " + nameOfSubset);
-        System.out.println("name of corpus subset to use for word cloud: " + nameOfCorpusSubset);
+        System.out.println("number of corpus filters: " + namesOfCorpusSubsets.size());
+        for (name in namesOfCorpusSubsets)
+        {
+            System.out.println("name of corpus subset to use for word cloud: " + name);
+        }
 
         // get subset filter and corpus filter objects to pass
         def subsetFilter;
@@ -199,13 +203,16 @@ class FilterController {
         System.out.println("name: " + subsetFilter.getName());
         System.out.println("sort field: " + subsetFilter.getSortField());
 
-        def corpusFilter;
-        for (filter in session.corpusSubsets)
+        def corpusFilters = [];
+        for (subsetName in namesOfCorpusSubsets)
         {
-            if (filter.name.equals(nameOfCorpusSubset))
+            for (filter in session.corpusSubsets)
             {
-                corpusFilter = filter;
-                break;
+                if (filter.name.equals(subsetName))
+                {
+                    corpusFilters.add(filter);
+                    break;
+                }
             }
         }
 
@@ -215,7 +222,7 @@ class FilterController {
                 model: [subsetFilter: subsetFilter, corpusFilter: corpusFilter]);
         */
         flash.subsetFilter = subsetFilter;
-        flash.corpusFilter = corpusFilter;
+        flash.corpusFilters = corpusFilters;
         redirect(controller: "Demo",
                 action: "createCloud");
     }

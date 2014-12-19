@@ -66,12 +66,13 @@
             
             <p>Corpus Subsets:</p>
     
-            <g:select name="corpusSubset" 
+            <g:select name="corpusFilters" 
                             size="${corpusSubsets.size()}"
                             from="${corpusSubsets}" 
                             value="${subset?.name}"
                             optionKey="name"
-                            optionValue="name"/>
+                            optionValue="name"
+                            multiple="true"/>
 
             <g:actionSubmit name="addSubsetToCorpus" 
                             value="Add Subset To Corpus" 

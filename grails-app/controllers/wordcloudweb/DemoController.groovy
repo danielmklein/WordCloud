@@ -86,9 +86,15 @@ class DemoController
 
         // turn corpus filter into db query, create corpus
         //def corpusFilter = params.corpusFilter;
-        def corpusFilter = flash.corpusFilter;
+        def corpusFilters = flash.corpusFilters;
+        System.out.println("num of filters in corpus: " + corpusFilters.size());
+        for (filter in corpusFilters)
+        {
+            System.out.println("corpus filter name: " + filter.getName());
+            System.out.println("corpus filter sort field: " + filter.getSortField());
+        }
 
-        def corpus = this.buildDatabaseQuery(corpusFilter);
+        def corpus = this.buildDatabaseQuery(corpusFilters);
         System.out.println("corpus size is: " + corpus.size());
 
         // pass subset and corpus to analysis engine to get terms
@@ -121,6 +127,39 @@ class DemoController
             } else
             {
                 query += "or o." + filter.getSortField() + " like '%" + value + "%' ";
+            }
+        }
+
+        System.out.println("Executing query: ");
+        System.out.println(query);
+
+        return SCOpinionDomain.findAll(query);
+
+
+    }
+
+    private def buildDatabaseQuery(List<Filter> filters)
+    {
+        // TODO: check sort field, build query like
+        // select opinions from table where [sortField] like "%blah%" or [sortField] like "%foo%" or ....
+
+        // TODO: figure out how to do this without building string??
+
+        def query = "from SCOpinionDomain as o where ";
+        def firstTerm = true;
+
+        for (filter in filters)
+        {
+            for (value in filter.getAllowedValuesList())
+            {
+                if (firstTerm)
+                {
+                    query += "o." + filter.getSortField() + " like '%" + value + "%' ";
+                    firstTerm = false;
+                } else
+                {
+                    query += "or o." + filter.getSortField() + " like '%" + value + "%' ";
+                }
             }
         }
 
