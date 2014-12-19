@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.ArrayList;
 
 import grails.gorm.*;
-import org.hibernate.criterion.Restrictions;
 
 import core.javacore.*;
 

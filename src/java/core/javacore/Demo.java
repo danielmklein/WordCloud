@@ -23,8 +23,6 @@ import java.util.Map;
 public class Demo
 {
     
-    // TODO: change this return type (maybe list of TermMetrics?)
-    //public static List<AnalysisEngine.TermMetrics> /*Map<String, Double>*/ runDemo() throws FileNotFoundException, ClassNotFoundException, IOException, Exception
     public static List<AnalysisEngine.TermMetrics> /*Map<String, Double>*/ runDemo(List<Document> allOpinions) throws FileNotFoundException, ClassNotFoundException, IOException, Exception
     {
         

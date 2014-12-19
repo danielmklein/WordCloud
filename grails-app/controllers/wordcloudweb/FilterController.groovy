@@ -1,30 +1,36 @@
 package wordcloudweb
 
-class FilterController {
+import core.javacore.WordCloudConstants;
 
-	//List subsets; // these two are lists of Filter objects
-	//List corpusSubsets;
+class FilterController {
 
     def index() 
     {
-        session.subsets = [];
-        session.corpusSubsets = [];
+        session.subsets = []; // list of Filter objects
+        session.corpusSubsets = []; // list of Filter objects
+        session.dbFields = WordCloudConstants.META_DB_FIELDS;
+
+        System.out.println("db fields are: " + session.dbFields);
 
     	// all filter fields will be blank in form
     	def filter = new Filter(name:'', allowedValues:'', 
     								sortField:'' );
 
         render(view:"filters", action:"filters", model: [filter:filter, subsets:session.subsets, 
-                                                        corpusSubsets:session.corpusSubsets]);
+                                                        corpusSubsets:session.corpusSubsets, dbFields:session.dbFields]);
     }
 
     def filters()
     {
         def curFilter = params.filter;
 
-        [filter:curFilter, subsets:session.subsets, corpusSubsets:session.corpusSubsets];
+        [filter:curFilter, subsets:session.subsets, 
+        corpusSubsets:session.corpusSubsets, dbFields:session.dbFields];
     }
 
+    /**
+    * Add a subset to the list
+    **/
     def createSubset()
     {
         def newFilter = new Filter();
@@ -57,7 +63,8 @@ class FilterController {
     	def emptyFilter = new Filter(name:'', allowedValues:'', 
     								sortField:'' );
     	render(view: "filters", action:"filters", model: [filter:emptyFilter, subsets:session.subsets, 
-                                                            corpusSubsets:session.corpusSubsets]);
+                                                            corpusSubsets:session.corpusSubsets,
+                                                            dbFields:session.dbFields]);
     }
 
     private def parseAllowedVals(String allowedVals)
@@ -65,6 +72,9 @@ class FilterController {
         return Arrays.asList(allowedVals.split("\\s*,\\s*"));
     }
 
+    /** 
+    * Move an already-created subset to the corpus list
+    **/
     def addSubsetToCorpus()
     {
         def nameOfSubset = params.subset; // TODO this var name sucks
@@ -98,7 +108,8 @@ class FilterController {
         def emptyFilter = new Filter(name:'', allowedValues:'', 
                                     sortField:'' );
         render(view: "filters", action:"filters", model: [filter:emptyFilter, subsets:session.subsets, 
-                                                            corpusSubsets:session.corpusSubsets]);
+                                                            corpusSubsets:session.corpusSubsets,
+                                                            dbFields:session.dbFields]);
     }
 
     def removeSubsetFromCorpus()
@@ -131,7 +142,8 @@ class FilterController {
         def emptyFilter = new Filter(name:'', allowedValues:'', 
                                     sortField:'' );
         render(view: "filters", action:"filters", model: [filter:emptyFilter, subsets:session.subsets, 
-                                                            corpusSubsets:session.corpusSubsets]);
+                                                            corpusSubsets:session.corpusSubsets,
+                                                            dbFields:session.dbFields]);
     }
 
     def addAllSubsetsToCorpus()
@@ -147,7 +159,8 @@ class FilterController {
         def emptyFilter = new Filter(name:'', allowedValues:'', 
                                     sortField:'' );
         render(view: "filters", action:"filters", model: [filter:emptyFilter, subsets:session.subsets, 
-                                                            corpusSubsets:session.corpusSubsets]);
+                                                            corpusSubsets:session.corpusSubsets,
+                                                            dbFields:session.dbFields]);
     }
 
     def removeAllSubsetsFromCorpus()
@@ -159,7 +172,8 @@ class FilterController {
         def emptyFilter = new Filter(name:'', allowedValues:'', 
                                     sortField:'' );
         render(view: "filters", action:"filters", model: [filter:emptyFilter, subsets:session.subsets, 
-                                                            corpusSubsets:session.corpusSubsets]);
+                                                            corpusSubsets:session.corpusSubsets,
+                                                            dbFields:session.dbFields]);
     }
 
     def createWordCloud()

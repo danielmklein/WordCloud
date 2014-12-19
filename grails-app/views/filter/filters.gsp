@@ -28,9 +28,13 @@
             <br/>
             
             <label for="sortField">Sort Field</label><!--this should actually a dropdown box-->
-            <g:textField name="sortField" value="${filter.sortField}"/>
-            <br/>
+            <!--<g:textField name="sortField" value="${filter.sortField}"/>-->
             
+            <g:select name="sortField" 
+                        from="${dbFields}" 
+                        value="${dbField}"/>
+            <br/>
+
             <label for="allowedValues">Allowed Values</label>
             <g:textField name="allowedValues" value="${filter.allowedValues}"/>
             <br/>
