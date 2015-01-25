@@ -13,14 +13,39 @@
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <link rel="stylesheet" href="css/normalize/normalize.css">
+        <link rel="stylesheet" href="../css/normalize/normalize.css">
+        <link href="../css/bootstrap/bootstrap.min.css" rel="stylesheet">
     </head>
-    <body>
+
+    <body role="document">
+
+            <!-- Fixed navbar -->
+            <nav class="navbar navbar-inverse navbar-fixed-top">
+              <div class="container">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="#">Supreme Court Word Clouds</a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                </div><!--/.nav-collapse -->
+              </div>
+            </nav>
+
+        
+        <div class="jumbotron">
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
+        <div class="container">
+        </br>
 
+        <h1>Welcome!</h1>
         <p>This is the page for creating subsets and adding them to the corpus.</p>
+
+        <p>TODO: add some help text here to instruct the user!</p>
+        </div> <!-- end container --> 
+        </div> <!-- end jumbotron -->
+
+        <div class="container">
         <g:form action="createSubset">
 
             <label for="name">Subset Name</label>
@@ -39,7 +64,7 @@
             <g:textField name="allowedValues" value="${filter.allowedValues}"/>
             <br/>
             
-            <g:submitButton name="createSubset" value="Create Subset"/>
+            <g:submitButton name="createSubset" value="Create Subset" class="btn btn-lg btn-default"/>
 
         </g:form>
         
@@ -56,6 +81,8 @@
         </g:each>
         
         <g:form>
+            <div class="row">
+            <div class="col-md-4">
             <p>Subsets:</p>
             <g:select name="subset" 
                         size="${subsets.size()}"
@@ -63,9 +90,10 @@
                         value="${subset?.name}"
                         optionKey="name"
                         optionValue="name"/>
+            </div> <!-- end column -->
             
+            <div class="col-md-4">
             <p>Corpus Subsets:</p>
-    
             <g:select name="corpusFilter" 
                             size="${corpusSubsets.size()}"
                             from="${corpusSubsets}" 
@@ -73,33 +101,45 @@
                             optionKey="name"
                             optionValue="name"
                             multiple="true"/>
+            </div> <!-- end column -->
 
+            </div> <!-- end row -->
+
+            </br>
             <g:actionSubmit name="addSubsetToCorpus" 
                             value="Add Subset To Corpus" 
-                            action="addSubsetToCorpus"/>
+                            action="addSubsetToCorpus"
+                            class="btn btn-lg btn-default"/>
 
             <g:actionSubmit name="removeSubsetFromCorpus" 
                             value="Remove Subset From Corpus" 
-                            action="removeSubsetFromCorpus"/>
-
-            <g:actionSubmit name="createWordCloud"
-                            value="Create WordCloud" 
-                            action="createWordCloud"/>
+                            action="removeSubsetFromCorpus"
+                            class="btn btn-lg btn-default"/>
 
         </g:form>
+        </br>
 
-        <g:form action="addAllSubsetsToCorpus">
-            <g:submitButton name="addAllSubsetsToCorpus" 
-                            value="Add All Subsets To Corpus"/>
-        </g:form>
+        <g:form>                               
+            <g:actionSubmit name="addAllSubsetsToCorpus"
+                            value="Add All Subsets To Corpus"
+                            action="addAllSubsetsToCorpus"
+                            class="btn btn-lg btn-default"/>
 
-        <g:form action="removeAllSubsetsFromCorpus">
             <g:submitButton name="removeAllSubsetsFromCorpus" 
-                            value="Remove All Subsets From Corpus"/>
+                            value="Remove All Subsets From Corpus"
+                            action="removeAllSubsetsFromCorpus"
+                            class="btn btn-lg btn-default"/>
+        </g:form>
+
+        </br>
+
+        <g:form action="createWordCloud">
+            <g:submitButton name="createWordCloud"
+                            value="Create WordCloud" 
+                            class="btn btn-lg btn-primary"/>
         </g:form>
         
         <!--<script src="js/jquery/jquery-1.11.1.min.js"></script>-->
-
-
+        </div> <!-- end container -->
     </body>
 </html>
