@@ -66,10 +66,10 @@
             
             <p>Corpus Subsets:</p>
     
-            <g:select name="corpusFilters" 
+            <g:select name="corpusFilter" 
                             size="${corpusSubsets.size()}"
                             from="${corpusSubsets}" 
-                            value="${subset?.name}"
+                            value="${corpusFilter?.name}"
                             optionKey="name"
                             optionValue="name"
                             multiple="true"/>

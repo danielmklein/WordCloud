@@ -24,7 +24,7 @@ class BootStrap
 
     def init = 
     { servletContext ->
-    	this.loadOpinions();
+    	//this.loadOpinions();
     }
 
     def destroy =
