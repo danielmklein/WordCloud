@@ -184,7 +184,7 @@ class FilterController {
     def createWordCloud()
     {
         def nameOfSubset = params.subset;
-        def namesOfCorpusSubsets = params.corpusFilters; // WHY AREN'T WE GETTING THIS PROPERLY FROM FRONT END??
+        def namesOfCorpusSubsets = params.list("corpusFilter"); // WHY AREN'T WE GETTING THIS PROPERLY FROM FRONT END??
 
         System.out.println("name of subset to use for word cloud: " + nameOfSubset);
         System.out.println("number of corpus filters: " + namesOfCorpusSubsets.size());

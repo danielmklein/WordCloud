@@ -122,11 +122,11 @@ class DemoController
         {
             if (firstTerm)
             {
-                query += "o." + filter.getSortField() + " like '%" + value + "%' ";
+                query += "upper(o." + filter.getSortField() + ") like upper('%" + value + "%') ";
                 firstTerm = false;
             } else
             {
-                query += "or o." + filter.getSortField() + " like '%" + value + "%' ";
+                query += "or upper(o." + filter.getSortField() + ") like upper('%" + value + "%') ";
             }
         }
 
@@ -154,11 +154,11 @@ class DemoController
             {
                 if (firstTerm)
                 {
-                    query += "o." + filter.getSortField() + " like '%" + value + "%' ";
+                    query += "upper(o." + filter.getSortField() + ") like upper('%" + value + "%') ";
                     firstTerm = false;
                 } else
                 {
-                    query += "or o." + filter.getSortField() + " like '%" + value + "%' ";
+                    query += "or upper(o." + filter.getSortField() + ") like upper('%" + value + "%') ";
                 }
             }
         }

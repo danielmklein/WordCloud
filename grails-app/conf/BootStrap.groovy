@@ -24,7 +24,7 @@ class BootStrap
 
     def init = 
     { servletContext ->
-    	//this.loadOpinions();
+    	this.loadOpinions();
     }
 
     def destroy =
@@ -105,6 +105,11 @@ class BootStrap
                 domainOpin.opinionAuthor = newOpin.getMetadata().getField(WordCloudConstants.META_OPIN_AUTHOR).toUpperCase();
                 domainOpin.opinionType = newOpin.getMetadata().getField(WordCloudConstants.META_OPIN_TYPE).toUpperCase();
 
+                System.out.println("new opinion has title: " + domainOpin.caseTitle);
+                System.out.println("new opinion has author: " + domainOpin.opinionAuthor);
+                System.out.println("new opinion has full citation: " + domainOpin.fullCitation);
+                System.out.println("new opinion has case num: " + domainOpin.caseNumber);
+                System.out.println("new opinion has type: " + domainOpin.opinionType);
                 //domainOpin.save(failOnError:true, flush:true);
                 session.insert(domainOpin);
 
@@ -132,7 +137,7 @@ class BootStrap
             }
 
             // TODO: REMOVE ME WHEN WE WANT TO DO ALL OPINIONS
-            if (numConverted > 2000)
+            if (numConverted > 1000)
             {
                 break;
             }

@@ -116,10 +116,6 @@
                             action="removeSubsetFromCorpus"
                             class="btn btn-lg btn-default"/>
 
-        </g:form>
-        </br>
-
-        <g:form>                               
             <g:actionSubmit name="addAllSubsetsToCorpus"
                             value="Add All Subsets To Corpus"
                             action="addAllSubsetsToCorpus"
@@ -129,15 +125,13 @@
                             value="Remove All Subsets From Corpus"
                             action="removeAllSubsetsFromCorpus"
                             class="btn btn-lg btn-default"/>
-        </g:form>
 
-        </br>
-
-        <g:form action="createWordCloud">
-            <g:submitButton name="createWordCloud"
-                            value="Create WordCloud" 
+            <g:actionSubmit name="createWordCloud"
+                            value="Create WordCloud"
+                            action="createWordCloud" 
                             class="btn btn-lg btn-primary"/>
         </g:form>
+        </br>
         
         <!--<script src="js/jquery/jquery-1.11.1.min.js"></script>-->
         </div> <!-- end container -->
