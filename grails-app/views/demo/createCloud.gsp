@@ -10,6 +10,7 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="../css/bootstrap/bootstrap.min.css" rel="stylesheet">
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
@@ -23,15 +24,34 @@
         <![endif]-->
 
         <!-- Add your site or application content here -->
-        <p>Hello world! This is HTML5 Boilerplate.</p>
+        <!--<p>Hello world! This is HTML5 Boilerplate.</p>-->
+        <div class="container">
+        <div class="row">
 
-        <!-- this might not be valid syntax...-->
-        <tr>
-        <g:each in="${terms}" var="term">
-            <td>${term.term} (${term.weight})</td></br>
-        </g:each>
-        </tr>
+        <div class="col-md-4">
+        <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Term</th>
+              <th>Weight</th>
+            </tr>
+          </thead>
+          
+          <tbody>
+          <g:each in="${terms}" var="term">
+            <tr>
+              <td>${term.term}</td>
+              <td>(${term.weight})</td>
+            </tr>
+          </g:each>
+          </tbody>
+        </table>
+        </div> <!--end table-responsive-->
+        </div> <!--end col-md-4-->
+
         
+        <div class="col-md-4">
         <g:javascript src="jquery/jquery-1.11.1.min.js" />
         <!--<script src="../js/jquery/jquery-1.11.1.min.js"></script>-->
 
@@ -89,6 +109,11 @@
                 .text(function(d) { return d.text; });
           }
         </script>
+        </div> <!--end col-md-4-->
+        </div> <!--end row-->
+        </div> <!--end container-->
+
+
         <!--<script src="js/plugins.js"></script>-->
         <!--<script src="js/main.js"></script>-->
 

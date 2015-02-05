@@ -15,6 +15,9 @@
 
         <link rel="stylesheet" href="../css/normalize/normalize.css">
         <link href="../css/bootstrap/bootstrap.min.css" rel="stylesheet">
+        <script src="../js/jquery/jquery-1.11.1.min.js"></script>
+        <script src="../js/bootstrap/bootstrap.min.js"></script>
+        <script src="../js/filters.js"></script>
     </head>
 
     <body role="document">
@@ -39,9 +42,12 @@
         </br>
 
         <h1>Welcome!</h1>
-        <p>This is the page for creating subsets and adding them to the corpus.</p>
+        <p>This is the page for creating subsets and adding them to the corpus in order to create word clouds from sets of Supreme Court opinions.</p>
 
-        <p>TODO: add some help text here to instruct the user!</p>
+        <p>First, create one or more subset definitions using the dropdown menu and input boxes.</p>
+        <p>Then, add one or more of your subsets to the corpus using the "Add Subset to Corpus" or "Add All Subsets to Corpus" buttons. The corpus is the set of opinions against which your subset will be compared when performing the analysis and generating the word cloud. If you specify multiple sets for the corpus, it will be constructed as the union of those sets.</p>
+        <p>Finally, select a subset in the subset selection box and click "Create Word Cloud". After a few moments, the 50 most characteristic terms of the selected subset when compared to the corpus will appear, along with a word cloud of those terms below</p>
+
         </div> <!-- end container --> 
         </div> <!-- end jumbotron -->
 
@@ -49,7 +55,14 @@
         <g:form action="createSubset">
 
             <label for="name">Subset Name</label>
-            <g:textField name="name" value="${filter.name}"/>
+            <g:textField name="name" 
+                            value="${filter.name}" 
+                            id="name_field" 
+                            data-toggle="tooltip" 
+                            data-placement="right" 
+                            title="Enter a name for the subset you'd like to create." 
+                            />
+            
             <br/>
             
             <label for="sortField">Sort Field</label><!--this should actually a dropdown box-->
@@ -57,12 +70,25 @@
             
             <g:select name="sortField" 
                         from="${dbFields}" 
-                        value="${dbField}"/>
+                        value="${dbField}"
+                        id="sort_field"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Select the field on whose values you wish to filter for your subset."
+                        />
             <br/>
 
             <label for="allowedValues">Allowed Values</label>
-            <g:textField name="allowedValues" value="${filter.allowedValues}"/>
+            <g:textField name="allowedValues" 
+                        value="${filter.allowedValues}"
+                        id="allowed_vals"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Enter the values for the sort field you want to allow. In other words, only opinions who have any of these values for the sort field will make it into your subset."
+                        />
             <br/>
+
+            <!-- TODO: for some sort field types, allowedValues should be a dropdown! or have autocomplete! -->
             
             <g:submitButton name="createSubset" value="Create Subset" class="btn btn-lg btn-default"/>
 
@@ -99,8 +125,7 @@
                             from="${corpusSubsets}" 
                             value="${corpusFilter?.name}"
                             optionKey="name"
-                            optionValue="name"
-                            multiple="true"/>
+                            optionValue="name"/>
             </div> <!-- end column -->
 
             </div> <!-- end row -->

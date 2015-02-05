@@ -59,8 +59,12 @@ class BootStrap
         StatelessSession session = sessionFactory.openStatelessSession();
         Transaction tx = session.beginTransaction();
 
-        for (File opinionFile : opinionFiles)
+        File opinionFile;
+        //for (File opinionFile : opinionFiles)
+        for (int i = 0; i < opinionFiles.size(); i+=15) // revert this to prev line for real app
         {
+            opinionFile = opinionFiles.get(i); // remove for real version
+
             inputFullPath = opinionFile.getCanonicalPath();
             // if a file doesn't have a .txt extension, we ignore it 
             isTextFile = txtFileRegex.matcher(inputFullPath).find();
@@ -105,6 +109,7 @@ class BootStrap
                 domainOpin.opinionAuthor = newOpin.getMetadata().getField(WordCloudConstants.META_OPIN_AUTHOR).toUpperCase();
                 domainOpin.opinionType = newOpin.getMetadata().getField(WordCloudConstants.META_OPIN_TYPE).toUpperCase();
 
+                // test output
                 System.out.println("new opinion has title: " + domainOpin.caseTitle);
                 System.out.println("new opinion has author: " + domainOpin.opinionAuthor);
                 System.out.println("new opinion has full citation: " + domainOpin.fullCitation);
@@ -137,7 +142,7 @@ class BootStrap
             }
 
             // TODO: REMOVE ME WHEN WE WANT TO DO ALL OPINIONS
-            if (numConverted > 1000)
+            if (numConverted > 1500)
             {
                 break;
             }
