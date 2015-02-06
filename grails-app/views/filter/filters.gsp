@@ -13,11 +13,16 @@
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <link rel="stylesheet" href="../css/normalize/normalize.css">
-        <link href="../css/bootstrap/bootstrap.min.css" rel="stylesheet">
-        <script src="../js/jquery/jquery-1.11.1.min.js"></script>
-        <script src="../js/bootstrap/bootstrap.min.js"></script>
-        <script src="../js/filters.js"></script>
+        <!--<link rel="stylesheet" href="../css/normalize/normalize.css">-->
+        <!--<link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">-->
+        <link rel="stylesheet" href="${resource(dir: 'css/bootstrap', file: 'bootstrap.min.css')}" type="text/css">
+        <link rel="stylesheet" href="${resource(dir: 'css/normalize', file: 'normalize.css')}" type="text/css">
+        <!--<script src="js/jquery/jquery-1.11.1.min.js"></script>-->
+        <g:javascript src="jquery/jquery-1.11.1.min.js" />
+        <!--<script src="js/bootstrap/bootstrap.min.js"></script>-->
+        <g:javascript src="bootstrap/bootstrap.min.js" />
+        <!--<script src="js/filters.js"></script>-->
+        <g:javascript src="filters.js" />
     </head>
 
     <body role="document">
@@ -46,7 +51,7 @@
 
         <p>First, create one or more subset definitions using the dropdown menu and input boxes.</p>
         <p>Then, add one or more of your subsets to the corpus using the "Add Subset to Corpus" or "Add All Subsets to Corpus" buttons. The corpus is the set of opinions against which your subset will be compared when performing the analysis and generating the word cloud. If you specify multiple sets for the corpus, it will be constructed as the union of those sets.</p>
-        <p>Finally, select a subset in the subset selection box and click "Create Word Cloud". After a few moments, the 50 most characteristic terms of the selected subset when compared to the corpus will appear, along with a word cloud of those terms below</p>
+        <p>Finally, select a subset in the subset selection box and click "Create Word Cloud". After a few moments, the 50 most characteristic terms of the selected subset when compared to the corpus will appear, along with a word cloud of those terms</p>
 
         </div> <!-- end container --> 
         </div> <!-- end jumbotron -->

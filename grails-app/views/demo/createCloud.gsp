@@ -10,7 +10,16 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="../css/bootstrap/bootstrap.min.css" rel="stylesheet">
+        <!--<link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">-->
+
+        <link rel="stylesheet" href="${resource(dir: 'css/bootstrap', file: 'bootstrap.min.css')}" type="text/css">
+        <g:javascript src="jquery/jquery-1.11.1.min.js" />
+        <!--<script src="../js/jquery/jquery-1.11.1.min.js"></script>-->
+
+        <g:javascript src="d3/d3.js" />
+        <!--<script src="../js/d3/d3.js"></script>-->
+        <g:javascript src="d3-cloud/d3.layout.cloud.js" />
+        <!--<script src="../js/d3-cloud/d3.layout.cloud.js"></script>-->
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
@@ -50,16 +59,11 @@
         </div> <!--end table-responsive-->
         </div> <!--end col-md-4-->
 
-        
         <div class="col-md-4">
-        <g:javascript src="jquery/jquery-1.11.1.min.js" />
-        <!--<script src="../js/jquery/jquery-1.11.1.min.js"></script>-->
+        </br>
+        <div id="wordcloud"></div>
 
-        <g:javascript src="d3/d3.js" />
-        <!--<script src="../js/d3/d3.js"></script>-->
-        <g:javascript src="d3-cloud/d3.layout.cloud.js" />
-        <!--<script src="../js/d3-cloud/d3.layout.cloud.js"></script>-->
-        <script>
+        <script> <!-- TODO: move this stuff to its own file
           var termList = [];
           var termDict = new Object();
 
@@ -91,7 +95,7 @@
               .start();
 
           function draw(words) {
-            d3.select("body").append("svg")
+            d3.select("#wordcloud").append("svg")
                 .attr("width", 800)
                 .attr("height", 800)
               .append("g")
@@ -110,6 +114,9 @@
           }
         </script>
         </div> <!--end col-md-4-->
+
+
+
         </div> <!--end row-->
         </div> <!--end container-->
 
