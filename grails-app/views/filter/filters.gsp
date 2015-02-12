@@ -59,6 +59,7 @@
         <div class="container">
         <g:form action="createSubset">
 
+            <div id="phase1">
             <label for="name">Subset Name</label>
             <g:textField name="name" 
                             value="${filter.name}" 
@@ -92,6 +93,11 @@
                         title="Enter the values for the sort field you want to allow. In other words, only opinions who have any of these values for the sort field will make it into your subset."
                         />
             <br/>
+            </div> <!-- end phase1-->
+            <button type="button" id="toggle_phase1">
+                <span>Toggle Phase 1</span>
+            </button>
+            <!--TODO: add more phases, figure out how to show/hide properly and update button text-->
 
             <!-- TODO: for some sort field types, allowedValues should be a dropdown! or have autocomplete! -->
             
