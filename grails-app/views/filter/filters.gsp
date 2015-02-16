@@ -59,7 +59,7 @@
         <div class="container">
         <g:form action="createSubset">
 
-            <div id="phase1">
+            
             <label for="name">Subset Name</label>
             <g:textField name="name" 
                             value="${filter.name}" 
@@ -71,23 +71,24 @@
             
             <br/>
             
+            <div id="phase1">
             <label for="sortField">Sort Field</label><!--this should actually a dropdown box-->
             <!--<g:textField name="sortField" value="${filter.sortField}"/>-->
             
-            <g:select name="sortField" 
+            <g:select name="sortField1" 
                         from="${dbFields}" 
                         value="${dbField}"
-                        id="sort_field"
+                        id="sort_field1"
                         data-toggle="tooltip"
                         data-placement="right"
                         title="Select the field on whose values you wish to filter for your subset."
                         />
             <br/>
 
-            <label for="allowedValues">Allowed Values</label>
-            <g:textField name="allowedValues" 
+            <label for="allowedValues1">Allowed Values</label>
+            <g:textField name="allowedValues1" 
                         value="${filter.allowedValues}"
-                        id="allowed_vals"
+                        id="allowed_vals1"
                         data-toggle="tooltip"
                         data-placement="right"
                         title="Enter the values for the sort field you want to allow. In other words, only opinions who have any of these values for the sort field will make it into your subset."
@@ -95,11 +96,100 @@
             <br/>
             </div> <!-- end phase1-->
             <button type="button" id="toggle_phase1">
-                <span>Toggle Phase 1</span>
+                <span>Show Phase 1</span>
             </button>
+
+            <div id="phase2">
+            <label for="sortField">Sort Field</label><!--this should actually a dropdown box-->
+            <!--<g:textField name="sortField" value="${filter.sortField}"/>-->
+            
+            <g:select name="sortField2" 
+                        from="${dbFields}" 
+                        value="${dbField}"
+                        id="sort_field2"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Select the field on whose values you wish to filter for your subset."
+                        />
+            <br/>
+
+            <label for="allowedValues2">Allowed Values</label>
+            <g:textField name="allowedValues2" 
+                        value="${filter.allowedValues}"
+                        id="allowed_vals2"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Enter the values for the sort field you want to allow. In other words, only opinions who have any of these values for the sort field will make it into your subset."
+                        />
+            <br/>
+            </div> <!-- end phase2-->
+            <button type="button" id="toggle_phase2">
+                <span>Show Phase 2</span>
+            </button>
+
+            
+            <div id="phase3">
+            <label for="sortField">Sort Field</label><!--this should actually a dropdown box-->
+            <!--<g:textField name="sortField" value="${filter.sortField}"/>-->
+            
+            <g:select name="sortField3" 
+                        from="${dbFields}" 
+                        value="${dbField}"
+                        id="sort_field3"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Select the field on whose values you wish to filter for your subset."
+                        />
+            <br/>
+
+            <label for="allowedValues3">Allowed Values</label>
+            <g:textField name="allowedValues3" 
+                        value="${filter.allowedValues}"
+                        id="allowed_vals3"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Enter the values for the sort field you want to allow. In other words, only opinions who have any of these values for the sort field will make it into your subset."
+                        />
+            <br/>
+            </div> <!-- end phase3-->
+            <button type="button" id="toggle_phase3">
+                <span>Show Phase 3</span>
+            </button>
+
+            <div id="phase4">
+            <label for="sortField">Sort Field</label><!--this should actually a dropdown box-->
+            <!--<g:textField name="sortField" value="${filter.sortField}"/>-->
+            
+            <g:select name="sortField4" 
+                        from="${dbFields}" 
+                        value="${dbField}"
+                        id="sort_field4"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Select the field on whose values you wish to filter for your subset."
+                        />
+            <br/>
+
+            <label for="allowedValues4">Allowed Values</label>
+            <g:textField name="allowedValues4" 
+                        value="${filter.allowedValues}"
+                        id="allowed_vals4"
+                        data-toggle="tooltip"
+                        data-placement="right"
+                        title="Enter the values for the sort field you want to allow. In other words, only opinions who have any of these values for the sort field will make it into your subset."
+                        />
+            <br/>
+            </div> <!-- end phase4-->
+            <button type="button" id="toggle_phase4">
+                <span>Show Phase 4</span>
+            </button>
+
+
             <!--TODO: add more phases, figure out how to show/hide properly and update button text-->
 
             <!-- TODO: for some sort field types, allowedValues should be a dropdown! or have autocomplete! -->
+
+            </br>
             
             <g:submitButton name="createSubset" value="Create Subset" class="btn btn-lg btn-default"/>
 

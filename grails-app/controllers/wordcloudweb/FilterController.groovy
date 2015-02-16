@@ -35,8 +35,10 @@ class FilterController {
     {
         def newFilter = new Filter();
         newFilter.setName(params.name);
-        newFilter.setSortField(params.sortField);
-        newFilter.setAllowedValues(params.allowedValues);
+        // TODO: instead of setSortField, this should become addSortField.
+        // TODO: same with allowed values
+        newFilter.setSortField(params.sortField1);
+        newFilter.setAllowedValues(params.allowedValues1);
         // TODO: perform error checking on allowedValues list?
         newFilter.setAllowedValuesList(this.parseAllowedVals(params.allowedValues));
         // TODO: ALL OF THE ERROR CHECKING
