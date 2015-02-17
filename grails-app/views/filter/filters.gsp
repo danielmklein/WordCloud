@@ -95,7 +95,7 @@
                         />
             <br/>
             </div> <!-- end phase1-->
-            <button type="button" id="toggle_phase1">
+            <button type="button" class="btn btn-xs btn-success" id="toggle_phase1">
                 <span>Show Phase 1</span>
             </button>
 
@@ -123,7 +123,7 @@
                         />
             <br/>
             </div> <!-- end phase2-->
-            <button type="button" id="toggle_phase2">
+            <button type="button" class="btn btn-xs btn-success" id="toggle_phase2">
                 <span>Show Phase 2</span>
             </button>
 
@@ -152,7 +152,7 @@
                         />
             <br/>
             </div> <!-- end phase3-->
-            <button type="button" id="toggle_phase3">
+            <button type="button" class="btn btn-xs btn-success" id="toggle_phase3">
                 <span>Show Phase 3</span>
             </button>
 
@@ -180,7 +180,7 @@
                         />
             <br/>
             </div> <!-- end phase4-->
-            <button type="button" id="toggle_phase4">
+            <button type="button" class="btn btn-xs btn-success" id="toggle_phase4">
                 <span>Show Phase 4</span>
             </button>
 

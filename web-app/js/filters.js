@@ -46,24 +46,35 @@ $(document).ready(
 
 function togglePhase(phaseNum)
 {
+	// first of all, toggle the phase div itself
 	$("#phase" + phaseNum).slideToggle("fast");
+
+	// if we just showed the phase, change the button text to "Hide",
+	// and switch the button color from green to red
     if ($.trim($("#toggle_phase" + phaseNum).text()) === 'Show Phase ' + phaseNum) 
 	{
 		$("#toggle_phase" + phaseNum).text('Hide Phase ' + phaseNum);
-	} else 
+		$("#toggle_phase" + phaseNum).removeClass("btn-success");
+		$("#toggle_phase" + phaseNum).addClass("btn-danger");
+
+	} else // otherwise change button to "Show" and switch from red to green 
 	{
-		$("#toggle_phase" + phaseNum).text('Show Phase ' + phaseNum);        
+		$("#toggle_phase" + phaseNum).text('Show Phase ' + phaseNum);
+		$("#toggle_phase" + phaseNum).removeClass("btn-danger");
+		$("#toggle_phase" + phaseNum).addClass("btn-success");        
 	}
 
+	// disable the previous phase's button if we just Showed, and 
+	// enable it if we just did a Hide
 	var prev_phase_btn = $("#toggle_phase"+(parseInt(phaseNum)-1).toString());
 	if (prev_phase_btn.prop("disabled"))
 	{
 		prev_phase_btn.prop("disabled", false);
 	} else
 	{
-		//$("#toggle_phase"+(parseInt(phaseNum)-1).toString()).prop("disabled",true);
 		prev_phase_btn.prop("disabled", true);
 	}
 
+	// finally, toggle the Show/Hide button itself
 	$("#toggle_phase" + (parseInt(phaseNum)+1).toString()).slideToggle("fast");
 }
