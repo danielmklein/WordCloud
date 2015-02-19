@@ -40,7 +40,7 @@ class FilterController {
         newFilter.setSortField(params.sortField1);
         newFilter.setAllowedValues(params.allowedValues1);
         // TODO: perform error checking on allowedValues list?
-        newFilter.setAllowedValuesList(this.parseAllowedVals(params.allowedValues));
+        newFilter.setAllowedValuesList(this.parseAllowedVals(params.allowedValues1));
         // TODO: ALL OF THE ERROR CHECKING
 
         session.subsets.add(newFilter);
