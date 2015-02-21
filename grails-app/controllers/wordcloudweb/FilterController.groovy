@@ -25,7 +25,8 @@ class FilterController {
         def curFilter = params.filter;
 
         [filter:curFilter, subsets:session.subsets, 
-        corpusSubsets:session.corpusSubsets, dbFields:session.dbFields];
+        corpusSubsets:session.corpusSubsets, dbFields:session.dbFields,
+        errorMsg:params.errorMsg];
     }
 
     /**
@@ -207,13 +208,29 @@ class FilterController {
             }
         }
 
-        System.out.println("subset filter has: ");
-        System.out.println("name: " + subsetFilter.getName());
-        System.out.println("sort field: " + subsetFilter.getSortField());
+        if (subsetFilter == null)
+        {
+            System.out.println("No subset filter selected... oh no.");
 
-        flash.subsetFilter = subsetFilter;
-        flash.corpusFilters = corpusFilters;
-        redirect(controller: "Demo",
-                action: "createCloud");
+            def emptyFilter = new Filter(name:'', allowedValues:'', 
+                                    sortField:'' );
+
+            render(view: "filters", action:"filters", 
+                model: [filter:emptyFilter, subsets:session.subsets, 
+                        corpusSubsets:session.corpusSubsets,
+                        dbFields:session.dbFields,
+                        errorMsg:"You must select a created subset for the word cloud!"]);
+        } else
+        {
+
+            System.out.println("subset filter has: ");
+            System.out.println("name: " + subsetFilter.getName());
+            System.out.println("sort field: " + subsetFilter.getSortField());
+
+            flash.subsetFilter = subsetFilter;
+            flash.corpusFilters = corpusFilters;
+            redirect(controller: "Demo",
+                    action: "createCloud");
+        }
     }
 }
