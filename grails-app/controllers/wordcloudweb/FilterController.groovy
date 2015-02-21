@@ -35,13 +35,45 @@ class FilterController {
     def createSubset()
     {
         def newFilter = new Filter();
+        def maxNumFilterLvls = 7;
+
         newFilter.setName(params.name);
+
+        for (int i = 1; i <= maxNumFilterLvls; i++)
+        {
+            def curSortField;
+            def curAllowedVals;
+            // see if sortfield and allowed vals for this lvl are not null
+            // if they are, we are done, because there are no higher levels
+            // if not, add sortfield to sortfields, allowedvals to allowedvals,
+            // and listify allowedvals as well
+            curSortField = params."sortField${i}";
+            curAllowedVals = params."allowedValues${i}";
+
+            if (curSortField && curAllowedVals)
+            {
+                System.out.println("filter level " + i + " has: ");
+                System.out.println("sortfield: " + curSortField);
+                System.out.println("allowed vals: " + curAllowedVals);
+                //newFiler.addSortField(curSortField);
+                //newFilter.addAllowedValString(curAllowedVals);
+                //newFilter.addAllowedValsList(this.parseAllowedVals(curAllowedVals));
+            } else 
+            {
+                break;
+            }
+        }
+
         // TODO: instead of setSortField, this should become addSortField.
+
         // TODO: same with allowed values
-        newFilter.setSortField(params.sortField1);
-        newFilter.setAllowedValues(params.allowedValues1);
+
+        //newFilter.setSortField(params.sortField1);
+        //newFilter.setAllowedValues(params.allowedValues1);
+
         // TODO: perform error checking on allowedValues list?
-        newFilter.setAllowedValuesList(this.parseAllowedVals(params.allowedValues1));
+
+        //newFilter.setAllowedValuesList(this.parseAllowedVals(params.allowedValues1));
         // TODO: ALL OF THE ERROR CHECKING
 
         session.subsets.add(newFilter);

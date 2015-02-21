@@ -7,11 +7,15 @@ package wordcloudweb
 class Filter
 {
 	String name;
-	int numPhases;
+	int numPhases; // this might be unused
 	//List phases; // a list of Phase domain objects
-	String sortField;
-	List allowedValuesList;
-	String allowedValues;
+
+	//String sortField; // this is gonna become a list
+	List<String> sortFields;
+	//List allowedValuesList; // this will become list of lists
+	//String allowedValues; // this will become list of strings
+	List<List> allowedValueLists;
+	List<String> allowedValueStrings;
 	boolean shouldInvert;
 
 	public Filter()
@@ -24,27 +28,59 @@ class Filter
 		this.name = name;
 	}
 
-	public setSortField(String sortField)
+	public addSortField(String sortField)
+	{
+		// todo: write me
+		this.sortFields.add(sortField);
+	}
+	
+	/*public setSortField(String sortField)
 	{
 		this.sortField = sortField;
+	}*/
+
+	public addAllowedValuesString(String allowedVals)
+	{
+		// todo: write me
+		this.allowedValueStrings.add(allowedVals);
 	}
 
-	public setAllowedValues(String allowedVals)
+	/*public setAllowedValues(String allowedVals)
 	{
 		this.allowedValues = allowedVals;
-	}
+	}*/
 
-	public setAllowedValuesList(List allowedVals)
+	public addAllowedValuesList(List allowedVals)
+	{
+		this.allowedValueLists.add(allowedVals);
+	}
+	
+	/*public setAllowedValuesList(List allowedVals)
 	{
 		this.allowedValuesList = allowedVals;
-	}
+	}*/
 
 	public String getName()
 	{
 		return this.name;
 	}
 
-	public String getSortField()
+	public List getSortFields()
+	{
+		return this.sortFields;
+	}
+
+	public List getAllowedValueLists()
+	{
+		return this.allowedValueLists;
+	}
+
+	public List getAllowedValueStrings()
+	{
+		return this.allowedValueStrings;
+	}
+
+	/*public String getSortField()
 	{
 		return this.sortField;
 	}
@@ -57,6 +93,6 @@ class Filter
 	public List getAllowedValuesList()
 	{
 		return this.allowedValuesList;
-	}
+	}*/
 
 }

@@ -45,7 +45,7 @@
 
         
         <div class="jumbotron">
-            
+
         <!-- if something went wrong previously, tell the user.-->    
         <g:if test="${(errorMsg != "") && (errorMsg != null)}">
             <script>alert("${errorMsg}");</script>
@@ -293,7 +293,7 @@
         
         <br/>
 
-        <p>Here's a list of the subsets we've already defined!</p>
+        <!--<p>Here's a list of the subsets we've already defined!</p>
         <g:each var="subset" in="${subsets}">
             <ul>
                 <li>Subset Name: ${subset.name}</li>
@@ -301,7 +301,7 @@
                 <li>Allowed Values: ${subset.allowedValues}</li>
             </ul>
             <br/>
-        </g:each>
+        </g:each>-->
         
         <g:form>
             <div class="row">
