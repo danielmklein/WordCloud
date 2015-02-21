@@ -2,106 +2,106 @@ $(document).ready(
 	function()
 	{
 		// enable all bootstrap tooltips
-	    $('[data-toggle="tooltip"]').tooltip();
+	    $('[data-tog="tooltip"]').tooltip();
 
-	    // hide the phase divs
-	    $('#phase1').hide();
+	    // hide the fltr_lvl divs
+	    $('#fltr_lvl1').hide();
 
-	    $('#phase2').hide();
-	    $('#toggle_phase2').hide();
+	    $('#fltr_lvl2').hide();
+	    $('#tog_fltr_lvl2').hide();
 
-	   	$('#phase3').hide();
-	    $('#toggle_phase3').hide();
+	   	$('#fltr_lvl3').hide();
+	    $('#tog_fltr_lvl3').hide();
 
-	    $('#phase4').hide();
-	    $('#toggle_phase4').hide();
+	    $('#fltr_lvl4').hide();
+	    $('#tog_fltr_lvl4').hide();
 
-	   	$('#phase5').hide();
-	    $('#toggle_phase5').hide();
+	   	$('#fltr_lvl5').hide();
+	    $('#tog_fltr_lvl5').hide();
 
-	   	$('#phase6').hide();
-	    $('#toggle_phase6').hide();
+	   	$('#fltr_lvl6').hide();
+	    $('#tog_fltr_lvl6').hide();
 
-	   	$('#phase7').hide();
-	    $('#toggle_phase7').hide();
+	   	$('#fltr_lvl7').hide();
+	    $('#tog_fltr_lvl7').hide();
 
-	    // click handler for showing/hiding phase 1
-	    $("#toggle_phase1").click(
+	    // click handler for showing/hiding fltr_lvl 1
+	    $("#tog_fltr_lvl1").click(
 	    	function ()
 	    	{
-	    		togglePhase("1")
+	    		toggle_filter_level("1")
 
 	    	});
 
-	    $("#toggle_phase2").click(
+	    $("#tog_fltr_lvl2").click(
 	    	function ()
 	    	{
-	    		togglePhase("2")
+	    		toggle_filter_level("2")
 	    	});
 	    	    
-	    $("#toggle_phase3").click(
+	    $("#tog_fltr_lvl3").click(
 	    	function ()
 	    	{
-	    		togglePhase("3")
+	    		toggle_filter_level("3")
 	    	});
 
-	  	$("#toggle_phase4").click(
+	  	$("#tog_fltr_lvl4").click(
 	    	function ()
 	    	{
-	    		togglePhase("4")
+	    		toggle_filter_level("4")
 	    	});
 
-	  	$("#toggle_phase5").click(
+	  	$("#tog_fltr_lvl5").click(
 	    	function ()
 	    	{
-	    		togglePhase("5")
+	    		toggle_filter_level("5")
 	    	});
 
-	  	$("#toggle_phase6").click(
+	  	$("#tog_fltr_lvl6").click(
 	    	function ()
 	    	{
-	    		togglePhase("6")
+	    		toggle_filter_level("6")
 	    	});
 
-	  	$("#toggle_phase7").click(
+	  	$("#tog_fltr_lvl7").click(
 	    	function ()
 	    	{
-	    		togglePhase("7")
+	    		toggle_filter_level("7")
 	    	});
 	}
 );
 
-function togglePhase(phaseNum)
+function toggle_filter_level(levelNum)
 {
-	// first of all, toggle the phase div itself
-	$("#phase" + phaseNum).slideToggle("fast");
+	// first of all, tog the fltr_lvl div itself
+	$("#fltr_lvl" + levelNum).slideToggle("fast");
 
-	// if we just showed the phase, change the button text to "Hide",
+	// if we just showed the fltr_lvl, change the button text to "Hide",
 	// and switch the button color from green to red
-    if ($.trim($("#toggle_phase" + phaseNum).text()) === 'Show Phase ' + phaseNum) 
+    if ($.trim($("#tog_fltr_lvl" + levelNum).text()) === 'Show Filter Level ' + levelNum) 
 	{
-		$("#toggle_phase" + phaseNum).text('Hide Phase ' + phaseNum);
-		$("#toggle_phase" + phaseNum).removeClass("btn-success");
-		$("#toggle_phase" + phaseNum).addClass("btn-danger");
+		$("#tog_fltr_lvl" + levelNum).text('Hide Filter Level ' + levelNum);
+		$("#tog_fltr_lvl" + levelNum).removeClass("btn-success");
+		$("#tog_fltr_lvl" + levelNum).addClass("btn-danger");
 
 	} else // otherwise change button to "Show" and switch from red to green 
 	{
-		$("#toggle_phase" + phaseNum).text('Show Phase ' + phaseNum);
-		$("#toggle_phase" + phaseNum).removeClass("btn-danger");
-		$("#toggle_phase" + phaseNum).addClass("btn-success");        
+		$("#tog_fltr_lvl" + levelNum).text('Show Filter Level ' + levelNum);
+		$("#tog_fltr_lvl" + levelNum).removeClass("btn-danger");
+		$("#tog_fltr_lvl" + levelNum).addClass("btn-success");        
 	}
 
-	// disable the previous phase's button if we just Showed, and 
+	// disable the previous fltr_lvl's button if we just Showed, and 
 	// enable it if we just did a Hide
-	var prev_phase_btn = $("#toggle_phase"+(parseInt(phaseNum)-1).toString());
-	if (prev_phase_btn.prop("disabled"))
+	var prev_fltr_lvl_btn = $("#tog_fltr_lvl"+(parseInt(levelNum)-1).toString());
+	if (prev_fltr_lvl_btn.prop("disabled"))
 	{
-		prev_phase_btn.prop("disabled", false);
+		prev_fltr_lvl_btn.prop("disabled", false);
 	} else
 	{
-		prev_phase_btn.prop("disabled", true);
+		prev_fltr_lvl_btn.prop("disabled", true);
 	}
 
-	// finally, toggle the Show/Hide button itself
-	$("#toggle_phase" + (parseInt(phaseNum)+1).toString()).slideToggle("fast");
+	// finally, tog the Show/Hide button itself
+	$("#tog_fltr_lvl" + (parseInt(levelNum)+1).toString()).slideToggle("fast");
 }

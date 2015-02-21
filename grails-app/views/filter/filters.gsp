@@ -76,7 +76,7 @@
             
             <br/>
             
-            <div id="phase1">
+            <div id="fltr_lvl1">
             <label for="sortField">Sort Field</label><!--this should actually a dropdown box-->
             <!--<g:textField name="sortField" value="${filter.sortField}"/>-->
             
@@ -99,12 +99,12 @@
                         title="Enter the values for the sort field you want to allow. In other words, only opinions who have any of these values for the sort field will make it into your subset."
                         />
             <br/>
-            </div> <!-- end phase1-->
-            <button type="button" class="btn btn-xs btn-success" id="toggle_phase1">
-                <span>Show Phase 1</span>
+            </div> <!-- end fltr_lvl1-->
+            <button type="button" class="btn btn-xs btn-success" id="tog_fltr_lvl1">
+                <span>Show Filter Level 1</span>
             </button>
 
-            <div id="phase2">
+            <div id="fltr_lvl2">
             <label for="sortField">Sort Field</label><!--this should actually a dropdown box-->
             <!--<g:textField name="sortField" value="${filter.sortField}"/>-->
             
@@ -127,13 +127,13 @@
                         title="Enter the values for the sort field you want to allow. In other words, only opinions who have any of these values for the sort field will make it into your subset."
                         />
             <br/>
-            </div> <!-- end phase2-->
-            <button type="button" class="btn btn-xs btn-success" id="toggle_phase2">
-                <span>Show Phase 2</span>
+            </div> <!-- end fltr_lvl2-->
+            <button type="button" class="btn btn-xs btn-success" id="tog_fltr_lvl2">
+                <span>Show Filter Level 2</span>
             </button>
 
             
-            <div id="phase3">
+            <div id="fltr_lvl3">
             <label for="sortField">Sort Field</label><!--this should actually a dropdown box-->
             <!--<g:textField name="sortField" value="${filter.sortField}"/>-->
             
@@ -156,12 +156,12 @@
                         title="Enter the values for the sort field you want to allow. In other words, only opinions who have any of these values for the sort field will make it into your subset."
                         />
             <br/>
-            </div> <!-- end phase3-->
-            <button type="button" class="btn btn-xs btn-success" id="toggle_phase3">
-                <span>Show Phase 3</span>
+            </div> <!-- end fltr_lvl3-->
+            <button type="button" class="btn btn-xs btn-success" id="tog_fltr_lvl3">
+                <span>Show Filter Level 3</span>
             </button>
 
-            <div id="phase4">
+            <div id="fltr_lvl4">
             <label for="sortField">Sort Field</label><!--this should actually a dropdown box-->
             <!--<g:textField name="sortField" value="${filter.sortField}"/>-->
             
@@ -184,12 +184,12 @@
                         title="Enter the values for the sort field you want to allow. In other words, only opinions who have any of these values for the sort field will make it into your subset."
                         />
             <br/>
-            </div> <!-- end phase4-->
-            <button type="button" class="btn btn-xs btn-success" id="toggle_phase4">
-                <span>Show Phase 4</span>
+            </div> <!-- end fltr_lvl4-->
+            <button type="button" class="btn btn-xs btn-success" id="tog_fltr_lvl4">
+                <span>Show Filter Level 4</span>
             </button>
 
-            <div id="phase5">
+            <div id="fltr_lvl5">
             <label for="sortField">Sort Field</label><!--this should actually a dropdown box-->
             <!--<g:textField name="sortField" value="${filter.sortField}"/>-->
             
@@ -212,12 +212,12 @@
                         title="Enter the values for the sort field you want to allow. In other words, only opinions who have any of these values for the sort field will make it into your subset."
                         />
             <br/>
-            </div> <!-- end phase5-->
-            <button type="button" class="btn btn-xs btn-success" id="toggle_phase5">
-                <span>Show Phase 5</span>
+            </div> <!-- end fltr_lvl5-->
+            <button type="button" class="btn btn-xs btn-success" id="tog_fltr_lvl5">
+                <span>Show Filter Level 5</span>
             </button>
 
-            <div id="phase6">
+            <div id="fltr_lvl6">
             <label for="sortField">Sort Field</label><!--this should actually a dropdown box-->
             <!--<g:textField name="sortField" value="${filter.sortField}"/>-->
             
@@ -240,12 +240,12 @@
                         title="Enter the values for the sort field you want to allow. In other words, only opinions who have any of these values for the sort field will make it into your subset."
                         />
             <br/>
-            </div> <!-- end phase6-->
-            <button type="button" class="btn btn-xs btn-success" id="toggle_phase6">
-                <span>Show Phase 6</span>
+            </div> <!-- end fltr_lvl6-->
+            <button type="button" class="btn btn-xs btn-success" id="tog_fltr_lvl6">
+                <span>Show Filter Level 6</span>
             </button>
 
-            <div id="phase7">
+            <div id="fltr_lvl7">
             <label for="sortField">Sort Field</label><!--this should actually a dropdown box-->
             <!--<g:textField name="sortField" value="${filter.sortField}"/>-->
             
@@ -268,12 +268,12 @@
                         title="Enter the values for the sort field you want to allow. In other words, only opinions who have any of these values for the sort field will make it into your subset."
                         />
             <br/>
-            </div> <!-- end phase7-->
-            <button type="button" class="btn btn-xs btn-success" id="toggle_phase7">
-                <span>Show Phase 7</span>
+            </div> <!-- end fltr_lvl7-->
+            <button type="button" class="btn btn-xs btn-success" id="tog_fltr_lvl7">
+                <span>Show Filter Level 7</span>
             </button>
 
-            <!--TODO: add more phases, figure out how to show/hide properly and update button text-->
+            <!--TODO: add more fltr_lvls, figure out how to show/hide properly and update button text-->
 
             <!-- TODO: for some sort field types, allowedValues should be a dropdown! or have autocomplete! -->
 
