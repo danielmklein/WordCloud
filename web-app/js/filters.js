@@ -16,6 +16,15 @@ $(document).ready(
 	    $('#phase4').hide();
 	    $('#toggle_phase4').hide();
 
+	   	$('#phase5').hide();
+	    $('#toggle_phase5').hide();
+
+	   	$('#phase6').hide();
+	    $('#toggle_phase6').hide();
+
+	   	$('#phase7').hide();
+	    $('#toggle_phase7').hide();
+
 	    // click handler for showing/hiding phase 1
 	    $("#toggle_phase1").click(
 	    	function ()
@@ -40,6 +49,24 @@ $(document).ready(
 	    	function ()
 	    	{
 	    		togglePhase("4")
+	    	});
+
+	  	$("#toggle_phase5").click(
+	    	function ()
+	    	{
+	    		togglePhase("5")
+	    	});
+
+	  	$("#toggle_phase6").click(
+	    	function ()
+	    	{
+	    		togglePhase("6")
+	    	});
+
+	  	$("#toggle_phase7").click(
+	    	function ()
+	    	{
+	    		togglePhase("7")
 	    	});
 	}
 );
