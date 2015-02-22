@@ -78,7 +78,7 @@ class DemoController
         System.out.println("in demo controller");
         System.out.println("subset filter has: ");
         System.out.println("name: " + subsetFilter.getName());
-        System.out.println("sort field: " + subsetFilter.getSortField());
+        //System.out.println("sort field: " + subsetFilter.getSortField());
 
         def subset = this.buildDatabaseQuery(subsetFilter);
         System.out.println("subset size is: " + subset.size());
@@ -91,7 +91,7 @@ class DemoController
         for (filter in corpusFilters)
         {
             System.out.println("corpus filter name: " + filter.getName());
-            System.out.println("corpus filter sort field: " + filter.getSortField());
+            //System.out.println("corpus filter sort field: " + filter.getSortField());
         }
 
         def corpus = this.buildDatabaseQuery(corpusFilters);
@@ -117,18 +117,36 @@ class DemoController
 
         def query = "from SCOpinionDomain as o where ";
         def firstTerm = true;
+        def curSortField;
+        def curAllowedVals;
 
-        for (value in filter.getAllowedValuesList())
+        for (int j = 0; j < filter.getSortFields().size(); j++)
         {
-            if (firstTerm)
+            curSortField = filter.getSortFields().get(j);
+            curAllowedVals = filter.getAllowedValueLists().get(j);
+            query += "(";
+
+            for (value in curAllowedVals)
             {
-                query += "upper(o." + filter.getSortField() + ") like upper('%" + value + "%') ";
-                firstTerm = false;
-            } else
-            {
-                query += "or upper(o." + filter.getSortField() + ") like upper('%" + value + "%') ";
+                if (firstTerm)
+                {
+                    query += "upper(o." + curSortField + ") like upper('%" + value + "%') ";
+                    firstTerm = false;
+                } else
+                {
+                    query += "or upper(o." + curSortField + ") like upper('%" + value + "%') ";
+                }
             }
+
+            query += ")";
+
+            if (j != filter.getSortFields().size() - 1)
+            {
+                query += " and ";
+            }
+            firstTerm = true;
         }
+
 
         System.out.println("Executing query: ");
         System.out.println(query);
@@ -147,21 +165,62 @@ class DemoController
 
         def query = "from SCOpinionDomain as o where ";
         def firstTerm = true;
+        def curSortField;
+        def curAllowedVals;
+        def curFilter;
 
-        for (filter in filters)
+        //for (filter in filters)
+        for (int i = 0; i < filters.size(); i++)
         {
-            for (value in filter.getAllowedValuesList())
+            curFilter = filters.get(i);
+            query += "(";
+
+            for (int j = 0; j < curFilter.getSortFields().size(); j++)
             {
-                if (firstTerm)
+                curSortField = curFilter.getSortFields().get(j);
+                curAllowedVals = curFilter.getAllowedValueLists().get(j);
+                query += "(";
+
+                for (value in curAllowedVals)
                 {
-                    query += "upper(o." + filter.getSortField() + ") like upper('%" + value + "%') ";
-                    firstTerm = false;
-                } else
-                {
-                    query += "or upper(o." + filter.getSortField() + ") like upper('%" + value + "%') ";
+                    if (firstTerm)
+                    {
+                        query += "upper(o." + curSortField + ") like upper('%" + value + "%') ";
+                        firstTerm = false;
+                    } else
+                    {
+                        query += "or upper(o." + curSortField + ") like upper('%" + value + "%') ";
+                    }
                 }
+
+                query += ")";
+
+                if (j != curFilter.getSortFields().size() - 1)
+                {
+                    query += " and ";
+                }
+                firstTerm = true;
+            }
+
+            query += ")";
+
+            if (i != filters.size() - 1)
+            {
+                query += " or ";
             }
         }
+
+        /*
+        select * from table where
+        ( here's a filter
+        (sortfield like blah or sortfield like blah...) (filter level)
+        and (sortfield like blah or sortfield like blah...) (another filter level)
+        )
+        or
+        (here's another filter
+
+        )
+        */
 
         System.out.println("Executing query: ");
         System.out.println(query);

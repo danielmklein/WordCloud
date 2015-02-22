@@ -14,13 +14,16 @@ class Filter
 	List<String> sortFields;
 	//List allowedValuesList; // this will become list of lists
 	//String allowedValues; // this will become list of strings
-	List<List> allowedValueLists;
 	List<String> allowedValueStrings;
+	List<List> allowedValueLists;
+
 	boolean shouldInvert;
 
 	public Filter()
 	{
-
+		sortFields = [];
+		allowedValueStrings = [];
+		allowedValueLists = [];
 	}
 
 	public setName(String name)

@@ -50,14 +50,14 @@ class FilterController {
             curSortField = params."sortField${i}";
             curAllowedVals = params."allowedValues${i}";
 
-            if (curSortField && curAllowedVals)
+            if (curSortField && (curAllowedVals != null))
             {
                 System.out.println("filter level " + i + " has: ");
                 System.out.println("sortfield: " + curSortField);
                 System.out.println("allowed vals: " + curAllowedVals);
-                //newFiler.addSortField(curSortField);
-                //newFilter.addAllowedValString(curAllowedVals);
-                //newFilter.addAllowedValsList(this.parseAllowedVals(curAllowedVals));
+                newFilter.addSortField(curSortField);
+                newFilter.addAllowedValuesString(curAllowedVals);
+                newFilter.addAllowedValuesList(this.parseAllowedVals(curAllowedVals));
             } else 
             {
                 break;
@@ -78,13 +78,13 @@ class FilterController {
 
         session.subsets.add(newFilter);
 
-        System.out.println(newFilter.name);
-        System.out.println(newFilter.sortField);
-        System.out.println("allowed vals in new filter are: ");
-        for (val in newFilter.getAllowedValuesList())
+        //System.out.println(newFilter.name);
+        //System.out.println(newFilter.sortField);
+        //System.out.println("allowed vals in new filter are: ");
+        /*for (val in newFilter.getAllowedValuesList())
         {
             System.out.println(val);
-        }
+        }*/
         System.out.println(session.subsets);
 
         // test print statements
@@ -257,7 +257,7 @@ class FilterController {
 
             System.out.println("subset filter has: ");
             System.out.println("name: " + subsetFilter.getName());
-            System.out.println("sort field: " + subsetFilter.getSortField());
+            //System.out.println("sort field: " + subsetFilter.getSortField());
 
             flash.subsetFilter = subsetFilter;
             flash.corpusFilters = corpusFilters;

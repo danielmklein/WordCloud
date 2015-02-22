@@ -86,7 +86,6 @@
             
             <div id="fltr_lvl1">
             <label for="sortField">Sort Field</label><!--this should actually a dropdown box-->
-            <!--<g:textField name="sortField" value="${filter.sortField}"/>-->
             
             <g:select name="sortField1" 
                         from="${dbFields}" 
@@ -100,7 +99,7 @@
 
             <label for="allowedValues1">Allowed Values</label>
             <g:textField name="allowedValues1" 
-                        value="${filter.allowedValues}"
+                        value=""
                         id="allowed_vals1"
                         data-toggle="tooltip"
                         data-placement="right"
@@ -114,7 +113,6 @@
 
             <div id="fltr_lvl2">
             <label for="sortField">Sort Field</label><!--this should actually a dropdown box-->
-            <!--<g:textField name="sortField" value="${filter.sortField}"/>-->
             
             <g:select name="sortField2" 
                         from="${dbFields}" 
@@ -128,7 +126,7 @@
 
             <label for="allowedValues2">Allowed Values</label>
             <g:textField name="allowedValues2" 
-                        value="${filter.allowedValues}"
+                        value=""
                         id="allowed_vals2"
                         data-toggle="tooltip"
                         data-placement="right"
@@ -143,7 +141,6 @@
             
             <div id="fltr_lvl3">
             <label for="sortField">Sort Field</label><!--this should actually a dropdown box-->
-            <!--<g:textField name="sortField" value="${filter.sortField}"/>-->
             
             <g:select name="sortField3" 
                         from="${dbFields}" 
@@ -157,7 +154,7 @@
 
             <label for="allowedValues3">Allowed Values</label>
             <g:textField name="allowedValues3" 
-                        value="${filter.allowedValues}"
+                        value=""
                         id="allowed_vals3"
                         data-toggle="tooltip"
                         data-placement="right"
@@ -171,7 +168,6 @@
 
             <div id="fltr_lvl4">
             <label for="sortField">Sort Field</label><!--this should actually a dropdown box-->
-            <!--<g:textField name="sortField" value="${filter.sortField}"/>-->
             
             <g:select name="sortField4" 
                         from="${dbFields}" 
@@ -185,7 +181,7 @@
 
             <label for="allowedValues4">Allowed Values</label>
             <g:textField name="allowedValues4" 
-                        value="${filter.allowedValues}"
+                        value=""
                         id="allowed_vals4"
                         data-toggle="tooltip"
                         data-placement="right"
@@ -199,7 +195,6 @@
 
             <div id="fltr_lvl5">
             <label for="sortField">Sort Field</label><!--this should actually a dropdown box-->
-            <!--<g:textField name="sortField" value="${filter.sortField}"/>-->
             
             <g:select name="sortField5" 
                         from="${dbFields}" 
@@ -213,7 +208,7 @@
 
             <label for="allowedValues5">Allowed Values</label>
             <g:textField name="allowedValues5" 
-                        value="${filter.allowedValues}"
+                        value=""
                         id="allowed_vals5"
                         data-toggle="tooltip"
                         data-placement="right"
@@ -227,7 +222,6 @@
 
             <div id="fltr_lvl6">
             <label for="sortField">Sort Field</label><!--this should actually a dropdown box-->
-            <!--<g:textField name="sortField" value="${filter.sortField}"/>-->
             
             <g:select name="sortField6" 
                         from="${dbFields}" 
@@ -241,7 +235,7 @@
 
             <label for="allowedValues6">Allowed Values</label>
             <g:textField name="allowedValues4" 
-                        value="${filter.allowedValues}"
+                        value=""
                         id="allowed_vals6"
                         data-toggle="tooltip"
                         data-placement="right"
@@ -255,7 +249,6 @@
 
             <div id="fltr_lvl7">
             <label for="sortField">Sort Field</label><!--this should actually a dropdown box-->
-            <!--<g:textField name="sortField" value="${filter.sortField}"/>-->
             
             <g:select name="sortField7" 
                         from="${dbFields}" 
@@ -269,7 +262,7 @@
 
             <label for="allowedValues7">Allowed Values</label>
             <g:textField name="allowedValues7" 
-                        value="${filter.allowedValues}"
+                        value=""
                         id="allowed_vals7"
                         data-toggle="tooltip"
                         data-placement="right"
@@ -293,16 +286,6 @@
         
         <br/>
 
-        <!--<p>Here's a list of the subsets we've already defined!</p>
-        <g:each var="subset" in="${subsets}">
-            <ul>
-                <li>Subset Name: ${subset.name}</li>
-                <li>Sort Field: ${subset.sortField}</li>
-                <li>Allowed Values: ${subset.allowedValues}</li>
-            </ul>
-            <br/>
-        </g:each>-->
-        
         <g:form>
             <div class="row">
             <div class="col-md-4">
