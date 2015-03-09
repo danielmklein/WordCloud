@@ -80,7 +80,10 @@ class DemoController
         System.out.println("name: " + subsetFilter.getName());
         //System.out.println("sort field: " + subsetFilter.getSortField());
 
-        def subset = this.buildDatabaseQuery(subsetFilter);
+        def subsetFilterList = [];
+        subsetFilterList.add(subsetFilter);
+        //def subset = this.buildDatabaseQuery(subsetFilter);
+        def subset = this.buildDatabaseQuery(subsetFilterList);
         System.out.println("subset size is: " + subset.size());
 
 
@@ -108,7 +111,7 @@ class DemoController
         [terms:terms]
     }
 
-    private def buildDatabaseQuery(Filter filter)
+    /*private def buildDatabaseQuery(Filter filter)
     {
         // TODO: check sort field, build query like
         // select opinions from table where [sortField] like "%blah%" or [sortField] like "%foo%" or ....
@@ -154,7 +157,7 @@ class DemoController
         return SCOpinionDomain.findAll(query);
 
 
-    }
+    }*/
 
     private def buildDatabaseQuery(List<Filter> filters)
     {

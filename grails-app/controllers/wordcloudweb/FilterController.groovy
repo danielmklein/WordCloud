@@ -50,7 +50,7 @@ class FilterController {
             curSortField = params."sortField${i}";
             curAllowedVals = params."allowedValues${i}";
 
-            if (curSortField && (curAllowedVals != null))
+            if (curSortField && (curAllowedVals != null) && (curAllowedVals != ""))
             {
                 System.out.println("filter level " + i + " has: ");
                 System.out.println("sortfield: " + curSortField);

@@ -17,6 +17,7 @@
         <!--<link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">-->
         <link rel="stylesheet" href="${resource(dir: 'css/bootstrap', file: 'bootstrap.min.css')}" type="text/css">
         <link rel="stylesheet" href="${resource(dir: 'css/normalize', file: 'normalize.css')}" type="text/css">
+        <link rel="stylesheet" href="${resource(dir: 'css', file: 'carousel.css')}" type="text/css">
         <!--<script src="js/jquery/jquery-1.11.1.min.js"></script>-->
         <g:javascript src="jquery/jquery-1.11.1.min.js" />
         <!--<script src="js/bootstrap/bootstrap.min.js"></script>-->
@@ -27,9 +28,10 @@
 
     <body role="document">
 
+        <div class="navbar-wrapper">
+        <div class="container">
         <!-- Fixed navbar -->
         <nav class="navbar navbar-inverse navbar-fixed-top">
-          <div class="container">
             <div class="navbar-header">
               <a class="navbar-brand" href="#">Supreme Court Word Clouds</a>
             </div>
@@ -39,22 +41,73 @@
                     <li><a href="filter">Create A Cloud</a></li>
                 </ul>
             </div><!--/.nav-collapse -->
-          </div>
         </nav>
+        </div>
+        </div>
 
-        <div class="jumbotron">
+
+        
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
+
+        <!-- START THE FEATURETTES -->
+        <div class="jumbotron">
+    <div class="container marketing">
+      <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-7">
+          <h2 class="featurette-heading">Welcome! <span class="text-muted">What's This?</span></h2>
+          <p class="lead">This application allows users to construct word clouds from Supreme Court opinions.  These word clouds depict words that occur relatively frequently in a chosen subset of opinions compared to their frequency in a larger set of opinions. The smaller set, from which the words in the word cloud will be drawn, is called the subset. The larger set, which provides the background distribution, is called the corpus.</p>
+        </div>
+        <div class="col-md-5">
+          <!--<img class="featurette-image img-responsive" data-src="holder.js/500x500/auto" alt="Generic placeholder image">-->
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-5">
+          <!--<img class="featurette-image img-responsive" data-src="holder.js/500x500/auto" alt="Generic placeholder image">-->
+        </div>
+        <div class="col-md-7">
+          <h2 class="featurette-heading">How About an Example? <span class="text-muted"></span></h2>
+          <p class="lead">For example, if you want to see the terms used particularly often in the 1960s compared to all opinions since 1925, you would choose the years 1960 through 1969 for the subset, and all cases for the corpus.</p>
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-7">
+          <h2 class="featurette-heading">Perhaps Another Example<span class="text-muted"></span></h2>
+          <p class="lead">Another example: if you want to see the words that Justice Scalia uses, compared to the words other justices on the Court at the same time use, you would choose Justice Scalia for the subset and the years 1986 to the present (i.e. the period during which Scalia has been on the Court) for the corpus.</p>
+        </div>
+        <div class="col-md-5">
+          <!--<img class="featurette-image img-responsive" data-src="holder.js/500x500/auto" alt="Generic placeholder image">-->
+        </div>
+      </div>
+
+      <hr class="featurette-divider">
+
+      <!-- /END THE FEATURETTES -->
+
+
+
+
+    </div><!-- /.container -->
+        
         <div class="container">
         </br>
 
         <div id="general_info">
-<p>This application allows users to construct word clouds from Supreme Court opinions.  These word clouds depict words that occur relatively frequently in a chosen subset of opinions compared to their frequency in a larger set of opinions. The smaller set, from which the words in the word cloud will be drawn, is called the subset. The larger set, which provides the background distribution, is called the corpus.</p>
+<p></p>
 
-<p>For example, if you want to see the terms used particularly often in the 1960s compared to all opinions since 1925, you would choose the years 1960 through 1969 for the subset, and all cases for the corpus.</p>
+<p></p>
 
-<p>Another example: if you want to see the words that Justice Scalia uses, compared to the words other justices on the Court at the same time use, you would choose Justice Scalia for the subset and the years 1986 to the present (i.e. the period during which Scalia has been on the Court) for the corpus. </p>
+<p> </p>
 
         </div> <!-- end general info -->
 
@@ -83,7 +136,10 @@
         <a href="filter" class="btn btn-lg btn-success" role="button">Create A Cloud</a>
         </div> <!--end container -->
         </div> <!--end jumbotron --> 
-
+      <!-- FOOTER -->
+      <footer>
+        <p class="pull-right"><a href="#">Back to top</a></p>
+      </footer>
     </body>
 
 </html>
