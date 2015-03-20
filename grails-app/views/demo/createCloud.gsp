@@ -47,7 +47,7 @@
             </tr>
           </thead>
           
-          <tbody>
+          <tbody> 
           <g:each in="${terms}" var="term">
             <tr>
               <td>${term.term}</td>
@@ -69,12 +69,13 @@
 
           <g:each in="${terms}" var="term">
             termList[termList.length] = "${term.term}";
-            termDict["${term.term}"] = ${term.weight};
+            termDict["${term.term}"] = ${term.weight} * 125;
           </g:each>
 
           var fill = d3.scale.category20();
 
           var fontSize = d3.scale.log().range([10,100]);
+          
           for (idx = 0; idx < termList.length; idx++)
           {
             var curTerm = termList[idx];
@@ -84,33 +85,40 @@
 
           d3.layout.cloud()
               .size([800 , 800])
+              .text(function(d) {return d.text;})
               .words(termList.map(function(d) {
-                return {text: d, size: termDict[d] * 125};
+                return {text: d, size: termDict[d]};
               }))
-              .padding(5)
-              .rotate(function() { return ~~(Math.random() * 5) * 30 - 60; })
-              .font("Impact")
+              .padding(10)
+              .rotate(function(d) { return ~~(Math.random() * 3) * 30 - 30; })
+              .font("Verdana")
               .fontSize(function(d) { return d.size; })
               .on("end", draw)
               .start();
+
+//return ~~(Math.random() * 5) * 30 - 60;
 
           function draw(words) {
             d3.select("#wordcloud").append("svg")
                 .attr("width", 800)
                 .attr("height", 800)
               .append("g")
-                .attr("transform", "translate(300,300)")
+                .attr("transform", "translate(400,400)")
               .selectAll("text")
                 .data(words)
               .enter().append("text")
                 .style("font-size", function(d) { return d.size + "px"; })
-                .style("font-family", "Impact")
+                .style("font-family", "Verdana")
                 .style("fill", function(d, i) { return fill(i); })
-                .attr("text-anchor", "right")
+                .attr("text-anchor", "middle")
                 .attr("transform", function(d) {
-                  return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                  return "translate(" + [d.x, d.y] + ") rotate(" + d.rotate + ")";
                 })
-                .text(function(d) { return d.text; });
+                .text(function(d) { return d.text; })
+                .on("click", 
+                    function (d) {
+                      console.log("clicked on: " + d.text);
+                });
           }
         </script>
         </div> <!--end col-md-4-->
