@@ -259,8 +259,8 @@ class FilterController {
             System.out.println("name: " + subsetFilter.getName());
             //System.out.println("sort field: " + subsetFilter.getSortField());
 
-            flash.subsetFilter = subsetFilter;
-            flash.corpusFilters = corpusFilters;
+            session.subsetFilter = subsetFilter;
+            session.corpusFilters = corpusFilters;
             redirect(controller: "Demo",
                     action: "createCloud");
         }

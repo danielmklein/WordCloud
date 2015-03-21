@@ -63,6 +63,10 @@
         </br>
         <div id="wordcloud"></div>
 
+        <div id="term_info">
+
+        </div>
+
         <script> <!-- TODO: move this stuff to its own file
           var termList = [];
           var termDict = new Object();
@@ -96,8 +100,6 @@
               .on("end", draw)
               .start();
 
-//return ~~(Math.random() * 5) * 30 - 60;
-
           function draw(words) {
             d3.select("#wordcloud").append("svg")
                 .attr("width", 800)
@@ -117,9 +119,17 @@
                 .text(function(d) { return d.text; })
                 .on("click", 
                     function (d) {
-                      console.log("clicked on: " + d.text);
+                      populate_term_info(d.text);
                 });
           }
+
+          function populate_term_info(term)
+          {
+            // todo: perform ajax call to controller function to be written
+
+            <g:remoteFunction controller="demo" action="populateTermContexts" update="term_info" params="'term='+term"/>
+          }
+          
         </script>
         </div> <!--end col-md-4-->
 

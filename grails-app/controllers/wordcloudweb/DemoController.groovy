@@ -9,6 +9,8 @@ import core.javacore.*;
 
 class DemoController 
 {
+    int ALL_RECORDS = -1;
+
 
     def index() 
     { 
@@ -36,6 +38,7 @@ class DemoController
         engine.setDomainSubset(subsetOpins);
     
         int numRelevantTerms = WordCloudConstants.NUM_TERMS_IN_CLOUD;
+        
         List<AnalysisEngine.TermMetrics> terms = engine.analyzeDocs(numRelevantTerms);
 
         //for (SCOpinionDomain opin : allDomainOpinions)
@@ -73,7 +76,7 @@ class DemoController
     {
         // turn subset filter into db query, create subset
         //def subsetFilter = params.subsetFilter;
-        def subsetFilter = flash.subsetFilter;
+        def subsetFilter = session.subsetFilter;
 
         System.out.println("in demo controller");
         System.out.println("subset filter has: ");
@@ -83,13 +86,13 @@ class DemoController
         def subsetFilterList = [];
         subsetFilterList.add(subsetFilter);
         //def subset = this.buildDatabaseQuery(subsetFilter);
-        def subset = this.buildDatabaseQuery(subsetFilterList);
+        def subset = this.buildDatabaseQuery(subsetFilterList, ALL_RECORDS, 0);
         System.out.println("subset size is: " + subset.size());
 
 
         // turn corpus filter into db query, create corpus
         //def corpusFilter = params.corpusFilter;
-        def corpusFilters = flash.corpusFilters;
+        def corpusFilters = session.corpusFilters;
         System.out.println("num of filters in corpus: " + corpusFilters.size());
         for (filter in corpusFilters)
         {
@@ -97,7 +100,7 @@ class DemoController
             //System.out.println("corpus filter sort field: " + filter.getSortField());
         }
 
-        def corpus = this.buildDatabaseQuery(corpusFilters);
+        def corpus = this.buildDatabaseQuery(corpusFilters, ALL_RECORDS, 0);
         System.out.println("corpus size is: " + corpus.size());
 
         // pass subset and corpus to analysis engine to get terms
@@ -111,55 +114,70 @@ class DemoController
         [terms:terms]
     }
 
-    /*private def buildDatabaseQuery(Filter filter)
+    def populateTermContexts()
     {
-        // TODO: check sort field, build query like
-        // select opinions from table where [sortField] like "%blah%" or [sortField] like "%foo%" or ....
+        def termForInfo = params.term;
+        System.out.println("populating context for term: " + termForInfo);
+        def subsetFilter = session.subsetFilter;
 
-        // TODO: figure out how to do this without building string??
+        int numRecs = 10;
+        int offset = 0;
 
-        def query = "from SCOpinionDomain as o where ";
-        def firstTerm = true;
-        def curSortField;
-        def curAllowedVals;
+        def subsetFilterList = [];
+        subsetFilterList.add(subsetFilter);
 
-        for (int j = 0; j < filter.getSortFields().size(); j++)
+        def subset = this.buildDatabaseQuery(subsetFilterList, numRecs, offset);
+
+        // TODO: here build the stuff we want to stick in the div
+        // iterate through opinions, looking for instances of term.
+        // for each instance, 
+        // get 5? or so words beforea and 5 or so words after and save that string
+
+        // to build string, let's say we print case title, then all the instances in context of term from that opinion
+        // and repeat
+
+        def htmlString = "";
+
+        for (opinion in subset)
         {
-            curSortField = filter.getSortFields().get(j);
-            curAllowedVals = filter.getAllowedValueLists().get(j);
-            query += "(";
+            def curDocTextList = Arrays.asList(opinion.getText().split("\\s+"));
 
-            for (value in curAllowedVals)
+            htmlString += "<strong>" + opinion.caseTitle + "</strong>\n";
+
+            for (int i = 0; i < curDocTextList.size(); i++)
             {
-                if (firstTerm)
-                {
-                    query += "upper(o." + curSortField + ") like upper('%" + value + "%') ";
-                    firstTerm = false;
-                } else
-                {
-                    query += "or upper(o." + curSortField + ") like upper('%" + value + "%') ";
+                def curTerm = curDocTextList.get(i);
+                System.out.println("cur term is: " + curTerm);
+                
+                def spacePadCurTerm = " " + curTerm; // wow this is hacky... we can do this with regex i think
+                def spacePadInfoTerm = " " + termForInfo;
+
+                if (spacePadCurTerm.contains(spacePadInfoTerm.toLowerCase()))
+                {  
+                    System.out.println("opinion term " + curTerm + " contains term we want");
+                    def startIdx = (i - 5 >= 0) ? (i - 5) : 0;
+                    def endIdx = (i + 5 < curDocTextList.size()) ? (i + 5) : (curDocTextList.size() - 1);
+
+                    def contextString = "<p>";
+                    for (int j = startIdx; j <= endIdx; j++)
+                    {
+                        contextString += curDocTextList.get(j) + " ";
+                    }
+
+                    htmlString += contextString + "</p>\n"
                 }
             }
-
-            query += ")";
-
-            if (j != filter.getSortFields().size() - 1)
-            {
-                query += " and ";
-            }
-            firstTerm = true;
         }
 
-
-        System.out.println("Executing query: ");
-        System.out.println(query);
-
-        return SCOpinionDomain.findAll(query);
+        System.out.println("htmlString is " + htmlString);
 
 
-    }*/
 
-    private def buildDatabaseQuery(List<Filter> filters)
+
+        render "<p>the term clicked was " + params.term + ", and the name of the subset filter is " + subsetFilter.getName() + "</p>\n" + htmlString;
+    }
+
+    private def buildDatabaseQuery(List<Filter> filters, int numRecs, int recOffset)
     {
         // TODO: check sort field, build query like
         // select opinions from table where [sortField] like "%blah%" or [sortField] like "%foo%" or ....
@@ -172,7 +190,6 @@ class DemoController
         def curAllowedVals;
         def curFilter;
 
-        //for (filter in filters)
         for (int i = 0; i < filters.size(); i++)
         {
             curFilter = filters.get(i);
@@ -227,8 +244,17 @@ class DemoController
 
         System.out.println("Executing query: ");
         System.out.println(query);
+        System.out.println("with max num records " + numRecs);
+        System.out.println("and offset of " + recOffset);
 
-        return SCOpinionDomain.findAll(query);
+        if (numRecs == ALL_RECORDS)
+        {
+            return SCOpinionDomain.findAll(query, [offset: recOffset]);    
+        } else
+        {
+            return SCOpinionDomain.findAll(query, [max: numRecs, offset: recOffset]);
+        }
+        
 
 
     }
