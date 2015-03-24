@@ -14,6 +14,7 @@
 
         <link rel="stylesheet" href="${resource(dir: 'css/bootstrap', file: 'bootstrap.min.css')}" type="text/css">
         <g:javascript src="jquery/jquery-1.11.1.min.js" />
+        <g:javascript src="bootstrap/bootstrap.min.js" />
         <!--<script src="../js/jquery/jquery-1.11.1.min.js"></script>-->
 
         <g:javascript src="d3/d3.js" />
@@ -26,6 +27,12 @@
         <!--<link rel="stylesheet" href="../../web-app/css/normalize/normalize.css">-->
         <!--<link rel="stylesheet" href="css/main.css">-->
         <!--<script src="js/vendor/modernizr-2.6.2.min.js"></script>-->
+        <style>
+          .modal-body {
+              max-height: calc(100vh - 210px);
+              overflow-y: auto;
+          }
+        </style>
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -63,9 +70,24 @@
         </br>
         <div id="wordcloud"></div>
 
-        <div id="term_info">
+        <div class="modal fade" id="term_info_modal">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal_title"></h4>
+        </div> <!-- end modal-header -->
 
-        </div>
+        <div class="modal-body" id="term_info">
+          <!-- populate_term_info() will put stuff here -->
+        </div> <!-- end modal-body -->
+
+        <div class="modal-footer" id="close_modal">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        </div> <!-- end modal-footer -->
+
+        </div> <!-- end modal-content -->
+        </div> <!-- end modal-dialog --> 
+        </div> <!-- end modal fade -->
 
         <script> <!-- TODO: move this stuff to its own file
           var termList = [];
@@ -119,16 +141,30 @@
                 .text(function(d) { return d.text; })
                 .on("click", 
                     function (d) {
-                      populate_term_info(d.text);
-                });
+                      populate_term_info(d.text, 
+                                        function() {
+                                          $("#modal_title").text("Context for '" + d.text + "'");
+                                          $("#term_info_modal").modal("show");
+                                        })
+                    }
+                );
           }
 
-          function populate_term_info(term)
+          function populate_term_info(term, callback)
           {
             // todo: perform ajax call to controller function to be written
 
-            <g:remoteFunction controller="demo" action="populateTermContexts" update="term_info" params="'term='+term"/>
+            <g:remoteFunction controller="demo" action="populateTermContexts" update="term_info" params="'term='+term" after="callback()"/>
+            //callback();
+            
           }
+
+          $("#term_info_modal").on("hidden.bs.modal", function()
+                                          {
+                                            $("#modal_title").text("");
+                                            $("#term_info").text("Loading...");
+                                          }
+                                  );
           
         </script>
         </div> <!--end col-md-4-->

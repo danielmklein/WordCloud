@@ -142,7 +142,7 @@ class DemoController
         {
             def curDocTextList = Arrays.asList(opinion.getText().split("\\s+"));
 
-            htmlString += "<strong>" + opinion.caseTitle + "</strong>\n";
+            htmlString += "<h3>From '" + opinion.caseTitle + "'...</h3>\n";
 
             for (int i = 0; i < curDocTextList.size(); i++)
             {
@@ -158,13 +158,20 @@ class DemoController
                     def startIdx = (i - 5 >= 0) ? (i - 5) : 0;
                     def endIdx = (i + 5 < curDocTextList.size()) ? (i + 5) : (curDocTextList.size() - 1);
 
-                    def contextString = "<p>";
+                    def contextString = "<p>...'";
                     for (int j = startIdx; j <= endIdx; j++)
                     {
-                        contextString += curDocTextList.get(j) + " ";
+                        if (i == j)
+                        {
+                            contextString += "<strong>" + curDocTextList.get(j) + "</strong> ";
+                        } else
+                        {
+                            contextString += curDocTextList.get(j) + " ";
+                        }
+                        
                     }
 
-                    htmlString += contextString + "</p>\n"
+                    htmlString += contextString + "...</p>\n"
                 }
             }
         }
@@ -174,7 +181,8 @@ class DemoController
 
 
 
-        render "<p>the term clicked was " + params.term + ", and the name of the subset filter is " + subsetFilter.getName() + "</p>\n" + htmlString;
+        //render "<p>the term clicked was " + params.term + ", and the name of the subset filter is " + subsetFilter.getName() + "</p>\n" + htmlString;
+        render htmlString;
     }
 
     private def buildDatabaseQuery(List<Filter> filters, int numRecs, int recOffset)
