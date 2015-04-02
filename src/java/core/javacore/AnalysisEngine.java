@@ -323,7 +323,7 @@ public class AnalysisEngine
      * @param numRelevantTerms
      * @return
      */
-    public List<TermMetrics> /*Map<String, Double>*/ analyzeDocs(int numRelevantTerms)
+    public List<TermMetrics> analyzeDocs(int numRelevantTerms)
     {
         
         List<String> mostFreqTerms = this.getMostFreqTerms(this.corpus, numRelevantTerms);
@@ -334,15 +334,23 @@ public class AnalysisEngine
         List<TermMetrics> rawInfo = this.collectTermInfo(this.subset, relevantTerms,
                                                         WordCloudConstants.NUM_TERMS_IN_CLOUD);
         
-        // TODO: maybe just return rawInfo (list of termmetrics) to client side??
         Map<String, Double> weightedTerms = new HashMap<String, Double>();
         for (TermMetrics tm : rawInfo)
         {
             weightedTerms.put(tm.term, tm.weight);
         }
         
+        Collections.sort(rawInfo, 
+                        new Comparator<TermMetrics>()
+                        {
+                            public int compare(TermMetrics a, TermMetrics b)
+                            {
+                                return Double.compare(a.weight, b.weight);
+                            }
+                        });
+        Collections.reverse(rawInfo);
+
         return rawInfo;
-        //return weightedTerms;
     }
     
     /**
@@ -660,13 +668,14 @@ public class AnalysisEngine
         }
     }
     
-    protected /*private*/ class TermMetrics 
+    protected class TermMetrics
     {
         protected String term;
         protected Double tfidf;
         protected Double weight;
         protected Double docFrequency;
         protected Double termFrequency;
+
     }
           
 }

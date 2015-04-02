@@ -51,6 +51,8 @@
             <tr>
               <th>Term</th>
               <th>Weight</th>
+              <th>Term Frequency</th>
+              <th>Document Frequency</th>
             </tr>
           </thead>
           
@@ -58,7 +60,9 @@
           <g:each in="${terms}" var="term">
             <tr>
               <td>${term.term}</td>
-              <td>(${term.weight})</td>
+              <td>${term.weight}</td>
+              <td>${term.termFrequency}</td>
+              <td>${term.docFrequency}</td>
             </tr>
           </g:each>
           </tbody>
@@ -68,7 +72,7 @@
 
         <div class="col-md-4">
         </br>
-        <div id="wordcloud"></div>
+        <div id="wordcloud"><!--wordcloud svg goes here --></div>
 
         <div class="modal fade" id="term_info_modal">
         <div class="modal-dialog modal-lg">
@@ -77,8 +81,14 @@
           <h4 class="modal-title" id="modal_title"></h4>
         </div> <!-- end modal-header -->
 
-        <div class="modal-body" id="term_info">
-          <!-- populate_term_info() will put stuff here -->
+        <div class="modal-body" 
+          <div id="term_stats">
+            <!-- metrics for term go here -->
+          </div>
+
+          <div id="term_info">
+            <!-- populate_term_info() will put stuff here -->
+          </div>
         </div> <!-- end modal-body -->
 
         <div class="modal-footer" id="close_modal">
@@ -89,11 +99,14 @@
         </div> <!-- end modal-dialog --> 
         </div> <!-- end modal fade -->
 
-        <script> <!-- TODO: move this stuff to its own file
+        <script>
           var termList = [];
           var termDict = new Object();
 
+          // todo: create Object() for each term, put metrics into that,
+          // store those in termDict, instead of just weight.
           <g:each in="${terms}" var="term">
+
             termList[termList.length] = "${term.term}";
             termDict["${term.term}"] = ${term.weight} * 125;
           </g:each>
@@ -144,6 +157,7 @@
                       populate_term_info(d.text, 
                                         function() {
                                           $("#modal_title").text("Context for '" + d.text + "'");
+                                          $("#term_stats").html("TODO: metrics should go here.");
                                           $("#term_info_modal").modal("show");
                                         })
                     }
@@ -162,6 +176,7 @@
           $("#term_info_modal").on("hidden.bs.modal", function()
                                           {
                                             $("#modal_title").text("");
+                                            $("#term_stats").text("");
                                             $("#term_info").text("Loading...");
                                           }
                                   );
