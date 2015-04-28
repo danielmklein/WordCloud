@@ -37,12 +37,12 @@ class BootStrap
         String opinionDirPath; 
         String osName = System.getProperty("os.name");
         System.out.println("os: " + osName);
-        if (osName.toLowerCase().contains("nux"))
-        {
-            opinionDirPath = WordCloudConstants.OPINION_DIR_PATH_DEPLOY;
-        } else
+        if (osName.toLowerCase().contains("win"))
         {
             opinionDirPath = WordCloudConstants.OPINION_DIR_PATH_LOCAL;
+        } else
+        {
+            opinionDirPath = WordCloudConstants.OPINION_DIR_PATH_DEPLOY;
         }
         
         System.out.println("Converting files in " + opinionDirPath + " to Document objects");
