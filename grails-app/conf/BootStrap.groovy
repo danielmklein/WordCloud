@@ -33,8 +33,17 @@ class BootStrap
 
     private /*List<Document>*/ void loadOpinions() throws Exception, FileNotFoundException, ClassNotFoundException, IOException
     {
-        String opinionDirPath = WordCloudConstants.OPINION_DIR_PATH;
-        //String serializeDirPath = WordCloudConstants.SERIALIZE_DIR_PATH;
+        // quick, incredibly dirty way to check which machine we are running on
+        String opinionDirPath; 
+        String osName = System.getProperty("os.name");
+        System.out.println("os: " + osName);
+        if (osName.toLowerCase().contains("nux"))
+        {
+            opinionDirPath = WordCloudConstants.OPINION_DIR_PATH_DEPLOY;
+        } else
+        {
+            opinionDirPath = WordCloudConstants.OPINION_DIR_PATH_LOCAL;
+        }
         
         System.out.println("Converting files in " + opinionDirPath + " to Document objects");
         System.out.println("And saving them to the database.");
@@ -110,11 +119,11 @@ class BootStrap
                 domainOpin.opinionType = newOpin.getMetadata().getField(WordCloudConstants.META_OPIN_TYPE).toUpperCase();
 
                 // test output
-                System.out.println("new opinion has title: " + domainOpin.caseTitle);
-                System.out.println("new opinion has author: " + domainOpin.opinionAuthor);
-                System.out.println("new opinion has full citation: " + domainOpin.fullCitation);
-                System.out.println("new opinion has case num: " + domainOpin.caseNumber);
-                System.out.println("new opinion has type: " + domainOpin.opinionType);
+                //System.out.println("new opinion has title: " + domainOpin.caseTitle);
+                //System.out.println("new opinion has author: " + domainOpin.opinionAuthor);
+                //System.out.println("new opinion has full citation: " + domainOpin.fullCitation);
+                //System.out.println("new opinion has case num: " + domainOpin.caseNumber);
+                //System.out.println("new opinion has type: " + domainOpin.opinionType);
                 //domainOpin.save(failOnError:true, flush:true);
                 session.insert(domainOpin);
 
@@ -133,7 +142,7 @@ class BootStrap
                 continue;
             }
             
-            if (numConverted % 1000 == 0)
+            if (numConverted % 250 == 0)
             {
                 tx.commit();
                 System.out.println(numConverted + " opinions converted.");
@@ -142,7 +151,7 @@ class BootStrap
             }
 
             // TODO: REMOVE ME WHEN WE WANT TO DO ALL OPINIONS
-            if (numConverted > 1500)
+            if (numConverted > 2000)
             {
                 break;
             }

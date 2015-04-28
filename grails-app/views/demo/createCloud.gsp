@@ -157,7 +157,7 @@
                       populate_term_info(d.text, 
                                         function() {
                                           $("#modal_title").text("Context for '" + d.text + "'");
-                                          $("#term_stats").html("TODO: metrics should go here.");
+                                          //$("#term_stats").html("TODO: metrics should go here.");
                                           $("#term_info_modal").modal("show");
                                         })
                     }

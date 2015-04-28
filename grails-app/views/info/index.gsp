@@ -129,9 +129,6 @@
 
         </div> <!-- end tfidf info-->
 
-        <p> test </p>
-
-
 
         <a href="filter" class="btn btn-lg btn-success" role="button">Create A Cloud</a>
         </div> <!--end container -->

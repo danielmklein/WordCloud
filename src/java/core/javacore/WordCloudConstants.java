@@ -12,12 +12,11 @@ import java.util.List;
  */
 public class WordCloudConstants
 {
-    // where serialize Document objects once they're created; not really used by web app
-    public static final String SERIALIZE_DIR_PATH = "C:\\Users\\Daniel\\Dropbox\\Class_Files\\CBH_301\\Word_Cloud\\supreme_court_opinions\\test_output\\serialized";
     
     // where the opinion text files live
-    public static final String OPINION_DIR_PATH = "C:\\Users\\Daniel\\Dropbox\\Class_Files\\CBH_301\\Word_Cloud\\supreme_court_opinions\\test_output\\opinions";
-
+    public static final String OPINION_DIR_PATH_LOCAL = "C:\\Users\\Daniel\\Dropbox\\Class_Files\\CBH_301\\Word_Cloud\\supreme_court_opinions\\test_output\\opinions";
+    public static final String OPINION_DIR_PATH_DEPLOY = "/srv/tomcat/opinion_files";
+    
     // names of metadata fields
     public static final String META_CASE_TITLE = "Case Title";
     public static final String META_CASE_NUM = "Case Number";
