@@ -31,7 +31,7 @@ public class OpinionSerializer
      */
     private static void packOpinions() throws IOException
     {
-        String opinionDirPath = WordCloudConstants.OPINION_DIR_PATH;
+        String opinionDirPath = WordCloudConstants.OPINION_DIR_PATH_DEPLOY;
         String serializeDirPath = WordCloudConstants.SERIALIZE_DIR_PATH;
         
         System.out.println("Converting files in " + opinionDirPath + " to Document objects");

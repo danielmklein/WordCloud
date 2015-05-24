@@ -16,6 +16,7 @@ public class WordCloudConstants
     // where the opinion text files live
     public static final String OPINION_DIR_PATH_LOCAL = "C:\\Users\\Daniel\\Dropbox\\Class_Files\\CBH_301\\Word_Cloud\\supreme_court_opinions\\test_output\\opinions";
     public static final String OPINION_DIR_PATH_DEPLOY = "/srv/tomcat/opinion_files";
+    public static final String SERIALIZE_DIR_PATH = "";
     
     // names of metadata fields
     public static final String META_CASE_TITLE = "Case Title";

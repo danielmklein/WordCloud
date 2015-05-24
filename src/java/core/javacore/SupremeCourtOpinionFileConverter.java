@@ -210,7 +210,8 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
             }
         }
         author = this.getAuthor(this.inputPath);
-        bodyText = String.join("\n", opinionLines);
+        //bodyText = String.join("\n", opinionLines);
+        bodyText = this.joinStrings(opinionLines, "\n"); // changed for java 7 compatibility.
 
         // Create new metadata object to go in the new opinion
         Metadata newMeta = new SupremeCourtOpinionMetadata();
@@ -232,6 +233,18 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
         this.converted.setOutputFilename(this.outputPath);
 
         return converted;
+    }
+
+    private String joinStrings(List<String> strings, String separator)
+    {
+        StringBuilder sb = new StringBuilder();
+        String sep = "";
+        for (String s: strings) {
+            sb.append(sep).append(s);
+            sep = separator;
+        }
+
+        return sb.toString();   
     }
 
     public String getAuthor(String filePath)
