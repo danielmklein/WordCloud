@@ -30,12 +30,27 @@ environments {
     }
     production {
         dataSource {
-            dbDir = "/srv/tomcat/db/opinions"
+            //dbDir = "/srv/tomcat/db/opinions"
 
-            dbCreate = "create-drop"
+            //dbCreate = "create-drop"
+
+            uname = "wcw"
+            pword = "wordcloudweb"
+            endpoint = "scotus-wordcloud.c8aosulxgyln.us-east-1.rds.amazonaws.com"
+            port_number = "3306"
+
+            username = {uname}
+            password = {pword}
+
+            dbCreate = "update"
             //url = "jdbc:h2:prodDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE"
-            url = "jdbc:h2:file:${dbDir};MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE"
+            //url = "jdbc:h2:file:${dbDir};MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE"
+            url = "jdbc:mysql://{endpoint}:{port_number}/ebdb?user={uname}&password={pword}"
             
+            driverClassName = "com.mysql.jdbc.Driver"
+            dialect = org.hibernate.dialect.MySQL5InnoDBDialect
+            pooled = true
+
             properties {
                // See http://grails.org/doc/latest/guide/conf.html#dataSource for documentation
                jmxEnabled = true
@@ -45,14 +60,15 @@ environments {
                maxIdle = 25
                maxWait = 10000
                maxAge = 10 * 60000
-               timeBetweenEvictionRunsMillis = 5000
-               minEvictableIdleTimeMillis = 60000
+               timeBetweenEvictionRunsMillis = 180000
+               numTestsPerEvictionRun = 3
+               minEvictableIdleTimeMillis = 180000
                validationQuery = "SELECT 1"
                validationQueryTimeout = 3
                validationInterval = 15000
                testOnBorrow = true
                testWhileIdle = true
-               testOnReturn = false
+               testOnReturn = true
                jdbcInterceptors = "ConnectionState"
                defaultTransactionIsolation = java.sql.Connection.TRANSACTION_READ_COMMITTED
             }

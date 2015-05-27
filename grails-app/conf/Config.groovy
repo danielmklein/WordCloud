@@ -91,7 +91,8 @@ environments {
     }
     production {
         grails.logging.jul.usebridge = false
-        // TODO: grails.serverURL = "http://www.changeme.com"
+        // todo: change me when this gets settled.
+        grails.serverURL = "http://ec2-52-7-217-96.compute-1.amazonaws.com:8080/"
     }
 }
 
