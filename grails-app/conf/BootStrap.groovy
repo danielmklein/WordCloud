@@ -13,6 +13,20 @@ import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
 
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.Bucket;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ListObjectsRequest;
+import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
+
 import wordcloudweb.SCOpinionDomain;
 
 import core.javacore.*;
@@ -24,7 +38,7 @@ class BootStrap
 
     def init = 
     { servletContext ->
-    	this.loadOpinions();
+        this.loadOpinions();
     }
 
     def destroy =
@@ -35,7 +49,7 @@ class BootStrap
     {
         // quick, incredibly dirty way to check which machine we are running on
         String opinionDirPath; 
-        String osName = System.getProperty("os.name");
+        /*String osName = System.getProperty("os.name");
         System.out.println("os: " + osName);
         if (osName.toLowerCase().contains("win"))
         {
@@ -44,21 +58,34 @@ class BootStrap
         {
             opinionDirPath = WordCloudConstants.OPINION_DIR_PATH_DEPLOY;
         }
-        
-        System.out.println("Converting files in " + opinionDirPath + " to Document objects");
-        System.out.println("And saving them to the database.");
+        */
+        //System.out.println("Converting files in " + opinionDirPath + " to Document objects");
+        String bucketName = "scotus-opinions";
 
-        File opinionDir = new File(opinionDirPath);
-        List<File> opinionFiles = Arrays.asList(opinionDir.listFiles());
+        System.out.println("Converting files in " + bucketName + " bucket to Document objects");
+        System.out.println("And saving them to the database.");
+        ObjectListing objectListing = s3.listObjects(new ListObjectsRequest()
+                .withBucketName(bucketName)
+                .withSuffix(".txt"));
+        for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
+            System.out.println(" - " + objectSummary.getKey() + "  " +
+                    "(size = " + objectSummary.getSize() + ")");
+        }
+        System.out.println();
+        //File opinionDir = new File(opinionDirPath);
+        //List<File> opinionFiles = Arrays.asList(opinionDir.listFiles());
         
-        long numOpinions = opinionFiles.size();
-        long numConverted = 0;
-        long numFailed = 0;
-        Pattern txtFileRegex = Pattern.compile("\\.txt\$");
+        //long numOpinions = opinionFiles.size();
+        //long numConverted = 0;
+        //long numFailed = 0;
+        //Pattern txtFileRegex = Pattern.compile("\\.txt\$");
         
-        System.out.println(numOpinions + " opinion files found.");
+        //System.out.println(numOpinions + " opinion files found.");
         
-        String inputFullPath;
+        // list objects in my bucket
+        // for each one, download it and process it as before.
+
+        /*String inputFullPath;
         String serializeFullPath;
         boolean isTextFile;
         SupremeCourtOpinionFileConverter converter = new SupremeCourtOpinionFileConverter(null, "BOGUS_SERIALIZE_PATH.txt");
@@ -66,11 +93,11 @@ class BootStrap
         SCOpinionDomain domainOpin;// = new SCOpinionDomain(null, null);
         
         StatelessSession session = sessionFactory.openStatelessSession();
-        Transaction tx = session.beginTransaction();
+        Transaction tx = session.beginTransaction();*/
 
-        File opinionFile;
+        //File opinionFile;
         //for (File opinionFile : opinionFiles)
-        for (int i = 0; i < opinionFiles.size(); i+=15) // revert this to prev line for real app
+        /*for (int i = 0; i < opinionFiles.size(); i+=15) // revert this to prev line for real app
         {
             opinionFile = opinionFiles.get(i); // remove for real version
 
@@ -100,7 +127,7 @@ class BootStrap
                 // instead of creating new object
                 //domainOpin.setMetadata(newOpin.getMetadata().getAllFields());
 
-                /*SCOpinionDomain*/ domainOpin = new SCOpinionDomain(newOpin.getText(), newOpin.getOutputFilename());
+                domainOpin = new SCOpinionDomain(newOpin.getText(), newOpin.getOutputFilename());
                 
                 domainOpin.docText = newOpin.getText();
                 domainOpin.outputFilename = newOpin.getOutputFilename();
@@ -163,7 +190,7 @@ class BootStrap
         
         System.out.println("Opinion conversion and serialization complete.");
         System.out.println(numConverted + " opinions converted.");
-        System.out.println(numFailed + " opinions failed conversion.");
+        System.out.println(numFailed + " opinions failed conversion.");*/
     }
 
 
