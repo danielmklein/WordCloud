@@ -13,19 +13,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.Bucket;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.ListObjectsRequest;
-import com.amazonaws.services.s3.model.ObjectListing;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.services.s3.model.*
 
 import wordcloudweb.SCOpinionDomain;
 
@@ -35,6 +23,7 @@ class BootStrap
 {
 
     def sessionFactory;
+    def amazonWebService
 
     def init = 
     { servletContext ->
@@ -64,12 +53,13 @@ class BootStrap
 
         System.out.println("Converting files in " + bucketName + " bucket to Document objects");
         System.out.println("And saving them to the database.");
-        ObjectListing objectListing = s3.listObjects(new ListObjectsRequest()
-                .withBucketName(bucketName)
-                .withSuffix(".txt"));
+        ObjectListing objectListing = amazonWebService.s3.listObjects(bucketName);
         for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
-            System.out.println(" - " + objectSummary.getKey() + "  " +
-                    "(size = " + objectSummary.getSize() + ")");
+            if (objectSummary.getKey().contains(".txt"))
+            {
+                System.out.println(" - " + objectSummary.getKey() + "  " +
+                        "(size = " + objectSummary.getSize() + ")");
+            }
         }
         System.out.println();
         //File opinionDir = new File(opinionDirPath);
