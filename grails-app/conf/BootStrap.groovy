@@ -53,7 +53,14 @@ class BootStrap
 
         System.out.println("Converting files in " + bucketName + " bucket to Document objects");
         System.out.println("And saving them to the database.");
-        ObjectListing objectListing = amazonWebService.s3.listObjects(bucketName);
+
+        ListObjectsRequest listObjectsRequest = new ListObjectsRequest()
+                                                .withBucketName(bucketName);
+                                                
+        ObjectListing objectListing;// = amazonWebService.s3
+                                    //.listObjects(bucketName).withSuffix("txt");
+
+        objectListing = amazonWebService.s3.listObjects(listObjectsRequest);
         for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
             if (objectSummary.getKey().contains(".txt"))
             {
@@ -61,6 +68,21 @@ class BootStrap
                         "(size = " + objectSummary.getSize() + ")");
             }
         }
+        listObjectsRequest.setMarker(objectListing.getNextMarker());
+
+        while (objectListing.isTruncated())
+        {
+            objectListing = amazonWebService.s3.listObjects(listObjectsRequest);
+            for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
+                if (objectSummary.getKey().contains(".txt"))
+                {
+                    System.out.println(" - " + objectSummary.getKey() + "  " +
+                            "(size = " + objectSummary.getSize() + ")");
+                }
+            }
+            listObjectsRequest.setMarker(objectListing.getNextMarker());
+        } 
+
         System.out.println();
         //File opinionDir = new File(opinionDirPath);
         //List<File> opinionFiles = Arrays.asList(opinionDir.listFiles());
