@@ -41,30 +41,93 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
         this.inputPath = inputPath;
     }
 
-    @Override
-    public SupremeCourtOpinion convertFile() throws IOException
+    private isTextFile(String path)
     {
-
-        //SupremeCourtOpinion converted = null;
-
-        // Check to see if the input file exists.
-        File inputFile = new File(this.inputPath);
-        if (!inputFile.isFile())
-        {
-            System.out.println("couldn't find the file!");
-            throw new IOException("The path " + this.inputPath
-                            + " does not exist!");
-        }
-
         Pattern txtFileRegex = Pattern.compile("\\.txt$");
-        Matcher match = txtFileRegex.matcher(this.inputPath);
-        if (!match.find())
+        Matcher match = txtFileRegex.matcher(path);
+
+        return match.find();
+    }
+
+    private isExistingFile(String path)
+    {
+        File inputFile = new File(path);
+        return inputFile.isFile();
+    }
+
+    public SupremeCourtOpinion convertFromInputStream(InputStream stream, String path)
+    {
+        if (!this.isTextFile(path))
         {
-            throw new IOException("The file " + this.inputPath
+            throw new IOException("The file " + path
                             + " is not a text file and "
                             + "thus cannot be converted.");
         }
 
+        try 
+        {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            return this.convertFromBufferedReader(reader, path);
+        } catch (Exception e)
+        {
+            throw new Exception(e);
+        }
+    }
+
+    
+    @Override
+    public SupremeCourtOpinion convertFromPath(String path) throws IOException
+    {
+
+        // Check to see if the input file exists.
+        if (!this.isExistingFile)
+        {
+            System.out.println("couldn't find the file!");
+            throw new IOException("The path " + path
+                            + " does not exist!");
+        }
+
+
+        if (!this.isTextFile(path))
+        {
+            throw new IOException("The file " + path
+                            + " is not a text file and "
+                            + "thus cannot be converted.");
+        }
+
+
+        File file = new File(path);
+        BufferedReader reader = null;
+
+        try
+        {
+            reader = new BufferedReader(new FileReader(file));
+            return this.convertFromBufferedReader(reader);
+        } catch (FileNotFoundException e)
+        {
+            // TODO: handle these more gracefully?
+            e.printStackTrace();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        } finally
+        {
+            try
+            {
+                if (reader != null)
+                {
+                    reader.close();
+                }
+            } catch (IOException e)
+            {
+                // so what?
+            }
+        }
+
+    }
+
+    private SupremeCourtOpinion convertFromBufferedReader(BufferedReader reader, String path)
+    {
         String title = "";
         String caseNum = "";
         String usCite = "";
@@ -104,112 +167,88 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
         boolean foundBreak = false;
         List<String> opinionLines = new ArrayList<String>();
 
-        File file = new File(this.inputPath);
-        BufferedReader reader = null;
-
-        try
+        String line = null;
+        // Parse out necessary fields
+        while ((line = reader.readLine()) != null)
         {
-            reader = new BufferedReader(new FileReader(file));
-            String line = null;
-            // Parse out necessary fields
-            while ((line = reader.readLine()) != null)
+            //System.out.println("next line is: " + line);
+            // regex stuff goes here
+
+            if (foundBreak) // we have reached the opinion body
             {
-                //System.out.println("next line is: " + line);
-                // regex stuff goes here
-
-                if (foundBreak) // we have reached the opinion body
-                {
-                    opinionLines.add(line.trim());
-                    continue;
-                }
-
-                titleMatch = this.getTitledItem(line, titleRegex);
-                if (!titleMatch.equals(""))
-                {
-                    title = titleMatch;
-                }
-
-                caseNumMatch = this.getTitledItem(line, caseNumRegex);
-                if (!caseNumMatch.equals(""))
-                {
-                    caseNum = caseNumMatch;
-                }
-
-                usCiteMatch = this.getTitledItem(line, usCiteRegex);
-                if (!usCiteMatch.equals(""))
-                {
-                    usCite = usCiteMatch;
-                }
-
-                scCiteMatch = this.getTitledItem(line, scCiteRegex);
-                if (!scCiteMatch.equals(""))
-                {
-                    scCite = scCiteMatch;
-                }
-
-                lawyersEdMatch = this.getTitledItem(line, lawyersEdRegex);
-                if (!lawyersEdMatch.equals(""))
-                {
-                    lawyersEd = lawyersEdMatch;
-                }
-
-                lexisCiteMatch = this.getTitledItem(line, lexisCiteRegex);
-                if (!lexisCiteMatch.equals(""))
-                {
-                    lexisCite = lexisCiteMatch;
-                }
-
-                fullCiteMatch = this.getTitledItem(line, fullCiteRegex);
-                if (!fullCiteMatch.equals(""))
-                {
-                    fullCite = fullCiteMatch;
-                }
-
-                dateMatch = this.getTitledItem(line, datelineRegex);
-                if (!dateMatch.equals(""))
-                {
-                    dates = this.splitDates(dateMatch);
-                }
-
-                dispositionMatch = this.getTitledItem(line, dispositionRegex);
-                if (!dispositionMatch.equals(""))
-                {
-                    disposition = dispositionMatch;
-                }
-
-                opinTypeMatch = this.getTitledItem(line, opinTypeRegex);
-                if (!opinTypeMatch.equals(""))
-                {
-                    opinType = opinTypeMatch;
-                }
-
-                if (breakRegex.matcher(line).find())
-                {
-                    foundBreak = true;
-                }
-
+                opinionLines.add(line.trim());
+                continue;
             }
-        } catch (FileNotFoundException e)
-        {
-            // TODO: handle these more gracefully?
-            e.printStackTrace();
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        } finally
-        {
-            try
+
+            titleMatch = this.getTitledItem(line, titleRegex);
+            if (!titleMatch.equals(""))
             {
-                if (reader != null)
-                {
-                    reader.close();
-                }
-            } catch (IOException e)
-            {
-                // so what?
+                title = titleMatch;
             }
+
+            caseNumMatch = this.getTitledItem(line, caseNumRegex);
+            if (!caseNumMatch.equals(""))
+            {
+                caseNum = caseNumMatch;
+            }
+
+            usCiteMatch = this.getTitledItem(line, usCiteRegex);
+            if (!usCiteMatch.equals(""))
+            {
+                usCite = usCiteMatch;
+            }
+
+            scCiteMatch = this.getTitledItem(line, scCiteRegex);
+            if (!scCiteMatch.equals(""))
+            {
+                scCite = scCiteMatch;
+            }
+
+            lawyersEdMatch = this.getTitledItem(line, lawyersEdRegex);
+            if (!lawyersEdMatch.equals(""))
+            {
+                lawyersEd = lawyersEdMatch;
+            }
+
+            lexisCiteMatch = this.getTitledItem(line, lexisCiteRegex);
+            if (!lexisCiteMatch.equals(""))
+            {
+                lexisCite = lexisCiteMatch;
+            }
+
+            fullCiteMatch = this.getTitledItem(line, fullCiteRegex);
+            if (!fullCiteMatch.equals(""))
+            {
+                fullCite = fullCiteMatch;
+            }
+
+            dateMatch = this.getTitledItem(line, datelineRegex);
+            if (!dateMatch.equals(""))
+            {
+                dates = this.splitDates(dateMatch);
+            }
+
+            dispositionMatch = this.getTitledItem(line, dispositionRegex);
+            if (!dispositionMatch.equals(""))
+            {
+                disposition = dispositionMatch;
+            }
+
+            opinTypeMatch = this.getTitledItem(line, opinTypeRegex);
+            if (!opinTypeMatch.equals(""))
+            {
+                opinType = opinTypeMatch;
+            }
+
+            if (breakRegex.matcher(line).find())
+            {
+                foundBreak = true;
+            }
+
         }
-        author = this.getAuthor(this.inputPath);
+
+        SupremeCourtOpinion converted = new SupremeCourtOpinion(null, null, null);
+        author = this.getAuthor(path);
         //bodyText = String.join("\n", opinionLines);
         bodyText = this.joinStrings(opinionLines, "\n"); // changed for java 7 compatibility.
 
@@ -228,11 +267,12 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
         newMeta.setField(WordCloudConstants.META_OPIN_TYPE, opinType);
 
         //converted = new SupremeCourtOpinion(newMeta, bodyText, this.outputPath);
-        this.converted.setText(bodyText);
-        this.converted.setMetadata(newMeta);
-        this.converted.setOutputFilename(this.outputPath);
+        converted.setText(bodyText);
+        converted.setMetadata(newMeta);
+        converted.setOutputFilename(this.outputPath);
 
         return converted;
+
     }
 
     private String joinStrings(List<String> strings, String separator)

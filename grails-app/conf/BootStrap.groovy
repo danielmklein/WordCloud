@@ -34,6 +34,11 @@ class BootStrap
     {
     }
 
+    private SCOpinionDomain convertFile()
+    {
+
+    }
+
     private /*List<Document>*/ void loadOpinions() throws Exception, FileNotFoundException, ClassNotFoundException, IOException
     {
         // quick, incredibly dirty way to check which machine we are running on
@@ -56,7 +61,7 @@ class BootStrap
 
         ListObjectsRequest listObjectsRequest = new ListObjectsRequest()
                                                 .withBucketName(bucketName);
-                                                
+
         ObjectListing objectListing;// = amazonWebService.s3
                                     //.listObjects(bucketName).withSuffix("txt");
 
@@ -78,6 +83,9 @@ class BootStrap
                 {
                     System.out.println(" - " + objectSummary.getKey() + "  " +
                             "(size = " + objectSummary.getSize() + ")");
+                    // TODO: figure out how to get object itself, then do:
+                    //object.getObjectContent() => this returns an InputStream,
+                    // which we can pass to SupremeCourtOpinionFileConverter.convertFromInputStream
                 }
             }
             listObjectsRequest.setMarker(objectListing.getNextMarker());
@@ -97,7 +105,7 @@ class BootStrap
         // list objects in my bucket
         // for each one, download it and process it as before.
 
-        /*String inputFullPath;
+        String inputFullPath;
         String serializeFullPath;
         boolean isTextFile;
         SupremeCourtOpinionFileConverter converter = new SupremeCourtOpinionFileConverter(null, "BOGUS_SERIALIZE_PATH.txt");
@@ -109,7 +117,7 @@ class BootStrap
 
         //File opinionFile;
         //for (File opinionFile : opinionFiles)
-        /*for (int i = 0; i < opinionFiles.size(); i+=15) // revert this to prev line for real app
+        for (int i = 0; i < opinionFiles.size(); i+=15) // revert this to prev line for real app
         {
             opinionFile = opinionFiles.get(i); // remove for real version
 
@@ -202,7 +210,7 @@ class BootStrap
         
         System.out.println("Opinion conversion and serialization complete.");
         System.out.println(numConverted + " opinions converted.");
-        System.out.println(numFailed + " opinions failed conversion.");*/
+        System.out.println(numFailed + " opinions failed conversion.");
     }
 
 
