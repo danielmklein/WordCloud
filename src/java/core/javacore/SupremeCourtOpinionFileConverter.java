@@ -1,6 +1,8 @@
 package core.javacore;
 
 import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -41,7 +43,7 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
         this.inputPath = inputPath;
     }
 
-    private isTextFile(String path)
+    private boolean isTextFile(String path)
     {
         Pattern txtFileRegex = Pattern.compile("\\.txt$");
         Matcher match = txtFileRegex.matcher(path);
@@ -49,13 +51,13 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
         return match.find();
     }
 
-    private isExistingFile(String path)
+    private boolean isExistingFile(String path)
     {
         File inputFile = new File(path);
         return inputFile.isFile();
     }
 
-    public SupremeCourtOpinion convertFromInputStream(InputStream stream, String path)
+    public SupremeCourtOpinion convertFromInputStream(InputStream stream, String path) throws IOException
     {
         if (!this.isTextFile(path))
         {
@@ -64,23 +66,24 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
                             + "thus cannot be converted.");
         }
 
+        SupremeCourtOpinion converted = null;
         try 
         {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-            return this.convertFromBufferedReader(reader, path);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+            converted = this.convertFromBufferedReader(reader, path);
         } catch (Exception e)
         {
-            throw new Exception(e);
+            throw new IOException(e);
         }
+
+        return converted;
     }
 
-    
-    @Override
     public SupremeCourtOpinion convertFromPath(String path) throws IOException
     {
 
         // Check to see if the input file exists.
-        if (!this.isExistingFile)
+        if (!this.isExistingFile(path))
         {
             System.out.println("couldn't find the file!");
             throw new IOException("The path " + path
@@ -98,11 +101,12 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
 
         File file = new File(path);
         BufferedReader reader = null;
+        SupremeCourtOpinion converted = null;
 
         try
         {
             reader = new BufferedReader(new FileReader(file));
-            return this.convertFromBufferedReader(reader);
+            converted = this.convertFromBufferedReader(reader, path);
         } catch (FileNotFoundException e)
         {
             // TODO: handle these more gracefully?
@@ -123,10 +127,12 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
                 // so what?
             }
         }
+        
+        return converted;
 
     }
 
-    private SupremeCourtOpinion convertFromBufferedReader(BufferedReader reader, String path)
+    private SupremeCourtOpinion convertFromBufferedReader(BufferedReader reader, String path) throws IOException
     {
         String title = "";
         String caseNum = "";
@@ -169,82 +175,88 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
 
         String line = null;
         // Parse out necessary fields
-        while ((line = reader.readLine()) != null)
+        try
         {
-            //System.out.println("next line is: " + line);
-            // regex stuff goes here
-
-            if (foundBreak) // we have reached the opinion body
+            while ((line = reader.readLine()) != null)
             {
-                opinionLines.add(line.trim());
-                continue;
-            }
+                //System.out.println("next line is: " + line);
+                // regex stuff goes here
 
-            titleMatch = this.getTitledItem(line, titleRegex);
-            if (!titleMatch.equals(""))
-            {
-                title = titleMatch;
-            }
+                if (foundBreak) // we have reached the opinion body
+                {
+                    opinionLines.add(line.trim());
+                    continue;
+                }
 
-            caseNumMatch = this.getTitledItem(line, caseNumRegex);
-            if (!caseNumMatch.equals(""))
-            {
-                caseNum = caseNumMatch;
-            }
+                titleMatch = this.getTitledItem(line, titleRegex);
+                if (!titleMatch.equals(""))
+                {
+                    title = titleMatch;
+                }
 
-            usCiteMatch = this.getTitledItem(line, usCiteRegex);
-            if (!usCiteMatch.equals(""))
-            {
-                usCite = usCiteMatch;
-            }
+                caseNumMatch = this.getTitledItem(line, caseNumRegex);
+                if (!caseNumMatch.equals(""))
+                {
+                    caseNum = caseNumMatch;
+                }
 
-            scCiteMatch = this.getTitledItem(line, scCiteRegex);
-            if (!scCiteMatch.equals(""))
-            {
-                scCite = scCiteMatch;
-            }
+                usCiteMatch = this.getTitledItem(line, usCiteRegex);
+                if (!usCiteMatch.equals(""))
+                {
+                    usCite = usCiteMatch;
+                }
 
-            lawyersEdMatch = this.getTitledItem(line, lawyersEdRegex);
-            if (!lawyersEdMatch.equals(""))
-            {
-                lawyersEd = lawyersEdMatch;
-            }
+                scCiteMatch = this.getTitledItem(line, scCiteRegex);
+                if (!scCiteMatch.equals(""))
+                {
+                    scCite = scCiteMatch;
+                }
 
-            lexisCiteMatch = this.getTitledItem(line, lexisCiteRegex);
-            if (!lexisCiteMatch.equals(""))
-            {
-                lexisCite = lexisCiteMatch;
-            }
+                lawyersEdMatch = this.getTitledItem(line, lawyersEdRegex);
+                if (!lawyersEdMatch.equals(""))
+                {
+                    lawyersEd = lawyersEdMatch;
+                }
 
-            fullCiteMatch = this.getTitledItem(line, fullCiteRegex);
-            if (!fullCiteMatch.equals(""))
-            {
-                fullCite = fullCiteMatch;
-            }
+                lexisCiteMatch = this.getTitledItem(line, lexisCiteRegex);
+                if (!lexisCiteMatch.equals(""))
+                {
+                    lexisCite = lexisCiteMatch;
+                }
 
-            dateMatch = this.getTitledItem(line, datelineRegex);
-            if (!dateMatch.equals(""))
-            {
-                dates = this.splitDates(dateMatch);
-            }
+                fullCiteMatch = this.getTitledItem(line, fullCiteRegex);
+                if (!fullCiteMatch.equals(""))
+                {
+                    fullCite = fullCiteMatch;
+                }
 
-            dispositionMatch = this.getTitledItem(line, dispositionRegex);
-            if (!dispositionMatch.equals(""))
-            {
-                disposition = dispositionMatch;
-            }
+                dateMatch = this.getTitledItem(line, datelineRegex);
+                if (!dateMatch.equals(""))
+                {
+                    dates = this.splitDates(dateMatch);
+                }
 
-            opinTypeMatch = this.getTitledItem(line, opinTypeRegex);
-            if (!opinTypeMatch.equals(""))
-            {
-                opinType = opinTypeMatch;
-            }
+                dispositionMatch = this.getTitledItem(line, dispositionRegex);
+                if (!dispositionMatch.equals(""))
+                {
+                    disposition = dispositionMatch;
+                }
 
-            if (breakRegex.matcher(line).find())
-            {
-                foundBreak = true;
-            }
+                opinTypeMatch = this.getTitledItem(line, opinTypeRegex);
+                if (!opinTypeMatch.equals(""))
+                {
+                    opinType = opinTypeMatch;
+                }
 
+                if (breakRegex.matcher(line).find())
+                {
+                    foundBreak = true;
+                }
+
+            }
+        } catch (IOException e)
+        {
+            throw e;
         }
 
         SupremeCourtOpinion converted = new SupremeCourtOpinion(null, null, null);
