@@ -2,13 +2,8 @@ package wordcloudweb
 
 class SCOpinionDomain
 {
-
-    //Map docMetadata;
     String docText;
-    String outputFilename;
-    //private int wordCount;
 
-    // TODO: this is hacky, but so what?
     String caseTitle;
     String caseNumber;
     String usCitation;
@@ -24,8 +19,7 @@ class SCOpinionDomain
     static mapping = {
         version false
         table 'opinions'
-        docText column: 'doc_text', sqlType: 'text'
-        outputFilename column: 'output_filename'
+        docText column: 'doc_text', sqlType: 'longtext'
         caseTitle sqlType: 'text'
         caseNumber sqlType: 'text'
         usCitation sqlType: 'text'

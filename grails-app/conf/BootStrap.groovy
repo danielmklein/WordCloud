@@ -10,23 +10,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.hibernate.SessionFactory;
-import org.hibernate.StatelessSession;
-import org.hibernate.Transaction;
-
 import com.amazonaws.services.s3.model.*
 
 import wordcloudweb.SCOpinionDomain;
 
 import core.javacore.*;
 
-class BootStrap 
+class BootStrap
 {
 
-    def sessionFactory;
     def amazonWebService
 
-    def init = 
+    def init =
     { servletContext ->
         this.loadOpinions();
     }
@@ -48,10 +43,9 @@ class BootStrap
             SupremeCourtOpinion newOpin = (new SupremeCourtOpinionFileConverter(null, "BOGUS_SERIALIZE_PATH.txt")) \
                                             .convertFromInputStream(object.getObjectContent(), object.getKey());
             domainOpin = new SCOpinionDomain(newOpin.getText(), newOpin.getOutputFilename());
-            
+
             domainOpin.docText = newOpin.getText();
-            domainOpin.outputFilename = newOpin.getOutputFilename();
-            
+
             // using toUpperCase to ensure all these fields are all caps in db
             domainOpin.caseTitle = newOpin.getMetadata().getField(WordCloudConstants.META_CASE_TITLE).toUpperCase();
             domainOpin.caseNumber = newOpin.getMetadata().getField(WordCloudConstants.META_CASE_NUM).toUpperCase();
@@ -66,13 +60,13 @@ class BootStrap
             domainOpin.opinionType = newOpin.getMetadata().getField(WordCloudConstants.META_OPIN_TYPE).toUpperCase();
 
             // test output
-            System.out.println("new opinion has title: " + domainOpin.caseTitle);
+            /*System.out.println("new opinion has title: " + domainOpin.caseTitle);
             System.out.println("new opinion has author: " + domainOpin.opinionAuthor);
             System.out.println("new opinion has full citation: " + domainOpin.fullCitation);
             System.out.println("new opinion has case num: " + domainOpin.caseNumber);
-            System.out.println("new opinion has type: " + domainOpin.opinionType);
-            
-        } catch (Exception e) 
+            System.out.println("new opinion has type: " + domainOpin.opinionType);*/
+
+        } catch (Exception e)
         {
             throw new Exception(e);
         }
@@ -80,17 +74,15 @@ class BootStrap
         return domainOpin;
     }
 
-    private Transaction checkNumConverted(long numConverted, StatelessSession session, Transaction tx)
+    private void checkNumConverted(long numConverted)
     {
         if (numConverted % 250 == 0)
         {
-            tx.commit();
             System.out.println(numConverted + " opinions converted.");
             System.out.println("Database currently contains " + SCOpinionDomain.count() + " opinions.");
-            tx = session.beginTransaction();
         }
 
-        return tx;
+        return;
     }
 
     private void loadOpinions() throws Exception, FileNotFoundException, ClassNotFoundException, IOException
@@ -103,9 +95,6 @@ class BootStrap
         long numConverted = 0;
         long numFailed = 0;
 
-        StatelessSession session = sessionFactory.openStatelessSession();
-        Transaction tx = session.beginTransaction();
-
         ListObjectsRequest listObjectsRequest = new ListObjectsRequest() \
                                                 .withBucketName(bucketName);
 
@@ -113,7 +102,7 @@ class BootStrap
         SCOpinionDomain domainOpin;
 
         ObjectListing objectListing = amazonWebService.s3.listObjects(listObjectsRequest);
-        for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) 
+        for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries())
         {
             if (objectSummary.getKey().contains(".txt"))
             {
@@ -123,21 +112,20 @@ class BootStrap
                                                 new GetObjectRequest(bucketName, objectSummary.getKey()));
                 try {
                     domainOpin = processObject(curObject);
-                } catch (Exception e) 
+                } catch (Exception e)
                 {
-                    System.out.println("Unable to convert " + curObject.getKey() + 
+                    System.out.println("Unable to convert " + curObject.getKey() +
                                         " to Document object and save it to database...");
                     numFailed++;
-                    tx.commit();
-                    session.close();
                     throw new Exception(e);
                 }
-                
+
                 if (domainOpin)
                 {
-                    session.insert(domainOpin);
                     numConverted++;
-                    tx = checkNumConverted(numConverted);
+                    System.out.println("saving domain opin: " + domainOpin.caseTitle + " to database.");
+                    System.out.println("Number of opinions in databse is: " + SCOpinionDomain.count());
+                    domainOpin.save(flush:true);
                 } else
                 {
                     numFailed++;
@@ -154,7 +142,7 @@ class BootStrap
         while (objectListing.isTruncated())
         {
             objectListing = amazonWebService.s3.listObjects(listObjectsRequest);
-            for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) 
+            for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries())
             {
                 if (objectSummary.getKey().contains(".txt"))
                 {
@@ -163,21 +151,18 @@ class BootStrap
                                                     new GetObjectRequest(bucketName, objectSummary.getKey()));
                     try {
                         domainOpin = processObject(curObject);
-                    } catch (Exception e) 
+                    } catch (Exception e)
                     {
-                        System.out.println("Unable to convert " + curObject.getKey() + 
+                        System.out.println("Unable to convert " + curObject.getKey() +
                                             " to Document object and save it to database...");
                         numFailed++;
-                        tx.commit();
-                        session.close();
                         throw new Exception(e);
                     }
-                    
+
                     if (domainOpin)
                     {
-                        session.insert(domainOpin);
                         numConverted++;
-                        tx = checkNumConverted(numConverted);
+                        domainOpin.save(flush:true);
                     } else
                     {
                         numFailed++;
@@ -190,17 +175,12 @@ class BootStrap
                 }
             }
             listObjectsRequest.setMarker(objectListing.getNextMarker());
-        } 
+        }
 
         System.out.println();
 
-        tx.commit();
-        session.close();
-        
         System.out.println("Opinion conversion and serialization complete.");
         System.out.println(numConverted + " opinions converted.");
         System.out.println(numFailed + " opinions failed conversion.");
     }
-
-
 }
