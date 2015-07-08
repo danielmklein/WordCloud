@@ -162,16 +162,20 @@ class BootStrap
                     if (domainOpin)
                     {
                         numConverted++;
-                        domainOpin.save(flush:true);
+                        // TODO: REMOVE ME WHEN WE WANT TO DO ALL OPINIONS
+                        if (numConverted % 5 == 0)
+                        {
+                          domainOpin.save(flush:true);
+                        }
                     } else
                     {
                         numFailed++;
                     }
                     // TODO: REMOVE ME WHEN WE WANT TO DO ALL OPINIONS
-                    if (numConverted > 2000)
-                    {
-                        break;
-                    }
+                    //if (numConverted > 2000)
+                    //{
+                    //    break;
+                    //}
                 }
             }
             listObjectsRequest.setMarker(objectListing.getNextMarker());
@@ -182,5 +186,5 @@ class BootStrap
         System.out.println("Opinion conversion and serialization complete.");
         System.out.println(numConverted + " opinions converted.");
         System.out.println(numFailed + " opinions failed conversion.");
-    } 
+    }
 }
