@@ -182,5 +182,5 @@ class BootStrap
         System.out.println("Opinion conversion and serialization complete.");
         System.out.println(numConverted + " opinions converted.");
         System.out.println(numFailed + " opinions failed conversion.");
-    }
+    } 
 }
