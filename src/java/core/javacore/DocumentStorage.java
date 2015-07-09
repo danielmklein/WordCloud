@@ -33,8 +33,6 @@ public class DocumentStorage extends Document
     
     public DocumentStorage(Metadata docMetadata, String docText, String outputFilename)
     {
-        // TODO: create identifier?
-        
         super(docMetadata, docText, outputFilename);
         // this.docText holds the actual string containing the raw, unmodified text from the doc
                 
@@ -62,7 +60,6 @@ public class DocumentStorage extends Document
     */
     private Map<String, Map<String, Double>> buildTermList(List<String> splitText)
     {
-        
         Map<String, Map<String, Double>> termList = new HashMap<String, Map<String, Double>>();
         
         for (String term : splitText)
@@ -88,7 +85,6 @@ public class DocumentStorage extends Document
      */
     private void populateTermFreqs()
     {
-        
         for (String term : this.termList.keySet())
         {
             Double tf = this.calcTermFreq(term);
@@ -144,17 +140,9 @@ public class DocumentStorage extends Document
             // convert term to lowercase and remove any whitespace  
             curTerm = curTerm.toLowerCase().replaceAll("\\s*", "");
             
-            // remove words less than 3 letters long
-            if (curTerm.length() < 3)
+            // remove words less than 3 letters long and stop words
+            if (curTerm.length() < 3 || StopWords.isStopWord(curTerm))
             {
-                //System.out.println("term '" + curTerm + "'is too short!");
-                continue;
-            }
-            
-            // remove stop words
-            if (StopWords.isStopWord(curTerm))
-            {
-                //System.out.println("term '" + curTerm + "'is a stop word!");
                 continue;
             }
             
@@ -167,7 +155,6 @@ public class DocumentStorage extends Document
     
     private boolean isProperNoun(String curTerm, String prevTerm)
     {
-        
         Matcher prevPunc = PUNC_REGEX.matcher(prevTerm);
         Matcher curCaps = CAP_REGEX.matcher(curTerm);
         
@@ -181,7 +168,6 @@ public class DocumentStorage extends Document
      */
     public List<String> stemText(List<String> wordList)
     {
-
         List<String> stemmed = new ArrayList<String>();
         Stemmer stemmer;
         
@@ -221,9 +207,7 @@ public class DocumentStorage extends Document
      */
     public Double calcTfidf(String term, Double docFreq)
     {
-        
         Double termFreq;
-        
         try
         {
             termFreq = this.termList.get(term).get("tf");
