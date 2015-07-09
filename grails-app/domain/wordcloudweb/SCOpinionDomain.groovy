@@ -36,21 +36,15 @@ class SCOpinionDomain
     static constraints = {
     }
 
-    public SCOpinionDomain(String docText, String outputFilename)
+    public SCOpinionDomain(String docText)
     {
 
         this.docText = docText;
-        this.outputFilename = outputFilename;
     }
 
     public String getText()
     {
         return this.docText;
-    }
-
-    public String getOutputFilename()
-    {
-        return this.outputFilename;
     }
 
     public Map getMetadata()

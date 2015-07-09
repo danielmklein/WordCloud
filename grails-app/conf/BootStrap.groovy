@@ -42,7 +42,7 @@ class BootStrap
         try {
             SupremeCourtOpinion newOpin = (new SupremeCourtOpinionFileConverter(null, "BOGUS_SERIALIZE_PATH.txt")) \
                                             .convertFromInputStream(object.getObjectContent(), object.getKey());
-            domainOpin = new SCOpinionDomain(newOpin.getText(), newOpin.getOutputFilename());
+            domainOpin = new SCOpinionDomain(newOpin.getText());
 
             domainOpin.docText = newOpin.getText();
 
