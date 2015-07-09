@@ -4,10 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import com.amazonaws.services.s3.model.*
@@ -19,7 +15,8 @@ import core.javacore.*;
 class BootStrap
 {
 
-    def amazonWebService
+    def amazonWebService;
+    def sessionFactory;
 
     def init =
     { servletContext ->
@@ -40,8 +37,10 @@ class BootStrap
 
         SCOpinionDomain domainOpin;
         try {
-            SupremeCourtOpinion newOpin = (new SupremeCourtOpinionFileConverter(null, "BOGUS_SERIALIZE_PATH.txt")) \
-                                            .convertFromInputStream(object.getObjectContent(), object.getKey());
+            SupremeCourtOpinionFileConverter converter = new SupremeCourtOpinionFileConverter(null, "BOGUS_SERIALIZE_PATH.txt");
+            SupremeCourtOpinion newOpin = converter.convertFromInputStream(object.getObjectContent(), object.getKey());
+            converter = null;
+
             domainOpin = new SCOpinionDomain(newOpin.getText());
 
             domainOpin.docText = newOpin.getText();
@@ -123,17 +122,27 @@ class BootStrap
                 if (domainOpin)
                 {
                     numConverted++;
-                    System.out.println("saving domain opin: " + domainOpin.caseTitle + " to database.");
-                    System.out.println("Number of opinions in databse is: " + SCOpinionDomain.count());
-                    domainOpin.save(flush:true);
+                    // TODO: REMOVE ME WHEN WE WANT TO DO ALL OPINIONS
+                    if (numConverted % 5 == 0)
+                    {
+                      System.out.println("saving domain opin: " + domainOpin.caseTitle + " to database.");
+                      System.out.println("Number of opinions in databse is: " + SCOpinionDomain.count());
+                      domainOpin.save(flush:true);
+                      domainOpin = null;
+                    }
                 } else
                 {
                     numFailed++;
                 }
-                // TODO: REMOVE ME WHEN WE WANT TO DO ALL OPINIONS
-                if (numConverted > 2000)
+
+                if (numConverted % 250 == 0)
                 {
-                    break;
+                    sessionFactory.currentSession.flush();
+                    sessionFactory.currentSession.clear();
+                    DomainClassGrailsPlugin.PROPERTY_INSTANCE_MAP.get().clear();
+
+                    System.out.println(numConverted + " opinions converted.");
+                    System.out.println("Database currently contains " + SCOpinionDomain.count() + " opinions.");
                 }
             }
         }
@@ -146,6 +155,8 @@ class BootStrap
             {
                 if (objectSummary.getKey().contains(".txt"))
                 {
+                    // TODO: put this code inside this loop into a function
+                    // so it isn't duplicated below like an idiot
                     System.out.println("Converting object " + objectSummary.getKey() + "...");
                     curObject = amazonWebService.s3.getObject(
                                                     new GetObjectRequest(bucketName, objectSummary.getKey()));
@@ -165,23 +176,33 @@ class BootStrap
                         // TODO: REMOVE ME WHEN WE WANT TO DO ALL OPINIONS
                         if (numConverted % 5 == 0)
                         {
+                          System.out.println("saving domain opin: " + domainOpin.caseTitle + " to database.");
+                          System.out.println("Number of opinions in databse is: " + SCOpinionDomain.count());
                           domainOpin.save(flush:true);
+                          domainOpin = null;
                         }
                     } else
                     {
                         numFailed++;
                     }
-                    // TODO: REMOVE ME WHEN WE WANT TO DO ALL OPINIONS
-                    //if (numConverted > 2000)
-                    //{
-                    //    break;
-                    //}
+
+                    if (numConverted % 250 == 0)
+                    {
+                        sessionFactory.currentSession.flush();
+                        sessionFactory.currentSession.clear();
+                        DomainClassGrailsPlugin.PROPERTY_INSTANCE_MAP.get().clear();
+
+                        System.out.println(numConverted + " opinions converted.");
+                        System.out.println("Database currently contains " + SCOpinionDomain.count() + " opinions.");
+                    }
+
                 }
             }
             listObjectsRequest.setMarker(objectListing.getNextMarker());
         }
 
-        System.out.println();
+        tx.commit();
+        session.close();
 
         System.out.println("Opinion conversion and serialization complete.");
         System.out.println(numConverted + " opinions converted.");
