@@ -14,10 +14,10 @@ import java.util.regex.Matcher;
 
 /**
  * SupremeCourtOpinionFileConverter Class for Word Cloud Project (Java)
- * 
+ *
  * Daniel Klein Computer-Based Honors Program The University of Alabama
  * 8.27.2014
- * 
+ *
  * Given a file containing one and only one opinion (along with
  * fields/labels/metadata), this class will parse the file and create a
  * SupremeCourtOpinion object from the file.
@@ -67,7 +67,7 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
         }
 
         SupremeCourtOpinion converted = null;
-        try 
+        try
         {
             BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
             converted = this.convertFromBufferedReader(reader, path);
@@ -90,14 +90,12 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
                             + " does not exist!");
         }
 
-
         if (!this.isTextFile(path))
         {
             throw new IOException("The file " + path
                             + " is not a text file and "
                             + "thus cannot be converted.");
         }
-
 
         File file = new File(path);
         BufferedReader reader = null;
@@ -127,9 +125,8 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
                 // so what?
             }
         }
-        
-        return converted;
 
+        return converted;
     }
 
     private SupremeCourtOpinion convertFromBufferedReader(BufferedReader reader, String path) throws IOException
@@ -263,6 +260,7 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
         author = this.getAuthor(path);
         //bodyText = String.join("\n", opinionLines);
         bodyText = this.joinStrings(opinionLines, "\n"); // changed for java 7 compatibility.
+        opinionLines = null;
 
         // Create new metadata object to go in the new opinion
         Metadata newMeta = new SupremeCourtOpinionMetadata();
@@ -296,7 +294,7 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
             sep = separator;
         }
 
-        return sb.toString();   
+        return sb.toString();
     }
 
     public String getAuthor(String filePath)
