@@ -133,7 +133,6 @@ class BootStrap
                         {
                             sessionFactory.currentSession.flush();
                             sessionFactory.currentSession.clear();
-                            SCOpinionDomain.PROPERTY_INSTANCE_MAP.get().clear();
                         }
                     } catch (Exception e)
                     {
@@ -184,7 +183,6 @@ class BootStrap
                           {
                               sessionFactory.currentSession.flush();
                               sessionFactory.currentSession.clear();
-                              SCOpinionDomain.PROPERTY_INSTANCE_MAP.get().clear();
                           }
                       } catch (Exception e)
                       {
