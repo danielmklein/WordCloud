@@ -140,12 +140,10 @@ class BootStrap
                                             " to Document object and save it to database...");
                         numFailed++;
                         throw new Exception(e);
-                    } finally
-                    {
-                      numProcessed++;
                     }
                 }
             }
+            numProcessed++;
         }
         listObjectsRequest.setMarker(objectListing.getNextMarker());
 
@@ -190,12 +188,10 @@ class BootStrap
                                               " to Document object and save it to database...");
                           numFailed++;
                           throw new Exception(e);
-                      } finally
-                      {
-                        numProcessed++;
                       }
                   }
               }
+              numProcessed++;
             }
             listObjectsRequest.setMarker(objectListing.getNextMarker());
         }
