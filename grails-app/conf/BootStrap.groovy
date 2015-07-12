@@ -150,6 +150,9 @@ class BootStrap
                         numFailed++;
                         throw new Exception(e);
                     }
+                } else
+                {
+                  curObject.close();
                 }
             }
             numProcessed++;
@@ -183,7 +186,7 @@ class BootStrap
                   {
                       try {
                           domainOpin = processObject(curObject);
-                          curObject.close()
+                          curObject.close();
                           if (domainOpin)
                           {
                               System.out.println("Saving domain opin: " + domainOpin.caseTitle + " to database.");
@@ -208,6 +211,9 @@ class BootStrap
                           numFailed++;
                           throw new Exception(e);
                       }
+                  } else
+                  {
+                    curObject.close();
                   }
               }
               numProcessed++;
