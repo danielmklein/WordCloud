@@ -222,7 +222,7 @@ class BootStrap
             listObjectsRequest.setMarker(objectListing.getNextMarker());
         }
 
-        session.close();
+        sessionFactory.currentSession.close();
 
         System.out.println("Opinion conversion and serialization complete.");
         System.out.println(numConverted + " opinions converted.");
