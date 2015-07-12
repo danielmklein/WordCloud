@@ -91,6 +91,7 @@ class BootStrap
         System.out.println("Converting files in " + bucketName + " bucket to Document objects");
         System.out.println("And saving them to the database.");
 
+        long numProcessed = 0;
         long numConverted = 0;
         long numFailed = 0;
 
@@ -103,46 +104,47 @@ class BootStrap
         ObjectListing objectListing = amazonWebService.s3.listObjects(listObjectsRequest);
         for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries())
         {
-            if (objectSummary.getKey().contains(".txt"))
+            if (objectSummary.getKey().contains(".txt")) // TODO: this is redundant -- it's checked in processOject()
             {
-                System.out.println("Converting object " + objectSummary.getKey() + "...");
+                System.out.println("Processing object " + objectSummary.getKey() + "...");
 
                 curObject = amazonWebService.s3.getObject(
                                                 new GetObjectRequest(bucketName, objectSummary.getKey()));
-                try {
-                    domainOpin = processObject(curObject);
-                } catch (Exception e)
-                {
-                    System.out.println("Unable to convert " + curObject.getKey() +
-                                        " to Document object and save it to database...");
-                    numFailed++;
-                    throw new Exception(e);
-                }
 
-                if (domainOpin)
+                // for right now, only convert and save every 5th opinion
+                // TODO: remove this check when we want to do 100% of the opinions
+                if (numProcessed % 5 == 0)
                 {
-                    numConverted++;
-                    // TODO: REMOVE ME WHEN WE WANT TO DO ALL OPINIONS
-                    if (numConverted % 5 == 0)
+                    try {
+                        domainOpin = processObject(curObject);
+                        if (domainOpin)
+                        {
+                            System.out.println("Saving domain opin: " + domainOpin.caseTitle + " to database.");
+                            System.out.println("Number of opinions in database is: " + SCOpinionDomain.count());
+                            domainOpin.save(flush:true);
+                            numConverted++;
+                            domainOpin = null;
+                        } else
+                        {
+                            numFailed++;
+                        }
+                        // flush the session explicitly every 250 opinions
+                        if (numProcessed % 250 == 0)
+                        {
+                            sessionFactory.currentSession.flush();
+                            sessionFactory.currentSession.clear();
+                            SCOpinionDomain.PROPERTY_INSTANCE_MAP.get().clear();
+                        }
+                    } catch (Exception e)
                     {
-                      System.out.println("saving domain opin: " + domainOpin.caseTitle + " to database.");
-                      System.out.println("Number of opinions in databse is: " + SCOpinionDomain.count());
-                      domainOpin.save(flush:true);
-                      domainOpin = null;
+                        System.out.println("Unable to convert " + curObject.getKey() +
+                                            " to Document object and save it to database...");
+                        numFailed++;
+                        throw new Exception(e);
+                    } finally
+                    {
+                      numProcessed++;
                     }
-                } else
-                {
-                    numFailed++;
-                }
-
-                if (numConverted % 250 == 0)
-                {
-                    sessionFactory.currentSession.flush();
-                    sessionFactory.currentSession.clear();
-                    DomainClassGrailsPlugin.PROPERTY_INSTANCE_MAP.get().clear();
-
-                    System.out.println(numConverted + " opinions converted.");
-                    System.out.println("Database currently contains " + SCOpinionDomain.count() + " opinions.");
                 }
             }
         }
@@ -153,55 +155,53 @@ class BootStrap
             objectListing = amazonWebService.s3.listObjects(listObjectsRequest);
             for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries())
             {
-                if (objectSummary.getKey().contains(".txt"))
-                {
-                    // TODO: put this code inside this loop into a function
-                    // so it isn't duplicated below like an idiot
-                    System.out.println("Converting object " + objectSummary.getKey() + "...");
-                    curObject = amazonWebService.s3.getObject(
-                                                    new GetObjectRequest(bucketName, objectSummary.getKey()));
-                    try {
-                        domainOpin = processObject(curObject);
-                    } catch (Exception e)
-                    {
-                        System.out.println("Unable to convert " + curObject.getKey() +
-                                            " to Document object and save it to database...");
-                        numFailed++;
-                        throw new Exception(e);
-                    }
+              if (objectSummary.getKey().contains(".txt")) // TODO: this is redundant -- it's checked in processOject()
+              {
+                  System.out.println("Processing object " + objectSummary.getKey() + "...");
 
-                    if (domainOpin)
-                    {
-                        numConverted++;
-                        // TODO: REMOVE ME WHEN WE WANT TO DO ALL OPINIONS
-                        if (numConverted % 5 == 0)
-                        {
-                          System.out.println("saving domain opin: " + domainOpin.caseTitle + " to database.");
-                          System.out.println("Number of opinions in databse is: " + SCOpinionDomain.count());
-                          domainOpin.save(flush:true);
-                          domainOpin = null;
-                        }
-                    } else
-                    {
-                        numFailed++;
-                    }
+                  curObject = amazonWebService.s3.getObject(
+                                                  new GetObjectRequest(bucketName, objectSummary.getKey()));
 
-                    if (numConverted % 250 == 0)
-                    {
-                        sessionFactory.currentSession.flush();
-                        sessionFactory.currentSession.clear();
-                        DomainClassGrailsPlugin.PROPERTY_INSTANCE_MAP.get().clear();
-
-                        System.out.println(numConverted + " opinions converted.");
-                        System.out.println("Database currently contains " + SCOpinionDomain.count() + " opinions.");
-                    }
-
-                }
+                  // for right now, only convert and save every 5th opinion
+                  // TODO: remove this check when we want to do 100% of the opinions
+                  if (numProcessed % 5 == 0)
+                  {
+                      try {
+                          domainOpin = processObject(curObject);
+                          if (domainOpin)
+                          {
+                              System.out.println("Saving domain opin: " + domainOpin.caseTitle + " to database.");
+                              System.out.println("Number of opinions in database is: " + SCOpinionDomain.count());
+                              domainOpin.save(flush:true);
+                              numConverted++;
+                              domainOpin = null;
+                          } else
+                          {
+                              numFailed++;
+                          }
+                          // flush the session explicitly every 250 opinions
+                          if (numProcessed % 250 == 0)
+                          {
+                              sessionFactory.currentSession.flush();
+                              sessionFactory.currentSession.clear();
+                              SCOpinionDomain.PROPERTY_INSTANCE_MAP.get().clear();
+                          }
+                      } catch (Exception e)
+                      {
+                          System.out.println("Unable to convert " + curObject.getKey() +
+                                              " to Document object and save it to database...");
+                          numFailed++;
+                          throw new Exception(e);
+                      } finally
+                      {
+                        numProcessed++;
+                      }
+                  }
+              }
             }
             listObjectsRequest.setMarker(objectListing.getNextMarker());
         }
 
-        tx.commit();
         session.close();
 
         System.out.println("Opinion conversion and serialization complete.");
