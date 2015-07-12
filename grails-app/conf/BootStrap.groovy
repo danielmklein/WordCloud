@@ -118,13 +118,14 @@ class BootStrap
                   numProcessed++;
                   continue;
                 }
-                
+
                 // for right now, only convert and save every 5th opinion
                 // TODO: remove this check when we want to do 100% of the opinions
                 if (numProcessed % 5 == 0)
                 {
                     try {
                         domainOpin = processObject(curObject);
+                        curObject.close();
                         if (domainOpin)
                         {
                             System.out.println("Saving domain opin: " + domainOpin.caseTitle + " to database.");
@@ -182,6 +183,7 @@ class BootStrap
                   {
                       try {
                           domainOpin = processObject(curObject);
+                          curObject.close()
                           if (domainOpin)
                           {
                               System.out.println("Saving domain opin: " + domainOpin.caseTitle + " to database.");
