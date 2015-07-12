@@ -108,9 +108,17 @@ class BootStrap
             {
                 System.out.println("Processing object " + objectSummary.getKey() + "...");
 
-                curObject = amazonWebService.s3.getObject(
-                                                new GetObjectRequest(bucketName, objectSummary.getKey()));
-
+                try
+                {
+                  curObject = amazonWebService.s3.getObject(
+                                                  new GetObjectRequest(bucketName, objectSummary.getKey()));
+                } catch (Exception e) // if we can't get the object, just move on.
+                {
+                  System.out.println("Something went wrong fetching object " + objectSummary.getKey() + " from S3!");
+                  numProcessed++;
+                  continue;
+                }
+                
                 // for right now, only convert and save every 5th opinion
                 // TODO: remove this check when we want to do 100% of the opinions
                 if (numProcessed % 5 == 0)
@@ -145,6 +153,7 @@ class BootStrap
             }
             numProcessed++;
         }
+        System.out.println("Advancing object listing market...");
         listObjectsRequest.setMarker(objectListing.getNextMarker());
 
         while (objectListing.isTruncated())
@@ -156,8 +165,16 @@ class BootStrap
               {
                   System.out.println("Processing object " + objectSummary.getKey() + "...");
 
-                  curObject = amazonWebService.s3.getObject(
-                                                  new GetObjectRequest(bucketName, objectSummary.getKey()));
+                  try
+                  {
+                    curObject = amazonWebService.s3.getObject(
+                                                    new GetObjectRequest(bucketName, objectSummary.getKey()));
+                  } catch (Exception e) // if we can't get the object, just move on.
+                  {
+                    System.out.println("Something went wrong fetching object " + objectSummary.getKey() + " from S3!");
+                    numProcessed++;
+                    continue;
+                  }
 
                   // for right now, only convert and save every 5th opinion
                   // TODO: remove this check when we want to do 100% of the opinions
@@ -193,6 +210,7 @@ class BootStrap
               }
               numProcessed++;
             }
+            System.out.println("Advancing object listing market...");
             listObjectsRequest.setMarker(objectListing.getNextMarker());
         }
 
