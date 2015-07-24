@@ -95,7 +95,7 @@ environments {
     production {
         grails.logging.jul.usebridge = false
         // todo: change me when this gets settled.
-        grails.serverURL = "http://ec2-52-7-217-96.compute-1.amazonaws.com:8080/"
+        grails.serverURL = "http://ec2-52-7-217-96.compute-1.amazonaws.com:8080/${grails.util.Metadata.current.getApplicationName()}"
     }
 }
 
