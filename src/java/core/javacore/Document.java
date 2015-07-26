@@ -20,36 +20,29 @@ public class Document implements Serializable
     private String outputFilename;
     private int wordCount;
 
-    public Document(Metadata docMetadata, String docText, String outputFilename)
+    public Document(Metadata docMetadata, String docText)
     {
-
         this.docMetadata = docMetadata;
         this.docText = docText;
-        this.outputFilename = outputFilename;
-        //this.wordCount = countWords(docText);
     }
 
     public int countWords(String text)
     {
-
         return text.split(" ").length;
     }
 
     public String getOutputFilename()
     {
-
         return this.outputFilename;
     }
 
     public String getText()
     {
-
         return this.docText;
     }
 
     public Metadata getMetadata()
     {
-
         return this.docMetadata;
     }
 
@@ -70,7 +63,6 @@ public class Document implements Serializable
 
     public void serialize() throws IOException
     {
-
         ObjectOutputStream oos = null;
         try
         {
@@ -101,7 +93,6 @@ public class Document implements Serializable
 
     public String toString()
     {
-
         return "";
     }
 

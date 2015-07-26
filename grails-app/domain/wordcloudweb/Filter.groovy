@@ -1,8 +1,8 @@
 package wordcloudweb
 
 /**
-* Domain class defining a filter for creating a 
-* subset of our body of documents. 
+* Domain class defining a filter for creating a
+* subset of our body of documents.
 **/
 class Filter
 {
@@ -29,13 +29,11 @@ class Filter
 
 	public addSortField(String sortField)
 	{
-		// todo: write me
 		this.sortFields.add(sortField);
 	}
 
 	public addAllowedValuesString(String allowedVals)
 	{
-		// todo: write me
 		this.allowedValueStrings.add(allowedVals);
 	}
 

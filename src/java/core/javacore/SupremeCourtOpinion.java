@@ -4,27 +4,23 @@ import java.io.Serializable;
 
 /**
  * SupremeCourtOpinion Class for Word Cloud Project (Java)
- * 
+ *
  * Daniel Klein Computer-Based Honors Program The University of Alabama 8.27.14
- * 
+ *
  * This specializes the generic Document class to apply to Supreme Court
  * opinions.
  */
 public class SupremeCourtOpinion extends Document implements Serializable
 {
-
     /**
      * @param docMetadata
      * @param docText
-     * @param outputFilename
      */
-    public SupremeCourtOpinion(Metadata docMetadata, String docText,
-                    String outputFilename)
+    public SupremeCourtOpinion(Metadata docMetadata, String docText)
     {
-
-        super(docMetadata, docText, outputFilename);
+        super(docMetadata, docText);
     }
-    
+
     @Override
     public String toString()
     {
@@ -41,8 +37,8 @@ public class SupremeCourtOpinion extends Document implements Serializable
         String opinType = this.getMetadata().getField(WordCloudConstants.META_OPIN_TYPE);
 
         String retString = "";
-        
-        retString = "CASE TITLE: " + caseTitle 
+
+        retString = "CASE TITLE: " + caseTitle
                     + "\nCASE NUMBER: " + caseNum
                     + "\nCASE DATES: " + caseDates
                     + "\nUS CITATION: " + usCite
@@ -54,7 +50,7 @@ public class SupremeCourtOpinion extends Document implements Serializable
                     + "\nOPINION TYPE: " + opinType
                     + "\n\nOPINION TEXT:\n\n"
                     + this.docText;
-        
+
         return retString;
     }
 

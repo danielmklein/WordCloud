@@ -4,7 +4,7 @@ import core.javacore.WordCloudConstants;
 
 class FilterController {
 
-    def index() 
+    def index()
     {
         session.subsets = []; // list of Filter objects
         session.corpusSubsets = []; // list of Filter objects
@@ -13,10 +13,10 @@ class FilterController {
         System.out.println("db fields are: " + session.dbFields);
 
     	// all filter fields will be blank in form
-    	def filter = new Filter(name:'', allowedValues:'', 
+    	def filter = new Filter(name:'', allowedValues:'',
     								sortField:'' );
 
-        render(view:"filters", action:"filters", model: [filter:filter, subsets:session.subsets, 
+        render(view:"filters", action:"filters", model: [filter:filter, subsets:session.subsets,
                                                         corpusSubsets:session.corpusSubsets, dbFields:session.dbFields]);
     }
 
@@ -24,7 +24,7 @@ class FilterController {
     {
         def curFilter = params.filter;
 
-        [filter:curFilter, subsets:session.subsets, 
+        [filter:curFilter, subsets:session.subsets,
         corpusSubsets:session.corpusSubsets, dbFields:session.dbFields,
         errorMsg:params.errorMsg];
     }
@@ -34,11 +34,11 @@ class FilterController {
     **/
     def createSubset()
     {
-        def newFilter = new Filter();
         def maxNumFilterLvls = 7;
-
+        def newFilter = new Filter();
         newFilter.setName(params.name);
-
+        // TODO: perform error checking on allowedValues list?
+        // TODO: ALL OF THE ERROR CHECKING
         for (int i = 1; i <= maxNumFilterLvls; i++)
         {
             def curSortField;
@@ -58,33 +58,13 @@ class FilterController {
                 newFilter.addSortField(curSortField);
                 newFilter.addAllowedValuesString(curAllowedVals);
                 newFilter.addAllowedValuesList(this.parseAllowedVals(curAllowedVals));
-            } else 
+            } else
             {
                 break;
             }
         }
 
-        // TODO: instead of setSortField, this should become addSortField.
-
-        // TODO: same with allowed values
-
-        //newFilter.setSortField(params.sortField1);
-        //newFilter.setAllowedValues(params.allowedValues1);
-
-        // TODO: perform error checking on allowedValues list?
-
-        //newFilter.setAllowedValuesList(this.parseAllowedVals(params.allowedValues1));
-        // TODO: ALL OF THE ERROR CHECKING
-
         session.subsets.add(newFilter);
-
-        //System.out.println(newFilter.name);
-        //System.out.println(newFilter.sortField);
-        //System.out.println("allowed vals in new filter are: ");
-        /*for (val in newFilter.getAllowedValuesList())
-        {
-            System.out.println(val);
-        }*/
         System.out.println(session.subsets);
 
         // test print statements
@@ -95,12 +75,12 @@ class FilterController {
         System.out.println("size of subsets:" + session.subsets.size());
         System.out.println("size of corpus subsets:" + session.corpusSubsets.size());
 
-    	def emptyFilter = new Filter(name:'', allowedValues:'', 
-    								sortField:'' );
-    	render(view: "filters", action:"filters", 
-                model: [filter:emptyFilter, subsets:session.subsets, 
-                        corpusSubsets:session.corpusSubsets,
-                        dbFields:session.dbFields]);
+      	def emptyFilter = new Filter(name:'', allowedValues:'',
+      								sortField:'' );
+      	render(view: "filters", action:"filters",
+                  model: [filter:emptyFilter, subsets:session.subsets,
+                          corpusSubsets:session.corpusSubsets,
+                          dbFields:session.dbFields]);
     }
 
     private def parseAllowedVals(String allowedVals)
@@ -108,14 +88,14 @@ class FilterController {
         return Arrays.asList(allowedVals.split("\\s*,\\s*"));
     }
 
-    /** 
+    /**
     * Move an already-created subset to the corpus list
     **/
     def addSubsetToCorpus()
     {
         def nameOfSubset = params.subset; // TODO this var name sucks
         System.out.println("Name of subset: " + nameOfSubset);
-        
+
         for (filter in session.subsets)
         {
             if (filter.name.equals(nameOfSubset))
@@ -125,7 +105,7 @@ class FilterController {
                 {
                     if (corpusFilter.name.equals(nameOfSubset))
                     {
-                        System.out.println("Tried to add " + nameOfSubset 
+                        System.out.println("Tried to add " + nameOfSubset
                                            + " to corpus, but it's already in there!");
                         alreadyInCorpus = true;
                         break;
@@ -141,10 +121,10 @@ class FilterController {
             }
         }
 
-        def emptyFilter = new Filter(name:'', allowedValues:'', 
+        def emptyFilter = new Filter(name:'', allowedValues:'',
                                     sortField:'' );
-        render(view: "filters", action:"filters", 
-                model: [filter:emptyFilter, subsets:session.subsets, 
+        render(view: "filters", action:"filters",
+                model: [filter:emptyFilter, subsets:session.subsets,
                         corpusSubsets:session.corpusSubsets,
                         dbFields:session.dbFields]);
     }
@@ -173,13 +153,12 @@ class FilterController {
         } else
         {
             System.out.println("Didn't find subset " + nameOfSubset + " in the corpus!");
-        } 
+        }
 
-
-        def emptyFilter = new Filter(name:'', allowedValues:'', 
+        def emptyFilter = new Filter(name:'', allowedValues:'',
                                     sortField:'' );
-        render(view: "filters", action:"filters", 
-                model: [filter:emptyFilter, subsets:session.subsets, 
+        render(view: "filters", action:"filters",
+                model: [filter:emptyFilter, subsets:session.subsets,
                         corpusSubsets:session.corpusSubsets,
                         dbFields:session.dbFields]);
     }
@@ -194,10 +173,10 @@ class FilterController {
             session.corpusSubsets.add(filter);
         }
 
-        def emptyFilter = new Filter(name:'', allowedValues:'', 
+        def emptyFilter = new Filter(name:'', allowedValues:'',
                                     sortField:'' );
-        render(view: "filters", action:"filters", 
-                model: [filter:emptyFilter, subsets:session.subsets, 
+        render(view: "filters", action:"filters",
+                model: [filter:emptyFilter, subsets:session.subsets,
                         corpusSubsets:session.corpusSubsets,
                         dbFields:session.dbFields]);
     }
@@ -208,10 +187,10 @@ class FilterController {
 
         session.corpusSubsets.clear();
 
-        def emptyFilter = new Filter(name:'', allowedValues:'', 
+        def emptyFilter = new Filter(name:'', allowedValues:'',
                                     sortField:'' );
-        render(view: "filters", action:"filters", 
-                model: [filter:emptyFilter, subsets:session.subsets, 
+        render(view: "filters", action:"filters",
+                model: [filter:emptyFilter, subsets:session.subsets,
                         corpusSubsets:session.corpusSubsets,
                         dbFields:session.dbFields]);
     }
@@ -219,7 +198,6 @@ class FilterController {
     def createWordCloud()
     {
         def nameOfSubset = params.subset;
-
         def corpusFilters = session.corpusSubsets;
 
         System.out.println("name of subset to use for word cloud: " + nameOfSubset);
@@ -244,20 +222,17 @@ class FilterController {
         {
             System.out.println("No subset filter selected... oh no.");
 
-            def emptyFilter = new Filter(name:'', allowedValues:'', 
+            def emptyFilter = new Filter(name:'', allowedValues:'',
                                     sortField:'' );
-
-            render(view: "filters", action:"filters", 
-                model: [filter:emptyFilter, subsets:session.subsets, 
+            render(view: "filters", action:"filters",
+                model: [filter:emptyFilter, subsets:session.subsets,
                         corpusSubsets:session.corpusSubsets,
                         dbFields:session.dbFields,
                         errorMsg:"You must select a created subset for the word cloud!"]);
         } else
         {
-
             System.out.println("subset filter has: ");
             System.out.println("name: " + subsetFilter.getName());
-            //System.out.println("sort field: " + subsetFilter.getSortField());
 
             session.subsetFilter = subsetFilter;
             session.corpusFilters = corpusFilters;

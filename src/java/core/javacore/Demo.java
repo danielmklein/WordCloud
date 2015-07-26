@@ -22,95 +22,29 @@ import java.util.Map;
  */
 public class Demo
 {
-    
-    public static List<AnalysisEngine.TermMetrics> /*Map<String, Double>*/ runDemo(List<Document> allOpinions) throws FileNotFoundException, ClassNotFoundException, IOException, Exception
+    public static List<AnalysisEngine.TermMetrics> runDemo(List<Document> allOpinions) throws FileNotFoundException, ClassNotFoundException, IOException, Exception
     {
-        
-        //List<Document> allOpinions = loadOpinions();
-        
         DocumentSorter sorter = new DocumentSorter(allOpinions);
-        
+
         String sortField = WordCloudConstants.META_OPIN_AUTHOR;
         List<String> allowedVals = new ArrayList<String>();
         allowedVals.add("FRANKFURTER");
         boolean shouldInvert = false;
-        
+
         List<Document> warrenOpinions = sorter.createSubset(sortField, allowedVals, shouldInvert);
-        
+
         System.out.println("Corpus has " + allOpinions.size() + " opinions.");
         System.out.println("Subset has " + warrenOpinions.size() + " opinions.");
-        
+
         AnalysisEngine engine = new AnalysisEngine(allOpinions, warrenOpinions);
         int numRelevantTerms = WordCloudConstants.NUM_TERMS_IN_CLOUD;
-        //Map<String, Double> terms = engine.analyzeDocs(numRelevantTerms);
         List<AnalysisEngine.TermMetrics> terms = engine.analyzeDocs(numRelevantTerms);
-        
-        //for (String term : terms.keySet())
+
         for (AnalysisEngine.TermMetrics term : terms)
         {
             System.out.println("Term '" + term.term + "' has weight " + term.weight);
         }
-        
+
         return terms;
     }
-    
-    /*public static List<Document> loadOpinions() throws FileNotFoundException, ClassNotFoundException, IOException
-    {
-        String serializeDirPath = WordCloudConstants.SERIALIZE_DIR_PATH;
-        
-        File docsDir = new File(serializeDirPath);
-        List<File> docsFiles = Arrays.asList(docsDir.listFiles());
-        List<Document> opinions = new ArrayList<Document>();
-        
-        System.out.println(docsFiles.size() + " opinions to load...");
-        
-        int numConverted = 0;
-        int limit = 1000;
-        
-        // load each serialized doc
-        for (File curFile : docsFiles)
-        {
-            if (numConverted >= limit) // TODO: remove me when we can do alllll the opinions
-            {
-                break;
-            }
-            // Read from disk using FileInputStream
-            FileInputStream f_in = new 
-                FileInputStream(curFile);
-
-            // Read object using ObjectInputStream
-            ObjectInputStream obj_in = 
-                new ObjectInputStream (f_in);
-
-            // Read an object
-            Object obj = obj_in.readObject();
-            obj_in.close();
-            
-            Document opinion;
-            
-            if (obj instanceof SupremeCourtOpinion)
-            {
-                // Cast object to a SCO
-                opinion = (SupremeCourtOpinion) obj;
-                System.out.println("Loaded opinion from file " + curFile.getName());
-                opinions.add(opinion);
-            } else
-            {
-                System.out.println("Loading opinion didn't work for file " + curFile.getName());
-            }
-            
-            numConverted++;
-        }
-        
-        return opinions;
-    }*/
-    
-    
-    /*public static void main(String[] args) throws FileNotFoundException, ClassNotFoundException, IOException, Exception
-    {
-        runDemo();
-
-    }*/
-    
-
 }

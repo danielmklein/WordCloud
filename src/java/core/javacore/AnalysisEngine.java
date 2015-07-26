@@ -26,17 +26,12 @@ import wordcloudweb.SCOpinionDomain;
 */
 public class AnalysisEngine
 {
-
     private List<DocumentStorage> corpus;
     private List<DocumentStorage> subset;
     private Map<String, Double> termList;
-
     private int numCorpusDocs;
     private int numSubsetDocs;
 
-    /**
-     *
-     */
     public AnalysisEngine(List<Document> corpus, List<Document> subset) throws Exception
     {
 
@@ -65,7 +60,6 @@ public class AnalysisEngine
 
         this.corpus = this.convertDocs(corpus);
         this.termList = this.buildFullTermList(this.corpus);
-
     }
 
     // this one takes opinion domain objects
@@ -133,18 +127,15 @@ public class AnalysisEngine
      */
     public List<DocumentStorage> convertDocs(List<Document> docSet) throws Exception
     {
-
         System.out.println("Converting documents into DocumentStorage objects...");
 
         int numDocs = docSet.size();
-
         List<DocumentStorage> converted = new ArrayList<DocumentStorage>();
         Document curDoc;
         DocumentStorage convertedDoc;
 
         for (int i = 0; i < numDocs; ++i)
         {
-
             try
             {
                 System.out.println("Converting document "
@@ -152,7 +143,7 @@ public class AnalysisEngine
                                     + " to Storage object...");
                 curDoc = docSet.get(i);
                 // TODO: just get rid of the output filename member
-                convertedDoc = new DocumentStorage(curDoc.getMetadata(), curDoc.getText(), "null");
+                convertedDoc = new DocumentStorage(curDoc.getMetadata(), curDoc.getText());
                 converted.add(convertedDoc);
 
             } catch (Exception e)
@@ -166,11 +157,9 @@ public class AnalysisEngine
 
     public List<DocumentStorage> convertDomainDocs(List<SCOpinionDomain> docSet) throws Exception
     {
-
         System.out.println("Converting documents into DocumentStorage objects...");
 
         int numDocs = docSet.size();
-
         List<DocumentStorage> converted = new ArrayList<DocumentStorage>();
         SCOpinionDomain curDoc;
         DocumentStorage convertedDoc;
@@ -185,10 +174,8 @@ public class AnalysisEngine
                                     + " to Storage object...");
                 curDoc = docSet.get(i);
                 docText = (String)InvokerHelper.getProperty(curDoc, "docText");
-                // TODO: just get rid of the output filename member
-                convertedDoc = new DocumentStorage(null, docText, "null");
+                convertedDoc = new DocumentStorage(null, docText);
                 converted.add(convertedDoc);
-
             } catch (Exception e)
             {
                 throw new Exception("AnalysisEngine: failed to instantiate new DocumentStorage object.");
@@ -215,7 +202,6 @@ public class AnalysisEngine
         for (DocumentStorage doc : corpus)
         {
             newTerms = new ArrayList<String>();
-
             // construct list of all terms in this doc that are not
             // already in termList
             for (String term : doc.getTermList().keySet())
@@ -280,7 +266,6 @@ public class AnalysisEngine
      */
     private List<String> determineRelevantTerms(List<DocumentStorage> corpus, List<String> termList)
     {
-
         List<String> relevantTerms = new ArrayList<String>();
         Double upperBound = WordCloudConstants.RELEVANT_TERM_PERCENTAGE_UPPER;
         Double lowerBound = WordCloudConstants.RELEVANT_TERM_PERCENTAGE_LOWER;
@@ -316,15 +301,12 @@ public class AnalysisEngine
 
     /**
      * The method this class is all about -- kicks off the analysis process.
-     * TODO: maybe change this method to just return list of TermMetrics,
-     * pull out terms and weights on front end?
      *
      * @param numRelevantTerms
      * @return
      */
     public List<TermMetrics> analyzeDocs(int numRelevantTerms)
     {
-
         List<String> mostFreqTerms = this.getMostFreqTerms(this.corpus, numRelevantTerms);
         List<String> relevantTerms = this.determineRelevantTerms(this.corpus, mostFreqTerms);
 
@@ -363,9 +345,7 @@ public class AnalysisEngine
      */
     private List<TermMetrics> collectTermInfo(List<DocumentStorage> subset, List<String> relevantTerms, int numTerms)
     {
-
         List<TermMetrics> rawTermInfo = new ArrayList<TermMetrics>();
-
         Double tfidf;
         Double weight;
         Double docFreq;
@@ -431,7 +411,6 @@ public class AnalysisEngine
     private Map<String, Double> buildWeightedPairs(List<TermMetrics> rawTermInfo)
     {
         // TODO: write me -- this is currently done in analyzeDocs.
-
         return null;
     }
 
@@ -471,7 +450,6 @@ public class AnalysisEngine
      */
     private Double calcTfidfForSubset(String term, List<DocumentStorage> subset)
     {
-
         Double docFreq = this.termList.get(term);
         List<Double> tfidfList = new ArrayList<Double>();
 
@@ -531,15 +509,11 @@ public class AnalysisEngine
      */
     private String destem(String stemmedTerm, List<DocumentStorage> corpus)
     {
-
         String destemmedTerm = "";
-
         int minNumTerms = WordCloudConstants.DESTEMMER_MIN_NUM_TERMS;
         Double minPercentage = WordCloudConstants.DESTEMMER_MIN_PERCENTAGE;
-
         Map<String, Integer> candidates = new HashMap<String, Integer>();
         Stemmer stemmer;
-
         long numTermsChecked = 0;
         long numDocsChecked = 0;
         long totalMatches = 0;
@@ -674,7 +648,6 @@ public class AnalysisEngine
         protected Double weight;
         protected Double docFrequency;
         protected Double termFrequency;
-
     }
 
 }

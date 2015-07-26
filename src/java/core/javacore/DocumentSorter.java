@@ -6,11 +6,16 @@ import java.util.List;
 
 /**
  * Daniel Klein Computer-Based Honors Program The University of Alabama 9.5.2014
- * 
+ *
  * Given a collection of Document objects and a sort key (which is a field of
  * the appropriate metadata object), this will yield subsets of document
  * objects, each subset having the same value for the sort field.
  */
+
+ /*
+  * NOTE: now that we use the database to create the subsets via queries,
+  * this class is not used.
+  */
 public class DocumentSorter
 {
 
@@ -26,28 +31,12 @@ public class DocumentSorter
     }
 
     /**
-     * Given a sort_field on which to sort, this will return a list of lists of
-     * Document objects, grouped by sort_field value.
-     * 
-     * @param sortField
-     * @return
-     * @throws IOException
-     */
-    public List<List<Document>> sortDocs(String sortField) throws IOException
-    {
-
-        // TODO: write this... maybe. And uncomment the tests for this
-        // when you do.
-        throw new IOException("sortDocs hasn't been written yet!");
-    }
-
-    /**
      * Given a sort field and a list of values to accept for that field, this
      * will return a list of Document objects, each of whose value for the sort
      * field is in the list of allowedVals. If shouldInvert=True, this will
      * return the set of documents whose value for sortField != anything in
      * allowedVals.
-     * 
+     *
      * @param sortField
      * @param allowedVals
      * @param shouldInvert
@@ -56,9 +45,9 @@ public class DocumentSorter
                     List<String> allowedVals, boolean shouldInvert)
                     throws IOException
     {
-        
+
         List<Document> subset = new ArrayList<Document>();
-        
+
         for (Document doc : this.docList)
         {
             // Pick the items in list whose value for the sortField
@@ -93,11 +82,11 @@ public class DocumentSorter
                 }
             }
         }
-        
+
         if (shouldInvert)
         {
             List<Document> inverted = new ArrayList<Document>();
-            
+
             for (Document doc : this.docList)
             {
                 if (!subset.contains(doc))
@@ -105,9 +94,9 @@ public class DocumentSorter
                     inverted.add(doc);
                 }
             }
-            
+
             return inverted;
-        } else 
+        } else
         {
             return subset;
         }
@@ -116,7 +105,7 @@ public class DocumentSorter
 
     /**
      * Add a Document object to this.docList.
-     * 
+     *
      * @param docToAdd
      */
     public void addDoc(Document docToAdd)
@@ -127,7 +116,7 @@ public class DocumentSorter
 
     /**
      * Explicitly set this.docList.
-     * 
+     *
      * @param docToAdd
      */
     public void setDocList(List<Document> newDocs)

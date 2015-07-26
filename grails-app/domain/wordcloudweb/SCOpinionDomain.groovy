@@ -33,12 +33,10 @@ class SCOpinionDomain
         opinionType sqlType: 'text'
     }
 
-    static constraints = {
-    }
+    static constraints = {}
 
     public SCOpinionDomain(String docText)
     {
-
         this.docText = docText;
     }
 
@@ -46,10 +44,4 @@ class SCOpinionDomain
     {
         return this.docText;
     }
-
-    public Map getMetadata()
-    {
-        return null; // TODO : maybe fix me later?
-    }
-
 }

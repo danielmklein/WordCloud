@@ -30,12 +30,10 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
      * @param fileToParse
      * @param serializePath
      */
-    public SupremeCourtOpinionFileConverter(String fileToParse,
-                    String serializePath)
+    public SupremeCourtOpinionFileConverter(String fileToParse)
     {
-
-        super(fileToParse, serializePath);
-        this.converted = new SupremeCourtOpinion(null, null, null);
+        super(fileToParse);
+        this.converted = new SupremeCourtOpinion(null, null);
     }
 
     public void setFileToParse(String inputPath)
@@ -81,7 +79,6 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
 
     public SupremeCourtOpinion convertFromPath(String path) throws IOException
     {
-
         // Check to see if the input file exists.
         if (!this.isExistingFile(path))
         {
@@ -177,8 +174,6 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
             while ((line = reader.readLine()) != null)
             {
                 //System.out.println("next line is: " + line);
-                // regex stuff goes here
-
                 if (foundBreak) // we have reached the opinion body
                 {
                     opinionLines.add(line.trim());
@@ -249,17 +244,15 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
                 {
                     foundBreak = true;
                 }
-
             }
         } catch (IOException e)
         {
             throw e;
         }
 
-        SupremeCourtOpinion converted = new SupremeCourtOpinion(null, null, null);
+        SupremeCourtOpinion converted = new SupremeCourtOpinion(null, null);
         author = this.getAuthor(path);
-        //bodyText = String.join("\n", opinionLines);
-        bodyText = this.joinStrings(opinionLines, "\n"); // changed for java 7 compatibility.
+        bodyText = this.joinStrings(opinionLines, "\n");
         opinionLines = null;
 
         // Create new metadata object to go in the new opinion
@@ -276,13 +269,10 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
         newMeta.setField(WordCloudConstants.META_OPIN_AUTHOR, author);
         newMeta.setField(WordCloudConstants.META_OPIN_TYPE, opinType);
 
-        //converted = new SupremeCourtOpinion(newMeta, bodyText, this.outputPath);
         converted.setText(bodyText);
         converted.setMetadata(newMeta);
-        converted.setOutputFilename(this.outputPath);
 
         return converted;
-
     }
 
     private String joinStrings(List<String> strings, String separator)
@@ -314,7 +304,6 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
 
     public String splitDates(String dateString)
     {
-
         String dates = "";
         Pattern dateStringRegex = Pattern
                         .compile("\\w+\\s\\d{1,2}-?\\d?\\d?,\\s\\d{4},\\s\\w+;");
@@ -346,7 +335,5 @@ public class SupremeCourtOpinionFileConverter extends DocumentConverter
         }
 
         return dates;
-
     }
-
 }
